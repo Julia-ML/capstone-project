@@ -12,7 +12,8 @@ const App = ()=> {
     dispatch(loginWithToken());
   }, []);
 
-  // useEffect(()=> {
+  //   might want to do something with this/alter it at some point
+  //   useEffect(()=> {
   //   if(auth.id){
   //     dispatch(fetchCart());
   //   }
