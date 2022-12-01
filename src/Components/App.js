@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import Home from "./Home";
 import Login from "./Login";
-import Register from "./Register";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route } from "react-router-dom";
@@ -25,7 +24,7 @@ const App = () => {
         <Home />
       ) : (
         <div>
-          <Login /> <Register />
+          <Login />
         </div>
       )}
       {!!auth.id && (
