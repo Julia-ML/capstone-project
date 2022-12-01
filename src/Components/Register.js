@@ -9,7 +9,7 @@ const Register = () => {
   const { users } = useSelector((state) => state);
 
   useEffect(() => {
-    dispatch(fetchUsers);
+    dispatch(fetchUsers());
   }, []);
 
   const [credentials, setCredentials] = useState({
