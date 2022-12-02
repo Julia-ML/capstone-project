@@ -131,6 +131,13 @@ const syncAndSeed = async () => {
 			status: 'In Progress',
 		}),
 	]);
+	return {
+		users: {
+		  moe,
+		  lucy,
+		  larry,
+		}
+	};
 };
 
 module.exports = {
