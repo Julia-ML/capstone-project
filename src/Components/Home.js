@@ -11,6 +11,9 @@ const Home = () => {
 		dispatch(fetchProjects());
 	}, []);
 
+	// to verify projects are there with tasks included
+	console.log(projects);
+
 	return (
 		<div>
 			<h1>Home</h1>
