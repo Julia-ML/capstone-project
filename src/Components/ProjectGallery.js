@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { createUser, fetchUsers, fetchProjects, createProject} from "../store"; //add fetchProjects, createProject
+import { createUser, fetchUsers, fetchProjects, createProject, deleteProject} from "../store"; //add fetchProjects, createProject
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Button from '@mui/material/Button';
@@ -48,7 +48,7 @@ const ProjectGallery = () => {
   
 return (
     <div>
-    <ul>{projects.length ? projects.map(project => {return <li key={project.id}>{project.name } : {project.description}</li>}) : ''}</ul>
+    <ul>{projects.length ? projects.map(project => {return <li key={project.id}>{project.name } : {project.description}<button onClick={()=>{dispatch(deleteProject(`${project.id}`, navigate))}}>x</button></li>}) : ''}</ul>
     <Button variant="contained" onClick={handleClickOpen}>Create New Project</Button>
     <Dialog open={open} onClose={handleClose}>
         <DialogTitle>New Project</DialogTitle>
