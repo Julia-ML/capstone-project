@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import Home from "./Home";
 import Login from "./Login";
+import ProjectGallery from "./ProjectGallery";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route } from "react-router-dom";
@@ -32,7 +33,9 @@ const App = () => {
           <nav>
             <Link to="/">Home</Link>
           </nav>
-          <Routes></Routes>
+          <Routes>
+            <Route path="/projects" element={<ProjectGallery />} />
+          </Routes>
         </div>
       )}
     </div>
