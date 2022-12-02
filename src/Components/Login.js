@@ -41,7 +41,7 @@ const Login = () => {
               </Grid>
               <Button type="submit" variant="contained">Login</Button>
             </form>
-            <Button onClick={()=> setToggle(true)} variant="contained">Create Account</Button>
+            <Button fullWidth onClick={()=> setToggle(true)} variant="contained">Create Account</Button>
           </div>
         )}  
         {toggle && < Register toggle={toggle} setToggle={setToggle} />}
