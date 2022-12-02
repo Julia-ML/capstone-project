@@ -1,6 +1,6 @@
 import axios from "axios";
 const projects = (state = [], action) => {
-  if (action.type === "GET_PROJECTS") {
+  if (action.type === "SET_PROJECTS") {
     return action.projects;
   }
   if (action.type === "CREATE_PROJECT") {
@@ -13,11 +13,15 @@ const projects = (state = [], action) => {
 };
 
 export const fetchProjects = () => {
-  return async (dispatch) => {
-    const response = await axios.get("/api/projects");
-    dispatch({ type: "GET_PROJECTS", projects: response.data });
-  };
-};
+	return async (dispatch) => {
+		const token = window.localStorage.getItem('token');
+		const response = await axios.get('/api/projects', {
+			headers: {
+				authorization: token,
+			},
+		});
+		dispatch({ type: 'SET_PROJECTS', projects: response.data });
+	};
 
 export const createProject = (newProject) => {
   return async (dispatch) => {
