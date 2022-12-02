@@ -17,7 +17,7 @@ const Login = () => {
     setCredentials({ ...credentials, [ev.target.name]: ev.target.value });
   };
 
-  const [toggle, setToggle] = useState(true);
+  const [toggle, setToggle] = useState(false);
 
   const login = (ev) => {
     ev.preventDefault();
