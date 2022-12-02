@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { createUser, fetchUsers } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { Button, Paper, TextField, Typography } from "@mui/material";
 
 const Register = (loginToggleState) => {
   const dispatch = useDispatch();
@@ -42,52 +43,64 @@ const Register = (loginToggleState) => {
       : alert("all fields required");
   };
   return (
-    <div>
-      <button onClick={()=> setToggle(false)}> back to Login page</button>
-      <h2>Register</h2>
+    <Paper>
+      <Button onClick={()=> setToggle(false)}> back to Login page</Button>
+      <Typography variant='h3'>Register</Typography>
       <form onSubmit={login}>
-        <input
-          placeholder="username"
-          value={credentials.username}
-          name="username"
-          onChange={onChange}
-          maxLength={15}
+        <TextField 
+           label='Username'
+           value={credentials.username} 
+           onChange={onChange} 
+           name="username" 
+           margin="normal" 
+           inputProps={{maxLength: 15}} 
+           fullWidth
         />
-        <input
-          placeholder="first name"
-          name="firstName"
-          value={credentials.firstName}
-          onChange={onChange}
+        <TextField 
+           label='First Name'
+           value={credentials.firstName} 
+           onChange={onChange} 
+           name="firstName" 
+           margin="normal"  
+           fullWidth
         />
-        <input
-          placeholder="last name"
-          name="lastName"
-          value={credentials.lastName}
-          onChange={onChange}
+        <TextField 
+           label='Last Name'
+           value={credentials.lastName} 
+           onChange={onChange} 
+           name="lastName" 
+           margin="normal"  
+           fullWidth
         />
-        <input
-          placeholder="email"
-          name="email"
-          value={credentials.email}
-          onChange={onChange}
+        <TextField 
+           label='Email'
+           value={credentials.email} 
+           onChange={onChange} 
+           name="email" 
+           margin="normal"  
+           fullWidth
         />
-        <input
-          placeholder="password"
-          type="password"
-          name="password"
-          value={credentials.password}
-          onChange={onChange}
+        <TextField 
+           label='Password'
+           type='password'
+           value={credentials.password} 
+           onChange={onChange} 
+           name="password" 
+           margin="normal"  
+           fullWidth
         />
-        <input
-          placeholder="confirm password"
-          type="password"
-          name="confirmPassword"
-          value={confirmPassword}
-          onChange={onChangeConfirm}
+        <TextField 
+           label='Confirm Password'
+           type='password'
+           value={confirmPassword} 
+           onChange={onChangeConfirm} 
+           name="confirmPassword" 
+           margin="normal"  
+           fullWidth
         />
-        <button >Register</button>
+        <Button type="submit" variant="contained"> Register </Button>
       </form>
-    </div>
+    </Paper>
   );
 };
 

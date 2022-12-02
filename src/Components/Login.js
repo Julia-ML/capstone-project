@@ -17,7 +17,7 @@ const Login = () => {
     setCredentials({ ...credentials, [ev.target.name]: ev.target.value });
   };
 
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(true);
 
   const login = (ev) => {
     ev.preventDefault();
@@ -29,7 +29,7 @@ const Login = () => {
         <Paper elevation={10}>
         {!toggle && (
           <div>
-            <Typography variant="h2" align="center"> Login </Typography>
+            <Typography variant="h3" align="center"> Login </Typography>
             <form onSubmit={login}>
               <Grid container>
                   <Grid item xs={12} md={6}>
