@@ -22,6 +22,7 @@ const Login = () => {
   const login = (ev) => {
     ev.preventDefault();
     dispatch(attemptLogin(credentials));
+    navigate("/dashboard")
   };
 
   return (
