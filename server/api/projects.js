@@ -10,3 +10,13 @@ app.get("/", async (req, res, next) => {
     next(ex);
   }
 });
+
+app.post("/create", async (req, res, next) => {
+  try {
+    console.log(req.body, "@@@@@");
+    const project = await Project.create(req.body);
+    res.send(project);
+  } catch (ex) {
+    next(ex);
+  }
+});

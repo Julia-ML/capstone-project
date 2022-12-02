@@ -32,6 +32,7 @@ const App = () => {
         <div>
           <nav>
             <Link to="/">Home</Link>
+            <Link to="/projects">Projects</Link>
           </nav>
           <Routes>
             <Route path="/projects" element={<ProjectGallery />} />
