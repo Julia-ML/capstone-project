@@ -3,6 +3,7 @@ import { attemptLogin } from "../store";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Register from "./Register"
+import { Button, Container, Grid, Paper, TextField, Typography } from "@mui/material";
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -22,31 +23,30 @@ const Login = () => {
     ev.preventDefault();
     dispatch(attemptLogin(credentials));
   };
+
   return (
-    <div>
-      {!toggle && (
-        <div>
-          <h2>Login</h2>
-          <form onSubmit={login}>
-            <input
-              placeholder="username"
-              value={credentials.username}
-              name="username"
-              onChange={onChange}
-            />
-            <input
-              placeholder="password"
-              name="password"
-              value={credentials.password}
-              onChange={onChange}
-            />
-            <button>Login</button>
-          </form>
-          <button onClick={()=> setToggle(true)}>Create Account</button>
-        </div>
-      )}  
-      {toggle && < Register toggle={toggle} setToggle={setToggle} />}
-    </div>
+      <Container>
+        <Paper elevation={10}>
+        {!toggle && (
+          <div>
+            <Typography variant="h2" align="center"> Login </Typography>
+            <form onSubmit={login}>
+              <Grid container>
+                  <Grid item xs={12} md={6}>
+                    <TextField label='Username' value={credentials.username} onChange={onChange} name="username" margin="normal" fullWidth/>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <TextField type="password" label='Password' value={credentials.password} onChange={onChange} name="password" margin="normal" fullWidth/>
+                  </Grid>
+              </Grid>
+              <Button type="submit" variant="contained">Login</Button>
+            </form>
+            <Button onClick={()=> setToggle(true)} variant="contained">Create Account</Button>
+          </div>
+        )}  
+        {toggle && < Register toggle={toggle} setToggle={setToggle} />}
+        </Paper>
+      </Container>
   );
 };
 
