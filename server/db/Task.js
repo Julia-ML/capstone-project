@@ -1,7 +1,7 @@
-const conn = require('./conn');
+const conn = require("./conn");
 const { STRING, UUID, UUIDV4, TEXT, ENUM } = conn.Sequelize;
 
-const Task = conn.define('task', {
+const Task = conn.define("task", {
 	id: {
 		type: UUID,
 		primaryKey: true,
@@ -14,8 +14,8 @@ const Task = conn.define('task', {
 		type: TEXT,
 	},
 	status: {
-		type: ENUM('To Do', 'In Progress', 'Done'),
-		defaultValue: 'To Do',
+		type: ENUM("Backlog", "To Do", "In Progress", "Done"),
+		defaultValue: "To Do",
 	},
 });
 
