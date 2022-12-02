@@ -1,8 +1,7 @@
-const express = require('express');
+const express = require("express");
 const app = express.Router();
-const Project = require('../db/Project');
-const Task = require('../db/Task');
-const User = require('../db/User');
+const { Project, Task, User } = require("../db");
+module.exports = app;
 
 app.get('/', async (req, res, next) => {
 	try {
@@ -13,4 +12,24 @@ app.get('/', async (req, res, next) => {
 	}
 });
 
+app.post("/create", async (req, res, next) => {
+  try {
+    const project = await Project.create(req.body);
+    res.send(project);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+app.delete("/:id", async (req, res, next) => {
+  try {
+    const project = await Project.findByPk(req.params.id);
+    project.destroy();
+    res.sendStatus(204);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 module.exports = app;
+

@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import Home from "./Home";
 import Login from "./Login";
-import LandingPage from "./LandingPage";
+import LandingPage from "./LandingPage"
+import ProjectGallery from "./ProjectGallery";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
@@ -38,15 +39,11 @@ const App = () => {
               <Route path="/" element={<LandingPage />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Home />} />
+              <Route path="/projects" element={<ProjectGallery />} />
             </Routes>
         </div>
-
     </div>
   );
 };
 
 export default App;
-
-
-//24   {!!auth.id && (
-//33        )}
