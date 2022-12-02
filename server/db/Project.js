@@ -7,7 +7,7 @@ const Project = conn.define('project', {
 		primaryKey: true,
 		defaultValue: UUIDV4,
 	},
-	projectName: {
+	name: {
 		type: STRING,
 	},
 	description: {

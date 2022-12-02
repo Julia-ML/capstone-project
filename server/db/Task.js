@@ -7,7 +7,7 @@ const Task = conn.define('task', {
 		primaryKey: true,
 		defaultValue: UUIDV4,
 	},
-	taskName: {
+	name: {
 		type: STRING,
 	},
 	description: {
