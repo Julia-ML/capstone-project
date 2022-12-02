@@ -3,7 +3,7 @@ import { createUser, fetchUsers } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-const Register = () => {
+const Register = (loginToggleState) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { users } = useSelector((state) => state);
@@ -20,6 +20,8 @@ const Register = () => {
     email: "",
   });
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { setToggle } = loginToggleState; 
 
   const onChange = (ev) => {
     setCredentials({ ...credentials, [ev.target.name]: ev.target.value });
@@ -41,6 +43,7 @@ const Register = () => {
   };
   return (
     <div>
+      <button onClick={()=> setToggle(false)}> back to Login page</button>
       <h2>Register</h2>
       <form onSubmit={login}>
         <input
@@ -82,7 +85,7 @@ const Register = () => {
           value={confirmPassword}
           onChange={onChangeConfirm}
         />
-        <button>Register</button>
+        <button >Register</button>
       </form>
     </div>
   );
