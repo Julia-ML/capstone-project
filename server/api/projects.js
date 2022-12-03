@@ -3,13 +3,13 @@ const app = express.Router();
 const { Project, Task, User } = require("../db");
 module.exports = app;
 
-app.get('/', async (req, res, next) => {
-	try {
-		const user = await User.findByToken(req.headers.authorization);
-		res.send(await user.getProjects());
-	} catch (ex) {
-		next(ex);
-	}
+app.get("/", async (req, res, next) => {
+  try {
+    const user = await User.findByToken(req.headers.authorization);
+    res.send(await user.getProjects());
+  } catch (ex) {
+    next(ex);
+  }
 });
 
 app.post("/create", async (req, res, next) => {
@@ -32,4 +32,3 @@ app.delete("/:id", async (req, res, next) => {
 });
 
 module.exports = app;
-
