@@ -53,9 +53,10 @@ export const Profile = () => {
     setUserInfo({ ...userInfo, [ev.target.name]: ev.target.value });
   };
 
-  const updateInfo = (ev) => {
+  const updateInfo = (ev, type, updated) => {
     ev.preventDefault();
-    dispatch(updateUser(userInfo));
+    dispatch(updateUser(updated));
+    editMode(type, true);
   };
 
   return (
@@ -79,7 +80,10 @@ export const Profile = () => {
               </div>
             ) : (
               <div>
-                <form onSubmit={updateInfo}>
+                <form
+                  onSubmit={(ev) =>
+                    updateInfo(ev, "username", { username: userInfo.username })
+                  }>
                   <TextField
                     label="Username"
                     value={userInfo.username}
@@ -104,14 +108,17 @@ export const Profile = () => {
               </div>
             ) : (
               <div>
-                <form>
+                <form
+                  onSubmit={(ev) =>
+                    updateInfo(ev, "email", { email: userInfo.email })
+                  }>
                   <TextField
                     label="Email"
                     value={userInfo.email}
                     name="email"
                     onChange={onChange}
                   />
-                  <Button>Update</Button>
+                  <Button type="submit">Update</Button>
                 </form>
                 <Button onClick={() => editMode("email", true)}>
                   <CancelIcon />
@@ -129,14 +136,19 @@ export const Profile = () => {
               </div>
             ) : (
               <div>
-                <form>
+                <form
+                  onSubmit={(ev) =>
+                    updateInfo(ev, "firstName", {
+                      firstName: userInfo.firstName,
+                    })
+                  }>
                   <TextField
                     label="First Name"
                     value={userInfo.firstName}
                     name="firstName"
                     onChange={onChange}
                   />
-                  <Button>Update</Button>
+                  <Button type="submit">Update</Button>
                 </form>
                 <Button onClick={() => editMode("firstName", true)}>
                   <CancelIcon />
@@ -154,14 +166,17 @@ export const Profile = () => {
               </div>
             ) : (
               <div>
-                <form>
+                <form
+                  onSubmit={(ev) =>
+                    updateInfo(ev, "lastName", { lastName: userInfo.lastName })
+                  }>
                   <TextField
                     label="Last Name"
                     value={userInfo.lastName}
                     name="lastName"
                     onChange={onChange}
                   />
-                  <Button>Update</Button>
+                  <Button type="submit">Update</Button>
                 </form>
                 <Button onClick={() => editMode("lastName", true)}>
                   <CancelIcon />
