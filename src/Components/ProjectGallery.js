@@ -6,7 +6,6 @@ import {
   createProject,
   deleteProject,
 } from "../store";
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -42,10 +41,9 @@ const ProjectGallery = () => {
     setNewProject({ ...newProject, [ev.target.name]: ev.target.value });
   };
 
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
   const handleClose = () => {
     setOpen(false);
