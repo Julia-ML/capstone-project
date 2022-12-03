@@ -30,7 +30,7 @@ const ProjectGallery = () => {
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
-    userId: `${auth.id}`,
+    teamId: `${auth.teamId}`,
   });
 
   const onChange = (ev) => {
@@ -50,10 +50,14 @@ const ProjectGallery = () => {
 
   const createNewProject = () => {
     console.log(newProject);
-    dispatch(createProject(newProject));
-    setNewProject({ name: "", description: "" });
-    handleClose();
-    navigate("/projects");
+    if (auth.teamId) {
+      dispatch(createProject(newProject));
+      setNewProject({ name: "", description: "" });
+      handleClose();
+      navigate("/projects");
+    } else {
+      alert("only admins and team members can create projects!");
+    }
   };
 
   useEffect(() => {
@@ -62,7 +66,6 @@ const ProjectGallery = () => {
 
   return (
     <div>
-      <br />
       <Typography align="right" sx={{ marginRight: 6 }}>
         <Button variant="contained" onClick={handleClickOpen}>
           Create New Project

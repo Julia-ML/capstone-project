@@ -91,7 +91,7 @@ User.authenticate = async function ({ username, password }) {
 User.prototype.getProjects = async function () {
   let projects = await conn.models.project.findAll({
     where: {
-      userId: this.id,
+      teamId: this.teamId,
     },
     include: [{ model: conn.models.task }],
   });
