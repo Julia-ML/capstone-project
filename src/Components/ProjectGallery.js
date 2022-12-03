@@ -7,7 +7,7 @@ import {
   deleteProject,
 } from "../store"; //add fetchProjects, createProject
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -27,7 +27,11 @@ const ProjectGallery = () => {
   const { auth, projects } = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [newProject, setNewProject] = useState({ name: "", description: "" });
+  const [newProject, setNewProject] = useState({
+    name: "",
+    description: "",
+    userId: `${auth.id}`,
+  });
 
   const onChange = (ev) => {
     newProject.name === "" || newProject.value === ""
@@ -58,49 +62,11 @@ const ProjectGallery = () => {
 
   return (
     <div>
-      <Grid container spacing={2} columns={4} sx={{ margin: 3 }}>
-        {projects.length
-          ? projects.map((project) => {
-              return (
-                <Grid item sx={3} lg={1}>
-                  <Card key={project.id}>
-                    <CardContent>
-                      <Typography sx={{ fontSize: 20 }} align="center">
-                        {project.name}
-                      </Typography>
-                      <br />
-                      <Typography paragraph={true} sx={{ width: "90%" }}>
-                        {project.description}
-                      </Typography>
-                      {auth.id === project.userId ? (
-                        <Typography align="right">
-                          <Button
-                            onClick={() => {
-                              dispatch(
-                                deleteProject(`${project.id}`, navigate)
-                              );
-                            }}
-                          >
-                            delete
-                          </Button>
-                        </Typography>
-                      ) : (
-                        ""
-                      )}
-                    </CardContent>
-                  </Card>
-                </Grid>
-              );
-            })
-          : ""}
-      </Grid>
-      <Button
-        variant="contained"
-        onClick={handleClickOpen}
-        sx={{ marginLeft: 3 }}
-      >
-        Create New Project
-      </Button>
+      <Typography align="right" sx={{ marginRight: 6 }}>
+        <Button variant="contained" onClick={handleClickOpen}>
+          Create New Project
+        </Button>
+      </Typography>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>New Project</DialogTitle>
         <DialogContent>
@@ -139,6 +105,55 @@ const ProjectGallery = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Grid container spacing={2} columns={4} sx={{ margin: 3, width: "95%" }}>
+        {projects.length
+          ? projects.map((project) => {
+              return (
+                <Grid item key={project.id} xs={1} md={1} lg={1}>
+                  <Card key={project.id}>
+                    <CardContent>
+                      <Typography align="center">
+                        <Button
+                          onClick={() => {
+                            navigate(`/projects/${project.id}`);
+                          }}
+                        >
+                          <Typography
+                            sx={{ fontSize: 20, fontWeight: "medium" }}
+                            align="center"
+                          >
+                            {project.name}
+                          </Typography>
+                        </Button>
+                      </Typography>
+                      <br />
+                      <Typography paragraph={true} sx={{ width: "90%" }}>
+                        {project.description}
+                      </Typography>
+                      {auth.id === project.userId ? (
+                        <Typography align="right">
+                          <Button
+                            onClick={() => {
+                              dispatch(
+                                deleteProject(`${project.id}`, navigate)
+                              );
+                            }}
+                            variant="outlined"
+                            size="small"
+                          >
+                            delete
+                          </Button>
+                        </Typography>
+                      ) : (
+                        ""
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })
+          : ""}
+      </Grid>
     </div>
   );
 };
