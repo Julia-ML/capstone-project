@@ -12,8 +12,12 @@ import { useSelector } from "react-redux";
 import EditIcon from "@mui/icons-material/Edit";
 import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { updateUser } from "../store";
 
 export const Profile = () => {
+  const dispatch = useDispatch();
   const { auth } = useSelector((state) => state);
   const [editToggle, setEditToggle] = useState({
     username: false,
@@ -21,10 +25,39 @@ export const Profile = () => {
     firstName: false,
     lastName: false,
   });
-  const editMode = (type) => {
+
+  const [userInfo, setUserInfo] = useState({
+    username: "",
+    firstName: "",
+    lastName: "",
+    email: "",
+  });
+
+  useEffect(() => {
+    setUserInfo({
+      username: auth.username,
+      firstName: auth.firstName,
+      lastName: auth.lastName,
+      email: auth.email,
+    });
+  }, [auth]);
+
+  const editMode = (type, cancel) => {
     setEditToggle({ ...editToggle, [type]: !editToggle[type] });
-    console.log(editToggle);
+    if (cancel) {
+      setUserInfo({ ...userInfo, [type]: auth[type] });
+    }
   };
+
+  const onChange = (ev) => {
+    setUserInfo({ ...userInfo, [ev.target.name]: ev.target.value });
+  };
+
+  const updateInfo = (ev) => {
+    ev.preventDefault();
+    dispatch(updateUser(userInfo));
+  };
+
   return (
     <Container>
       <Paper>
@@ -46,10 +79,16 @@ export const Profile = () => {
               </div>
             ) : (
               <div>
-                <form>
-                  <TextField label="Username" />
+                <form onSubmit={updateInfo}>
+                  <TextField
+                    label="Username"
+                    value={userInfo.username}
+                    name="username"
+                    onChange={onChange}
+                  />
+                  <Button type="submit">Update</Button>
                 </form>
-                <Button onClick={() => editMode("username")}>
+                <Button onClick={() => editMode("username", true)}>
                   <CancelIcon />
                 </Button>
               </div>
@@ -66,9 +105,15 @@ export const Profile = () => {
             ) : (
               <div>
                 <form>
-                  <TextField label="Email" />
+                  <TextField
+                    label="Email"
+                    value={userInfo.email}
+                    name="email"
+                    onChange={onChange}
+                  />
+                  <Button>Update</Button>
                 </form>
-                <Button onClick={() => editMode("email")}>
+                <Button onClick={() => editMode("email", true)}>
                   <CancelIcon />
                 </Button>
               </div>
@@ -85,11 +130,17 @@ export const Profile = () => {
             ) : (
               <div>
                 <form>
-                  <TextField label="First Name" />
-                  <Button onClick={() => editMode("firstName")}>
-                    <CancelIcon />
-                  </Button>
+                  <TextField
+                    label="First Name"
+                    value={userInfo.firstName}
+                    name="firstName"
+                    onChange={onChange}
+                  />
+                  <Button>Update</Button>
                 </form>
+                <Button onClick={() => editMode("firstName", true)}>
+                  <CancelIcon />
+                </Button>
               </div>
             )}
           </ListItem>
@@ -104,9 +155,15 @@ export const Profile = () => {
             ) : (
               <div>
                 <form>
-                  <TextField label="Last Name" />
+                  <TextField
+                    label="Last Name"
+                    value={userInfo.lastName}
+                    name="lastName"
+                    onChange={onChange}
+                  />
+                  <Button>Update</Button>
                 </form>
-                <Button onClick={() => editMode("lastName")}>
+                <Button onClick={() => editMode("lastName", true)}>
                   <CancelIcon />
                 </Button>
               </div>

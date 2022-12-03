@@ -3,6 +3,9 @@ const auth = (state = {}, action) => {
   if (action.type === "SET_AUTH") {
     return action.auth;
   }
+  if (action.type === "UPDATE_AUTH") {
+    return action.auth;
+  }
   return state;
 };
 
@@ -38,6 +41,18 @@ export const createUser = (credentials) => {
     const response = await axios.post("/api/auth/create", credentials);
     window.localStorage.setItem("token", response.data);
     dispatch(loginWithToken());
+  };
+};
+
+export const updateUser = (credentials) => {
+  return async (dispatch) => {
+    const token = window.localStorage.getItem("token");
+    const response = await axios.put("/api/auth/update", credentials, {
+      headers: {
+        authorization: token,
+      },
+    });
+    dispatch({ type: "Update_Auth", auth: response.data });
   };
 };
 
