@@ -1,10 +1,30 @@
-import { Container, ListItem, Paper, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  ListItem,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { useSelector } from "react-redux";
+import EditIcon from "@mui/icons-material/Edit";
+import { useState } from "react";
+import CancelIcon from "@mui/icons-material/Cancel";
 
 export const Profile = () => {
   const { auth } = useSelector((state) => state);
-  console.log(auth);
+  const [editToggle, setEditToggle] = useState({
+    username: false,
+    email: false,
+    firstName: false,
+    lastName: false,
+  });
+  const editMode = (type) => {
+    setEditToggle({ ...editToggle, [type]: !editToggle[type] });
+    console.log(editToggle);
+  };
   return (
     <Container>
       <Paper>
@@ -17,16 +37,80 @@ export const Profile = () => {
           alignItems="flex-start"
           justifyContent="center">
           <ListItem>
-            <strong>Username: {auth.username}</strong>{" "}
+            {!editToggle.username ? (
+              <div>
+                <strong>Username: {auth.username} </strong>
+                <Button onClick={() => editMode("username")}>
+                  <EditIcon />
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <form>
+                  <TextField label="Username" />
+                </form>
+                <Button onClick={() => editMode("username")}>
+                  <CancelIcon />
+                </Button>
+              </div>
+            )}
           </ListItem>
           <ListItem>
-            <strong>Email: {auth.email}</strong>{" "}
+            {!editToggle.email ? (
+              <div>
+                <strong>Email: {auth.email} </strong>
+                <Button onClick={() => editMode("email")}>
+                  <EditIcon />
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <form>
+                  <TextField label="Email" />
+                </form>
+                <Button onClick={() => editMode("email")}>
+                  <CancelIcon />
+                </Button>
+              </div>
+            )}
           </ListItem>
           <ListItem>
-            <strong>First Name: {auth.firstName}</strong>{" "}
+            {!editToggle.firstName ? (
+              <div>
+                <strong>First Name: {auth.firstName} </strong>
+                <Button onClick={() => editMode("firstName")}>
+                  <EditIcon />
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <form>
+                  <TextField label="First Name" />
+                  <Button onClick={() => editMode("firstName")}>
+                    <CancelIcon />
+                  </Button>
+                </form>
+              </div>
+            )}
           </ListItem>
           <ListItem>
-            <strong>Last Name: {auth.lastName}</strong>{" "}
+            {!editToggle.lastName ? (
+              <div>
+                <strong>Last Name: {auth.lastName} </strong>
+                <Button onClick={() => editMode("lastName")}>
+                  <EditIcon />
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <form>
+                  <TextField label="Last Name" />
+                </form>
+                <Button onClick={() => editMode("lastName")}>
+                  <CancelIcon />
+                </Button>
+              </div>
+            )}
           </ListItem>
         </Stack>
       </Paper>
