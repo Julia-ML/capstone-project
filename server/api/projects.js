@@ -21,6 +21,16 @@ app.post("/create", async (req, res, next) => {
   }
 });
 
+app.post("/createtask", async (req, res, next) => {
+  try {
+    const task = await Task.create(req.body);
+    const project = Project.findByPk(task.projectId);
+    res.send(project);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 app.delete("/:id", async (req, res, next) => {
   try {
     const project = await Project.findByPk(req.params.id);
