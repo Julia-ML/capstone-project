@@ -5,7 +5,7 @@ import {
   fetchProjects,
   createProject,
   deleteProject,
-} from "../store"; //add fetchProjects, createProject
+} from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
 import Button from "@mui/material/Button";
@@ -24,12 +24,13 @@ import Typography from "@mui/material/Typography";
 const ProjectGallery = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { auth, projects } = useSelector((state) => state);
+  const { auth, projects, users } = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
+    userId: "",
     teamId: `${auth.teamId}`,
   });
 
@@ -52,7 +53,7 @@ const ProjectGallery = () => {
     console.log(newProject);
     if (auth.teamId) {
       dispatch(createProject(newProject));
-      setNewProject({ name: "", description: "" });
+      setNewProject({ ...newProject, name: "", description: "" });
       handleClose();
       navigate("/projects");
     } else {
@@ -61,8 +62,19 @@ const ProjectGallery = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchProjects());
+    dispatch(fetchProjects()), dispatch(fetchUsers());
   }, []);
+
+  const user = users.find((user) => user.id === auth.id);
+
+  useEffect(() => {
+    user !== undefined
+      ? setNewProject({
+          ...newProject,
+          userId: user.team.adminId,
+        })
+      : "";
+  }, [user]);
 
   return (
     <div>

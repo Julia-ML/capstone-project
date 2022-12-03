@@ -131,6 +131,12 @@ const syncAndSeed = async () => {
       status: "In Progress",
     }),
   ]);
+
+  teamMoe.adminId = moe.id;
+  teamMoe.save();
+  teamLarry.adminId = larry.id;
+  teamLarry.save();
+
   return {
     users: {
       moe,
