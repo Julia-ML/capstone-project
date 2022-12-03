@@ -7,6 +7,7 @@ import ProjectDetail from "./ProjectDetail";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
+import Profile from "./Profile";
 
 const App = () => {
   const { auth } = useSelector((state) => state);
@@ -23,7 +24,9 @@ const App = () => {
       <div>
         <nav>
           {auth.id && (
+
             <div className="nav">
+
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/tasks">Tasks</Link>
               <Link to="/projects">Projects</Link>
@@ -35,6 +38,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/projects" element={<ProjectGallery />} />
           <Route path="/projects/:id" element={<ProjectDetail />} />

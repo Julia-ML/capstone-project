@@ -3,6 +3,10 @@ const auth = (state = {}, action) => {
   if (action.type === "SET_AUTH") {
     return action.auth;
   }
+  if (action.type === "UPDATE_AUTH") {
+    const key = Object.keys(action.auth)[0];
+    return { ...state, [key]: action.auth[key] };
+  }
   return state;
 };
 
@@ -38,6 +42,18 @@ export const createUser = (credentials) => {
     const response = await axios.post("/api/auth/create", credentials);
     window.localStorage.setItem("token", response.data);
     dispatch(loginWithToken());
+  };
+};
+
+export const updateUser = (updatedInfo) => {
+  return async (dispatch) => {
+    const token = window.localStorage.getItem("token");
+    const response = await axios.put("/api/auth/update", updatedInfo, {
+      headers: {
+        authorization: token,
+      },
+    });
+    dispatch({ type: "UPDATE_AUTH", auth: updatedInfo });
   };
 };
 
