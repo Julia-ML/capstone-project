@@ -62,6 +62,7 @@ const ProjectGallery = () => {
 
   return (
     <div>
+      <br />
       <Typography align="right" sx={{ marginRight: 6 }}>
         <Button variant="contained" onClick={handleClickOpen}>
           Create New Project
