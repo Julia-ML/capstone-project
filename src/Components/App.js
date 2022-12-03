@@ -24,7 +24,9 @@ const App = () => {
       <div>
         <nav>
           {auth.id && (
-            <div class="nav">
+
+            <div className="nav">
+
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/tasks">Tasks</Link>
               <Link to="/projects">Projects</Link>
