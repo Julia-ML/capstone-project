@@ -24,6 +24,7 @@ export const Profile = () => {
     email: false,
     firstName: false,
     lastName: false,
+    checker: false,
   });
 
   const [userInfo, setUserInfo] = useState({
@@ -43,7 +44,11 @@ export const Profile = () => {
   }, [auth]);
 
   const editMode = (type, cancel) => {
-    setEditToggle({ ...editToggle, [type]: !editToggle[type] });
+    setEditToggle({
+      ...editToggle,
+      [type]: !editToggle[type],
+      checker: !editToggle.checker,
+    });
     if (cancel) {
       setUserInfo({ ...userInfo, [type]: auth[type] });
     }
@@ -74,9 +79,11 @@ export const Profile = () => {
             {!editToggle.username ? (
               <div>
                 <strong>Username: {auth.username} </strong>
-                <Button onClick={() => editMode("username")}>
-                  <EditIcon />
-                </Button>
+                {!editToggle.checker && (
+                  <Button onClick={() => editMode("username")}>
+                    <EditIcon />
+                  </Button>
+                )}
               </div>
             ) : (
               <div>
@@ -102,9 +109,11 @@ export const Profile = () => {
             {!editToggle.email ? (
               <div>
                 <strong>Email: {auth.email} </strong>
-                <Button onClick={() => editMode("email")}>
-                  <EditIcon />
-                </Button>
+                {!editToggle.checker && (
+                  <Button onClick={() => editMode("email")}>
+                    <EditIcon />
+                  </Button>
+                )}
               </div>
             ) : (
               <div>
@@ -130,9 +139,11 @@ export const Profile = () => {
             {!editToggle.firstName ? (
               <div>
                 <strong>First Name: {auth.firstName} </strong>
-                <Button onClick={() => editMode("firstName")}>
-                  <EditIcon />
-                </Button>
+                {!editToggle.checker && (
+                  <Button onClick={() => editMode("firstName")}>
+                    <EditIcon />
+                  </Button>
+                )}
               </div>
             ) : (
               <div>
@@ -160,9 +171,11 @@ export const Profile = () => {
             {!editToggle.lastName ? (
               <div>
                 <strong>Last Name: {auth.lastName} </strong>
-                <Button onClick={() => editMode("lastName")}>
-                  <EditIcon />
-                </Button>
+                {!editToggle.checker && (
+                  <Button onClick={() => editMode("lastName")}>
+                    <EditIcon />
+                  </Button>
+                )}
               </div>
             ) : (
               <div>

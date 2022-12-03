@@ -31,7 +31,6 @@ app.post("/create", async (req, res, next) => {
 
 app.put("/update", async (req, res, next) => {
   try {
-    console.log(req.headers.authorization, "checking header");
     const user = await User.findByToken(req.headers.authorization);
     await user.update(req.body);
     res.send(user);

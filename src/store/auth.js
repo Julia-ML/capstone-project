@@ -4,7 +4,6 @@ const auth = (state = {}, action) => {
     return action.auth;
   }
   if (action.type === "UPDATE_AUTH") {
-    console.log(action.auth, "check");
     const key = Object.keys(action.auth)[0];
     return { ...state, [key]: action.auth[key] };
   }
