@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { createUser, fetchUsers, fetchProjects, createProject, deleteProject} from "../store"; //add fetchProjects, createProject
+import {
+  createUser,
+  fetchUsers,
+  fetchProjects,
+  createProject,
+  deleteProject,
+} from "../store"; //add fetchProjects, createProject
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Card from "@mui/material/Card";
+import CardActions from "@mui/material/CardActions";
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
 
 const ProjectGallery = () => {
   const dispatch = useDispatch();
@@ -16,13 +27,14 @@ const ProjectGallery = () => {
   const { auth, projects } = useSelector((state) => state);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [newProject, setNewProject] = useState({name: '', description: ''})
-  
-  const onChange = (ev) => {
-    newProject.name === '' || newProject.value ==='' ? setDisabled(true) : setDisabled(false)
-    setNewProject({ ...newProject, [ev.target.name]: ev.target.value });
+  const [newProject, setNewProject] = useState({ name: "", description: "" });
 
-  }
+  const onChange = (ev) => {
+    newProject.name === "" || newProject.value === ""
+      ? setDisabled(true)
+      : setDisabled(false);
+    setNewProject({ ...newProject, [ev.target.name]: ev.target.value });
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -31,30 +43,69 @@ const ProjectGallery = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  
-  const createNewProject = () => {
-      console.log(newProject)
-      dispatch(createProject(newProject));
-      setNewProject({name: '', description: ''});
-      handleClose();
-      navigate('/projects')
-  }
 
-  
+  const createNewProject = () => {
+    console.log(newProject);
+    dispatch(createProject(newProject));
+    setNewProject({ name: "", description: "" });
+    handleClose();
+    navigate("/projects");
+  };
+
   useEffect(() => {
     dispatch(fetchProjects());
   }, []);
-  
-  
-return (
+
+  return (
     <div>
-    <ul>{projects.length ? projects.map(project => {return <li key={project.id}>{project.name } : {project.description}<button onClick={()=>{dispatch(deleteProject(`${project.id}`, navigate))}}>x</button></li>}) : ''}</ul>
-    <Button variant="contained" onClick={handleClickOpen}>Create New Project</Button>
-    <Dialog open={open} onClose={handleClose}>
+      <Grid container spacing={2} columns={4} sx={{ margin: 3 }}>
+        {projects.length
+          ? projects.map((project) => {
+              return (
+                <Grid item sx={3} lg={1}>
+                  <Card key={project.id}>
+                    <CardContent>
+                      <Typography sx={{ fontSize: 20 }} align="center">
+                        {project.name}
+                      </Typography>
+                      <br />
+                      <Typography paragraph={true} sx={{ width: "90%" }}>
+                        {project.description}
+                      </Typography>
+                      {auth.id === project.userId ? (
+                        <Typography align="right">
+                          <Button
+                            onClick={() => {
+                              dispatch(
+                                deleteProject(`${project.id}`, navigate)
+                              );
+                            }}
+                          >
+                            delete
+                          </Button>
+                        </Typography>
+                      ) : (
+                        ""
+                      )}
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })
+          : ""}
+      </Grid>
+      <Button
+        variant="contained"
+        onClick={handleClickOpen}
+        sx={{ marginLeft: 3 }}
+      >
+        Create New Project
+      </Button>
+      <Dialog open={open} onClose={handleClose}>
         <DialogTitle>New Project</DialogTitle>
         <DialogContent>
           <DialogContentText>
-          Input project name and description: 
+            Input project name and description:
           </DialogContentText>
           <TextField
             autoFocus
@@ -83,12 +134,13 @@ return (
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button disabled = {disabled} onClick={createNewProject}>Create</Button>
+          <Button disabled={disabled} onClick={createNewProject}>
+            Create
+          </Button>
         </DialogActions>
       </Dialog>
     </div>
-    )
-    
+  );
 };
 
 export default ProjectGallery;
