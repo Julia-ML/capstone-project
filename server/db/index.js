@@ -65,6 +65,13 @@ const syncAndSeed = async () => {
       email: "ethyl@email.com",
       teamId: teamLarry.id,
     }),
+    User.create({
+      username: "ramir",
+      password: "123",
+      firstName: "ramir",
+      lastName: "migues",
+      email: "ramir@email.com",
+    }),
   ]);
 
   // create projects to give to teams and managers

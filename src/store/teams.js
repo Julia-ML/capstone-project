@@ -1,4 +1,5 @@
 import axios from "axios";
+import { updateUser } from "./auth";
 const teams = (state = [], action) => {
   if (action.type === "GET_TEAMS") {
     return action.teams;
