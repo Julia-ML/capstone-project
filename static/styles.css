@@ -2,6 +2,10 @@ body {
   font-family: verdana;
 }
 
+h1{
+  color: #0076CE;
+}
+
 form {
   display: flex;
   flex-direction: column;
@@ -14,4 +18,8 @@ form > * {
 .nav {
   display: flex;
   justify-content: space-around;
+}
+
+#welcome {
+  font-size: smaller;
 }

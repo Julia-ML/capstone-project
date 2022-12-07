@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout, fetchProjects } from "../store";
+import { fetchProjects } from "../store";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -15,17 +15,8 @@ const Home = () => {
 
   return (
     <div>
-      <h1>Home</h1>
       <div>
-        Welcome {auth.username}!!
-        <button
-          onClick={() => {
-            dispatch(logout());
-            navigate("/");
-          }}
-        >
-          Logout
-        </button>
+        My Dashboard
       </div>
     </div>
   );
