@@ -13,6 +13,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import CreateTeam from "./CreateTeam";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { JoinTeam } from "./JoinTeam";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -21,6 +22,8 @@ const Team = () => {
   useEffect(() => {
     dispatch(fetchTeams());
   }, [auth]);
+
+  console.log(teams.id);
 
   return (
     <Container>
@@ -46,7 +49,10 @@ const Team = () => {
           </CopyToClipboard>
         </Paper>
       ) : (
-        <CreateTeam />
+        <div>
+          <CreateTeam />
+          <JoinTeam />
+        </div>
       )}
     </Container>
   );
