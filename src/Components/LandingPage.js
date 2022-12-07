@@ -5,7 +5,6 @@ const LandingPage = () => {
     const navigate = useNavigate()
     return (
         <div>
-            <button onClick={() => navigate("/login")}>Login</button>
             <p>
                 A tool created for developers by developers. 
             </p>

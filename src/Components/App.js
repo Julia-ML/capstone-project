@@ -4,6 +4,7 @@ import Login from "./Login";
 import LandingPage from "./LandingPage";
 import ProjectGallery from "./ProjectGallery";
 import ProjectDetail from "./ProjectDetail";
+import NavBar from "./Nav";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
@@ -23,15 +24,9 @@ const App = () => {
       <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
       <div>
         <nav>
-          {auth.id && (
             <div className="nav">
-              <Link to="/dashboard">Dashboard</Link>
-              <Link to="/tasks">Tasks</Link>
-              <Link to="/projects">Projects</Link>
-              <Link to="/team">My Teammates</Link>
-              <Link to="/profile">Profile</Link>
+              <NavBar />
             </div>
-          )}
         </nav>
         <Routes>
           <Route path="/" element={<LandingPage />} />
