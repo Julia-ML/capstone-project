@@ -16,4 +16,18 @@ app.get("/", async (req, res, next) => {
   }
 });
 
+app.post("/", async (req, res, next) => {
+  try {
+    const user = await User.findByToken(req.headers.authorization);
+    const newTeam = await Team.create({
+      name: req.body.name,
+      adminId: user.id,
+    });
+    await user.update({ teamId: newTeam.id });
+    res.send(newTeam);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 module.exports = app;
