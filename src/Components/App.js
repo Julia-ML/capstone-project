@@ -8,7 +8,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import Profile from "./Profile";
-
+import Team from "./Team";
 const App = () => {
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -24,13 +24,11 @@ const App = () => {
       <div>
         <nav>
           {auth.id && (
-
             <div className="nav">
-
               <Link to="/dashboard">Dashboard</Link>
               <Link to="/tasks">Tasks</Link>
               <Link to="/projects">Projects</Link>
-              <Link to="/teammates">My Teammates</Link>
+              <Link to="/team">My Teammates</Link>
               <Link to="/profile">Profile</Link>
             </div>
           )}
@@ -38,6 +36,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/team" element={<Team />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/projects" element={<ProjectGallery />} />
