@@ -1,10 +1,19 @@
 import React from "react";
-import { Container, ListItem, Paper, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  ListItem,
+  Paper,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { fetchTeams } from "../store";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import CreateTeam from "./CreateTeam";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { JoinTeam } from "./JoinTeam";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -13,6 +22,8 @@ const Team = () => {
   useEffect(() => {
     dispatch(fetchTeams());
   }, [auth]);
+
+  console.log(teams.id);
 
   return (
     <Container>
@@ -31,9 +42,17 @@ const Team = () => {
                 })}
             </Stack>
           </Typography>
+          <CopyToClipboard text={teams.id}>
+            <Button variant="contained" fullWidth>
+              Copy your team ID - send to teammate
+            </Button>
+          </CopyToClipboard>
         </Paper>
       ) : (
-        <CreateTeam />
+        <div>
+          <CreateTeam />
+          <JoinTeam />
+        </div>
       )}
     </Container>
   );
