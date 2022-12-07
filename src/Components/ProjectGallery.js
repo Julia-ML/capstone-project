@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import {
-  createUser,
   fetchUsers,
   fetchProjects,
   createProject,
   deleteProject,
+  putProject,
 } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -25,20 +25,36 @@ const ProjectGallery = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { auth, projects, users } = useSelector((state) => state);
+  const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [newProject, setNewProject] = useState({
     name: "",
     description: "",
     userId: "",
-    teamId: `${auth.teamId}`,
+    teamId: "",
+  });
+  const [editProject, setEditProject] = useState({
+    id: "",
+    name: "",
+    description: "",
+    userId: "",
+    teamId: "",
   });
 
   const onChange = (ev) => {
-    newProject.name === "" || newProject.value === ""
-      ? setDisabled(true)
-      : setDisabled(false);
-    setNewProject({ ...newProject, [ev.target.name]: ev.target.value });
+    if (!edit) {
+      newProject.name === "" || newProject.value === ""
+        ? setDisabled(true)
+        : setDisabled(false);
+      setNewProject({ ...newProject, [ev.target.name]: ev.target.value });
+    }
+    if (edit) {
+      editProject.name === "" || editProject.value === ""
+        ? setDisabled(true)
+        : setDisabled(false);
+      setEditProject({ ...editProject, [ev.target.name]: ev.target.value });
+    }
   };
 
   const handleClickOpen = () => {
@@ -46,12 +62,12 @@ const ProjectGallery = () => {
   };
 
   const handleClose = () => {
+    setEdit(false);
     setOpen(false);
   };
 
   const createNewProject = () => {
-    console.log(newProject);
-    if (auth.teamId) {
+    if (auth.teamId !== undefined) {
       dispatch(createProject(newProject));
       setNewProject({ ...newProject, name: "", description: "" });
       handleClose();
@@ -59,6 +75,13 @@ const ProjectGallery = () => {
     } else {
       alert("only admins and team members can create projects!");
     }
+  };
+
+  const updateProject = () => {
+    dispatch(putProject(editProject));
+    setEditProject({ ...editProject, id: "", name: "", description: "" });
+    handleClose();
+    navigate("/projects");
   };
 
   useEffect(() => {
@@ -72,6 +95,12 @@ const ProjectGallery = () => {
       ? setNewProject({
           ...newProject,
           userId: user.team.adminId,
+          teamId: user.team.id,
+        }) &&
+        setEditProject({
+          ...editProject,
+          userId: user.team.adminId,
+          teamId: user.team.id,
         })
       : "";
   }, [user]);
@@ -84,11 +113,12 @@ const ProjectGallery = () => {
         </Button>
       </Typography>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>New Project</DialogTitle>
+        {!edit ? (
+          <DialogTitle>New Project</DialogTitle>
+        ) : (
+          <DialogTitle>Edit</DialogTitle>
+        )}
         <DialogContent>
-          <DialogContentText>
-            Input project name and description:
-          </DialogContentText>
           <TextField
             autoFocus
             margin="dense"
@@ -98,7 +128,7 @@ const ProjectGallery = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={newProject.name}
+            value={!edit ? newProject.name : editProject.name}
             onChange={onChange}
           />
           <TextField
@@ -110,14 +140,33 @@ const ProjectGallery = () => {
             type="text"
             fullWidth
             variant="standard"
-            value={newProject.description}
+            value={!edit ? newProject.description : editProject.description}
             onChange={onChange}
           />
+          {edit ? (
+            <Button
+              onClick={() => {
+                handleClose();
+                dispatch(deleteProject(`${editProject.id}`, navigate));
+              }}
+              variant="outlined"
+              size="small"
+            >
+              delete project
+            </Button>
+          ) : (
+            ""
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button disabled={disabled} onClick={createNewProject}>
-            Create
+          <Button
+            disabled={disabled}
+            onClick={() => {
+              !edit ? createNewProject() : updateProject();
+            }}
+          >
+            Submit
           </Button>
         </DialogActions>
       </Dialog>
@@ -150,14 +199,12 @@ const ProjectGallery = () => {
                         <Typography align="right">
                           <Button
                             onClick={() => {
-                              dispatch(
-                                deleteProject(`${project.id}`, navigate)
-                              );
+                              handleClickOpen();
+                              setEdit(true);
+                              setEditProject(project);
                             }}
-                            variant="outlined"
-                            size="small"
                           >
-                            delete
+                            Edit
                           </Button>
                         </Typography>
                       ) : (

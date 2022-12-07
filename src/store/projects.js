@@ -9,6 +9,11 @@ const projects = (state = [], action) => {
   if (action.type === "DELETE_PROJECT") {
     return state.filter((project) => project.id !== action.id);
   }
+  if (action.type === "UPDATE_PROJECT") {
+    return state.map((project) =>
+      project.id === action.project.id ? action.project : project
+    );
+  }
   if (action.type === "CREATE_TASK") {
     return state;
   }
@@ -36,13 +41,21 @@ export const createProject = (newProject) => {
 
 export const deleteProject = (projectId, navigate) => {
   return async (dispatch) => {
-    console.log("project id", projectId);
     const response = await axios.delete(`/api/projects/${projectId}`);
     dispatch({ type: "DELETE_PROJECT", id: projectId });
     navigate("/projects");
   };
 };
 
+export const putProject = (editProject) => {
+  return async (dispatch) => {
+    const response = await axios.put(
+      `/api/projects/${editProject.id}`,
+      editProject
+    );
+    dispatch({ type: "UPDATE_PROJECT", project: response.data });
+  };
+};
 export const createTask = (newTask) => {
   return async (dispatch) => {
     const response = await axios.post("/api/projects/createtask", newTask); //sends back the project the new task is on
