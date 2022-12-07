@@ -17,6 +17,7 @@ import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
+import Drawer from "@mui/material/Drawer";
 
 const onDragEnd = (result, columns, setColumns) => {
   if (!result.destination) return;
@@ -67,6 +68,8 @@ const ProjectDetail = () => {
   const [columns, setColumns] = useState([]);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerTask, setDrawerTask] = useState({});
   const [newTask, setNewTask] = useState({
     name: "",
     description: "",
@@ -134,8 +137,23 @@ const ProjectDetail = () => {
 
   const createNewTask = () => {
     dispatch(createTask(newTask));
-    setNewTask({ ...newTask, name: "", description: "" });
+    //doesn't show up in column after creating until you refresh?
+    if (newTask.status === "To Do") {
+      setTodo([...todo, newTask]);
+    }
+    if (newTask.status === "Backlog") {
+      setBacklog([...backlog, newTask]);
+    }
+    if (newTask.status === "In Progress") {
+      setProgress([...progress, newTask]);
+    }
+    setColumns({ ...columns });
+    setNewTask({ ...newTask, name: "", description: "", status: "To Do" });
     handleClose();
+  };
+
+  const toggleDrawer = () => {
+    setDrawerOpen(false);
   };
 
   return (
@@ -205,7 +223,14 @@ const ProjectDetail = () => {
                                           ...provided.draggableProps.style,
                                         }}
                                       >
-                                        {task.name}
+                                        <Button
+                                          onClick={() => {
+                                            setDrawerTask(task);
+                                            setDrawerOpen(true);
+                                          }}
+                                        >
+                                          {task.name}
+                                        </Button>
                                       </div>
                                     );
                                   }}
@@ -252,6 +277,7 @@ const ProjectDetail = () => {
                       value={newTask.description}
                       onChange={onChange}
                       margin="normal"
+                      multiline
                     />
                     <Select
                       name="status"
@@ -278,6 +304,22 @@ const ProjectDetail = () => {
           })}
         </DragDropContext>
       </Container>
+      <Drawer
+        anchor={"right"}
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        PaperProps={{
+          sx: { width: "40%" },
+        }}
+      >
+        <Container>
+          <br />
+          <Typography variant="h6">{drawerTask.name}</Typography>
+          <br />
+          <Typography paragraph={true}>{drawerTask.description}</Typography>
+          <Typography>Status: {drawerTask.status}</Typography>
+        </Container>
+      </Drawer>
     </div>
   );
 };
