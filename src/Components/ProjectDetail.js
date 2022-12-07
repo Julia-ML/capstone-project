@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { createTask, fetchProjects } from "../store";
+import { createTask, fetchProjects, fetchUsers } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -73,6 +73,10 @@ const ProjectDetail = () => {
     status: "To Do",
     projectId: id,
   });
+
+  useEffect(() => {
+    dispatch(fetchProjects()), dispatch(fetchUsers());
+  }, []);
 
   useEffect(() => {
     if (projects[0] !== undefined) {
