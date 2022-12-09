@@ -1,10 +1,8 @@
 import React from "react";
-import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
-    const navigate = useNavigate()
     return (
-        <div>
+        <div id="landing-page">
             <p>
                 A tool created for developers by developers. 
             </p>

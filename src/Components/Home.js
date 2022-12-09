@@ -8,14 +8,14 @@ const Home = () => {
   const { projects } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const date = new Date();
   useEffect(() => {
     dispatch(fetchProjects());
   }, []);
 
   return (
     <div>
-      <div>My Dashboard</div>
+      <div>My Dashboard for: {date.toDateString()}</div>
     </div>
   );
 };
