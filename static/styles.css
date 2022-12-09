@@ -23,3 +23,9 @@ form > * {
 #welcome {
   font-size: smaller;
 }
+
+#landing-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
