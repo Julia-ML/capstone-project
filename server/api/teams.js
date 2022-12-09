@@ -30,4 +30,18 @@ app.post("/", async (req, res, next) => {
   }
 });
 
+app.put("/remove/member", async (req, res, next) => {
+  try {
+    const adminUser = await User.findByToken(req.headers.authorization);
+    if (adminUser) {
+      const removedUser = await User.findByPk(req.body.id);
+      removedUser.update({ teamId: null });
+      res.send(removedUser);
+    }
+    res.send("invalid token");
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 module.exports = app;
