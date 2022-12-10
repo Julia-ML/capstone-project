@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects, fetchTeams } from "../store";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Home = () => {
   const { auth } = useSelector((state) => state);
