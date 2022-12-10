@@ -7,14 +7,13 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import { fetchTeams } from "../store";
+import { fetchTeams, setNewAdmin } from "../store";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import CreateTeam from "./CreateTeam";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { JoinTeam } from "./JoinTeam";
-import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { RemoveTeamMember } from "../store";
 
@@ -30,8 +29,6 @@ const Team = () => {
   if (auth.id === teams.adminId) {
     adminView = true;
   }
-
-  console.log(teams, "team");
 
   return (
     <Container>
@@ -56,7 +53,9 @@ const Team = () => {
                             {" "}
                             <CancelIcon />
                           </Button>
-                          <Button>Set as new admin</Button>
+                          <Button onClick={() => dispatch(setNewAdmin(user))}>
+                            Set as new admin
+                          </Button>
                         </div>
                       )}
                     </ListItem>
