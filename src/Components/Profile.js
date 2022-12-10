@@ -14,11 +14,13 @@ import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updateUser } from "../store";
+import { updateUser, deleteUser, logout } from "../store";
+import { useNavigate } from "react-router-dom";
 
 export const Profile = () => {
   const dispatch = useDispatch();
-  const { auth } = useSelector((state) => state);
+  const navigate = useNavigate()
+  const { auth, users } = useSelector((state) => state);
   const [editToggle, setEditToggle] = useState({
     username: false,
     email: false,
@@ -198,6 +200,8 @@ export const Profile = () => {
             )}
           </ListItem>
         </Stack>
+        <br></br>
+        <Button onClick = {() => { dispatch(deleteUser(auth)); navigate("/")}}>Delete Account</Button>
       </Paper>
     </Container>
   );

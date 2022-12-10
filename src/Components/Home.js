@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProjects } from "../store";
+import { fetchProjects, fetchTeams } from "../store";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
@@ -8,16 +8,14 @@ const Home = () => {
   const { projects } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const date = new Date();
   useEffect(() => {
     dispatch(fetchProjects());
   }, []);
 
   return (
     <div>
-      <div>
-        My Dashboard
-      </div>
+      <div>My Dashboard for: {date.toDateString()}</div>
     </div>
   );
 };

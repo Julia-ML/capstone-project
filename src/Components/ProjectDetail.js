@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { createTask, fetchProjects, fetchUsers } from "../store";
+import { createTask, fetchProjects, fetchUsers, fetchTasks } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -19,44 +19,8 @@ import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
 
-const onDragEnd = (result, columns, setColumns) => {
-  if (!result.destination) return;
-  const { source, destination } = result;
-  if (source.droppableId !== destination.droppableId) {
-    const sourceColumn = columns[source.droppableId];
-    const destColumn = columns[destination.droppableId];
-    const sourceTasks = [...sourceColumn.tasks];
-    const destTasks = [...destColumn.tasks] || [];
-    const [removed] = sourceTasks.splice(source.index, 1);
-    destTasks.splice(destination.index, 0, removed);
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...sourceColumn,
-        tasks: sourceTasks,
-      },
-      [destination.droppableId]: {
-        ...destColumn,
-        tasks: destTasks,
-      },
-    });
-  } else {
-    const column = columns[source.droppableId];
-    const copiedTasks = [...column.tasks];
-    const [removed] = copiedTasks.splice(source.index, 1);
-    copiedTasks.splice(destination.index, 0, removed);
-    setColumns({
-      ...columns,
-      [source.droppableId]: {
-        ...column,
-        tasks: copiedItems,
-      },
-    });
-  }
-};
-
 const ProjectDetail = () => {
-  const { projects } = useSelector((state) => state);
+  const { projects, tasks, auth } = useSelector((state) => state);
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -75,29 +39,36 @@ const ProjectDetail = () => {
     description: "",
     status: "To Do",
     projectId: id,
+    teamId: auth.teamId,
   });
 
   useEffect(() => {
-    dispatch(fetchProjects()), dispatch(fetchUsers());
+    dispatch(fetchProjects()), dispatch(fetchUsers(), dispatch(fetchTasks()));
   }, []);
 
   useEffect(() => {
+    const projectTasks = tasks.filter((task) => {
+      return task.projectId == id;
+    });
+    console.log(projectTasks, tasks);
     if (projects[0] !== undefined) {
       //kept getting project undefined error, changing from projects.length to this seems to fix it??
       const project = projects.find((project) => project.id === id);
-      if (project && project.tasks) {
-        setProject(project);
-        setBacklog(project.tasks.filter((task) => task.status === "Backlog"));
-        setTodo(project.tasks.filter((task) => task.status === "To Do"));
-        setProgress(
-          project.tasks.filter((task) => task.status === "In Progress")
-        );
-        setDone(project.tasks.filter((task) => task.status === "Done"));
-      } else {
-        setProject(project);
-      }
+      projectTasks.length
+        ? `${
+            (setProject(project),
+            setBacklog(
+              projectTasks.filter((task) => task.status === "Backlog")
+            ),
+            setTodo(projectTasks.filter((task) => task.status === "To Do")),
+            setProgress(
+              projectTasks.filter((task) => task.status === "In Progress")
+            ),
+            setDone(projectTasks.filter((task) => task.status === "Done")))
+          }`
+        : setProject(project);
     }
-  }, [projects]);
+  }, [projects, tasks]);
 
   useEffect(() => {
     setColumns({
@@ -118,7 +89,7 @@ const ProjectDetail = () => {
         items: done,
       },
     });
-  }, [project]);
+  }, [project, tasks]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -154,6 +125,42 @@ const ProjectDetail = () => {
 
   const toggleDrawer = () => {
     setDrawerOpen(false);
+  };
+
+  const onDragEnd = (result, columns, setColumns) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceTasks = [...sourceColumn.tasks];
+      const destTasks = [...destColumn.tasks];
+      const [removed] = sourceTasks.splice(source.index, 1);
+      destTasks.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          tasks: sourceTasks,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          tasks: destTasks,
+        },
+      });
+    } else {
+      const column = columns[source.droppableId];
+      const copiedTasks = [...column.tasks];
+      const [removed] = copiedTasks.splice(source.index, 1);
+      copiedTasks.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          tasks: copiedItems,
+        },
+      });
+    }
   };
 
   return (
@@ -201,8 +208,10 @@ const ProjectDetail = () => {
                             column.tasks.map((task, index) => {
                               return (
                                 <Draggable
-                                  key={task.id}
-                                  draggableId={task.id}
+                                  /* I have no idea why this fixes it, 
+                                without +'a' there's an error that says it doesnt have a key/draggableId */
+                                  key={task.id + "a"}
+                                  draggableId={task.id + "a"}
                                   index={index}
                                 >
                                   {(provided, snapshot) => {
@@ -267,7 +276,6 @@ const ProjectDetail = () => {
                     />
                     <TextField
                       autoFocus
-                      margin="dense"
                       id="desc"
                       label="description"
                       name="description"

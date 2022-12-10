@@ -14,16 +14,24 @@ import { useSelector } from "react-redux";
 import CreateTeam from "./CreateTeam";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { JoinTeam } from "./JoinTeam";
+import { useState } from "react";
+import CancelIcon from "@mui/icons-material/Cancel";
+import { RemoveTeamMember } from "../store";
 
 const Team = () => {
   const dispatch = useDispatch();
   const { teams, auth } = useSelector((state) => state);
+  let adminView = false;
 
   useEffect(() => {
     dispatch(fetchTeams());
   }, [auth]);
 
-  console.log(teams.id);
+  if (auth.id === teams.adminId) {
+    adminView = true;
+  }
+
+  console.log(teams, "team");
 
   return (
     <Container>
@@ -38,7 +46,21 @@ const Team = () => {
               justifyContent="center">
               {teams.users &&
                 teams.users.map((user) => {
-                  return <ListItem key={user.id}>{user.firstName}</ListItem>;
+                  return (
+                    <ListItem key={user.id}>
+                      {user.firstName}
+                      {adminView && user.id !== teams.adminId && (
+                        <div>
+                          <Button
+                            onClick={() => dispatch(RemoveTeamMember(user))}>
+                            {" "}
+                            <CancelIcon />
+                          </Button>
+                          <Button>Set as new admin</Button>
+                        </div>
+                      )}
+                    </ListItem>
+                  );
                 })}
             </Stack>
           </Typography>
