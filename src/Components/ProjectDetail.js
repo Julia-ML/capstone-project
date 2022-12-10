@@ -18,7 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
-import trackingDone from "./trackingDone";
+const schedule = require("node-schedule");
 
 const ProjectDetail = () => {
   const { projects, tasks, auth } = useSelector((state) => state);
@@ -48,17 +48,31 @@ const ProjectDetail = () => {
     dispatch(fetchProjects()), dispatch(fetchUsers(), dispatch(fetchTasks()));
   }, []);
 
+  //let projectTasks = null;
   useEffect(() => {
     const projectTasks = tasks.filter((task) => {
       return task.projectId == id;
     });
-    console.log(projectTasks, tasks);
+
+    console.log(projectTasks, "rpoject tasks");
+    const rule = new schedule.RecurrenceRule();
+    //rule.hour = 0;
+    rule.minute = [new schedule.Range(0, 59)];
+
+    const trackingDone = schedule.scheduleJob(rule, function () {
+      const numberDone = projectTasks.length
+        ? projectTasks.filter((task) => task.status === "To Do").length
+        : "";
+      numberDone !== "" ? setDataPoints([...dataPoints, numberDone]) : "";
+      console.log(dataPoints);
+    });
+
     if (projects[0] !== undefined) {
       //kept getting project undefined error, changing from projects.length to this seems to fix it??
       const project = projects.find((project) => project.id === id);
       projectTasks.length
         ? `${
-            ((setProject(project),
+            (setProject(project),
             setBacklog(
               projectTasks.filter((task) => task.status === "Backlog")
             ),
@@ -66,12 +80,24 @@ const ProjectDetail = () => {
             setProgress(
               projectTasks.filter((task) => task.status === "In Progress")
             ),
-            setDone(projectTasks.filter((task) => task.status === "Done"))),
-            setDataPoints(trackingDone(projectTasks)))
+            setDone(projectTasks.filter((task) => task.status === "Done")))
           }`
         : setProject(project);
     }
-  }, [projects, tasks, dataPoints]);
+  }, [projects, tasks]);
+  useEffect(() => {
+    // console.log(projectTasks, "rpoject tasks");
+    // const rule = new schedule.RecurrenceRule();
+    // //rule.hour = 0;
+    // rule.minute = [new schedule.Range(0, 59)];
+    // const trackingDone = schedule.scheduleJob(rule, function () {
+    //   const numberDone = projectTasks.filter(
+    //     (task) => task.status === "To Do"
+    //   ).length;
+    //   setDataPoints([...dataPoints, numberDone]);
+    //   console.log(dataPoints);
+    // });
+  }, []);
 
   useEffect(() => {
     setColumns({
@@ -332,7 +358,7 @@ const ProjectDetail = () => {
         </Container>
       </Drawer>
       <hr />
-      <div>DATA: {JSON.stringify(dataPoints)}</div>
+      <div>DATA: {JSON.stringify(dataPoints) || "no data"}</div>
       <hr />
     </div>
   );
