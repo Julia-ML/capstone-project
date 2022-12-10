@@ -14,9 +14,6 @@ const projects = (state = [], action) => {
       project.id === action.project.id ? action.project : project
     );
   }
-  if (action.type === "CREATE_TASK") {
-    return state;
-  }
   return state;
 };
 
@@ -54,12 +51,6 @@ export const putProject = (editProject) => {
       editProject
     );
     dispatch({ type: "UPDATE_PROJECT", project: response.data });
-  };
-};
-export const createTask = (newTask) => {
-  return async (dispatch) => {
-    const response = await axios.post("/api/projects/createtask", newTask); //sends back the project the new task is on
-    dispatch({ type: "CREATE_TASK", project: response.data });
   };
 };
 
