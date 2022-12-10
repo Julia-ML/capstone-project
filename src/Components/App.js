@@ -10,6 +10,7 @@ import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import Profile from "./Profile";
 import Team from "./Team";
+
 const App = () => {
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();
@@ -24,9 +25,9 @@ const App = () => {
       <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
       <div>
         <nav>
-            <div className="nav">
-              <NavBar />
-            </div>
+          <div className="nav">
+            <NavBar />
+          </div>
         </nav>
         <Routes>
           <Route path="/" element={<LandingPage />} />

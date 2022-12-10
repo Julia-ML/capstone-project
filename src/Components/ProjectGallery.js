@@ -20,6 +20,7 @@ import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+const schedule = require("node-schedule");
 
 const ProjectGallery = () => {
   const dispatch = useDispatch();
@@ -104,6 +105,15 @@ const ProjectGallery = () => {
         })
       : "";
   }, [user]);
+
+  const rule = new schedule.RecurrenceRule();
+  //rule.hour = 0;
+  rule.minute = [new schedule.Range(0, 59)];
+  let something = 0;
+  const job = schedule.scheduleJob(rule, function () {
+    console.log(something);
+    something++;
+  });
 
   return (
     <div>
