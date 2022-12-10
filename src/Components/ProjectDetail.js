@@ -47,22 +47,28 @@ const ProjectDetail = () => {
   }, []);
 
   useEffect(() => {
+    const projectTasks = tasks.filter((task) => {
+      return task.projectId == id;
+    });
+    console.log(projectTasks, tasks);
     if (projects[0] !== undefined) {
       //kept getting project undefined error, changing from projects.length to this seems to fix it??
       const project = projects.find((project) => project.id === id);
-      if (project && project.tasks) {
-        setProject(project);
-        setBacklog(project.tasks.filter((task) => task.status === "Backlog"));
-        setTodo(project.tasks.filter((task) => task.status === "To Do"));
-        setProgress(
-          project.tasks.filter((task) => task.status === "In Progress")
-        );
-        setDone(project.tasks.filter((task) => task.status === "Done"));
-      } else {
-        setProject(project);
-      }
+      projectTasks.length
+        ? `${
+            (setProject(project),
+            setBacklog(
+              projectTasks.filter((task) => task.status === "Backlog")
+            ),
+            setTodo(projectTasks.filter((task) => task.status === "To Do")),
+            setProgress(
+              projectTasks.filter((task) => task.status === "In Progress")
+            ),
+            setDone(projectTasks.filter((task) => task.status === "Done")))
+          }`
+        : setProject(project);
     }
-  }, [projects]);
+  }, [projects, tasks]);
 
   useEffect(() => {
     setColumns({
@@ -83,7 +89,7 @@ const ProjectDetail = () => {
         items: done,
       },
     });
-  }, [project]);
+  }, [project, tasks]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -202,8 +208,10 @@ const ProjectDetail = () => {
                             column.tasks.map((task, index) => {
                               return (
                                 <Draggable
-                                  key={task.id}
-                                  draggableId={task.id}
+                                  /* I have no idea why this fixes it, 
+                                without +'a' there's an error that says it doesnt have a key/draggableId */
+                                  key={task.id + "a"}
+                                  draggableId={task.id + "a"}
                                   index={index}
                                 >
                                   {(provided, snapshot) => {
