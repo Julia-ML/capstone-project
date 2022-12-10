@@ -143,27 +143,6 @@ const ProjectDetail = () => {
 			// gets the actual DB ID of the task being dragged by removing the "a" at the end of the draggableId
 			const draggedId = result.draggableId.slice(0, -1);
 
-			// re-sets and re-orders the tasks in the source and destination columns
-			const sourceColumn = columns[source.droppableId];
-			const destColumn = columns[destination.droppableId];
-			const sourceTasks = [...sourceColumn.tasks];
-
-			// this is the line that still has trouble when dragging to "Done"
-			const destTasks = [...destColumn.tasks] || [];
-			const [removed] = sourceTasks.splice(source.index, 1);
-			destTasks.splice(destination.index, 0, removed);
-			setColumns({
-				...columns,
-				[source.droppableId]: {
-					...sourceColumn,
-					tasks: sourceTasks,
-				},
-				[destination.droppableId]: {
-					...destColumn,
-					tasks: destTasks,
-				},
-			});
-
 			// grabs the actual changed task
 			const changedTask = tasks.find((task) => task.id === draggedId);
 
@@ -172,6 +151,10 @@ const ProjectDetail = () => {
 
 			// updates the database to reflect the new status
 			dispatch(updateTask(changedTask));
+
+			// calls fetchProjects and fetchTasks to refresh columns/tasks
+			dispatch(fetchProjects());
+			dispatch(fetchTasks());
 		} else {
 			const column = columns[source.droppableId];
 			const copiedTasks = [...column.tasks];
