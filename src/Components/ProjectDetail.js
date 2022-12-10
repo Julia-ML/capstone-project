@@ -18,6 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
+import trackingDone from "./trackingDone";
 
 const ProjectDetail = () => {
   const { projects, tasks, auth } = useSelector((state) => state);
@@ -30,6 +31,7 @@ const ProjectDetail = () => {
   const [progress, setProgress] = useState([]);
   const [done, setDone] = useState([]);
   const [columns, setColumns] = useState([]);
+  const [dataPoints, setDataPoints] = useState([0]);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -56,7 +58,7 @@ const ProjectDetail = () => {
       const project = projects.find((project) => project.id === id);
       projectTasks.length
         ? `${
-            (setProject(project),
+            ((setProject(project),
             setBacklog(
               projectTasks.filter((task) => task.status === "Backlog")
             ),
@@ -64,11 +66,12 @@ const ProjectDetail = () => {
             setProgress(
               projectTasks.filter((task) => task.status === "In Progress")
             ),
-            setDone(projectTasks.filter((task) => task.status === "Done")))
+            setDone(projectTasks.filter((task) => task.status === "Done"))),
+            setDataPoints(trackingDone(projectTasks)))
           }`
         : setProject(project);
     }
-  }, [projects, tasks]);
+  }, [projects, tasks, dataPoints]);
 
   useEffect(() => {
     setColumns({
@@ -328,6 +331,9 @@ const ProjectDetail = () => {
           <Typography>Status: {drawerTask.status}</Typography>
         </Container>
       </Drawer>
+      <hr />
+      <div>DATA: {JSON.stringify(dataPoints)}</div>
+      <hr />
     </div>
   );
 };
