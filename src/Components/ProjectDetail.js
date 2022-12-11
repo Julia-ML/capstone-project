@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { createTask, fetchProjects, fetchUsers, fetchTasks } from "../store";
+import {
+  createTask,
+  fetchProjects,
+  fetchUsers,
+  fetchTasks,
+  fetchLog,
+  addLog,
+} from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -21,7 +28,7 @@ import Drawer from "@mui/material/Drawer";
 const schedule = require("node-schedule");
 
 const ProjectDetail = () => {
-  const { projects, tasks, auth } = useSelector((state) => state);
+  const { projects, tasks, auth, log } = useSelector((state) => state);
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -31,7 +38,7 @@ const ProjectDetail = () => {
   const [progress, setProgress] = useState([]);
   const [done, setDone] = useState([]);
   const [columns, setColumns] = useState([]);
-  const [dataPoints, setDataPoints] = useState([0]);
+  const [dataPoints, setDataPoints] = useState({});
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -41,39 +48,34 @@ const ProjectDetail = () => {
     description: "",
     status: "To Do",
     projectId: id,
-    teamId: auth.teamId,
+    teamId: "",
   });
 
   useEffect(() => {
-    dispatch(fetchProjects()), dispatch(fetchUsers(), dispatch(fetchTasks()));
+    dispatch(fetchProjects()),
+      dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
   }, []);
 
-  //let projectTasks = null;
   useEffect(() => {
     const projectTasks = tasks.filter((task) => {
       return task.projectId == id;
     });
-
-    console.log(projectTasks, "rpoject tasks");
     const rule = new schedule.RecurrenceRule();
     //rule.hour = 0;
-    rule.minute = [new schedule.Range(0, 59)];
-
-    const trackingDone = schedule.scheduleJob(rule, function () {
-      const numberDone = projectTasks.length
-        ? projectTasks.filter((task) => task.status === "To Do").length
-        : "";
-      numberDone !== "" ? setDataPoints([...dataPoints, numberDone]) : "";
+    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
+    const job = schedule.scheduleJob(rule, function () {
       console.log(dataPoints);
     });
 
     if (projects[0] !== undefined) {
       //kept getting project undefined error, changing from projects.length to this seems to fix it??
       const project = projects.find((project) => project.id === id);
+      setProject(project);
+      setNewTask({ ...newTask, teamId: project.teamId });
+
       projectTasks.length
         ? `${
-            (setProject(project),
-            setBacklog(
+            (setBacklog(
               projectTasks.filter((task) => task.status === "Backlog")
             ),
             setTodo(projectTasks.filter((task) => task.status === "To Do")),
@@ -136,6 +138,7 @@ const ProjectDetail = () => {
   };
 
   const createNewTask = () => {
+    console.log("newTask", newTask);
     dispatch(createTask(newTask));
     //doesn't show up in column after creating until you refresh?
     if (newTask.status === "To Do") {
@@ -149,6 +152,7 @@ const ProjectDetail = () => {
     }
     setColumns({ ...columns });
     setNewTask({ ...newTask, name: "", description: "", status: "To Do" });
+    dispatch(fetchTasks());
     handleClose();
   };
 
@@ -358,7 +362,7 @@ const ProjectDetail = () => {
         </Container>
       </Drawer>
       <hr />
-      <div>DATA: {JSON.stringify(dataPoints) || "no data"}</div>
+      <div>DATA: {JSON.stringify(log)}</div>
       <hr />
     </div>
   );
