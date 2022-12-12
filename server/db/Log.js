@@ -1,5 +1,5 @@
 const conn = require("./conn");
-const { STRING, UUID, UUIDV4, TEXT, INTEGER, DATE } = conn.Sequelize;
+const { STRING, UUID, UUIDV4, TEXT, DECIMAL, DATE } = conn.Sequelize;
 
 const Log = conn.define("log", {
   id: {
@@ -11,7 +11,7 @@ const Log = conn.define("log", {
     type: DATE,
   },
   value: {
-    type: INTEGER,
+    type: DECIMAL,
   },
 });
 

@@ -63,8 +63,20 @@ const ProjectDetail = () => {
     const rule = new schedule.RecurrenceRule();
     //rule.hour = 0;
     rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-    const job = schedule.scheduleJob(rule, function () {
-      console.log(dataPoints);
+    const job = schedule.scheduleJob("* * * * *", function () {
+      let taskLength = projectTasks.length;
+      let doneTasks = projectTasks.filter(
+        (task) => task.status === "To Do"
+      ).length; //using to do for now instead of done bc done bug
+
+      const percent = doneTasks / taskLength; //returns % tasks done
+
+      if (percent) {
+        console.log(doneTasks, taskLength, Date());
+        //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
+      }
+      taskLength = 0;
+      doneTasks = 0;
     });
 
     if (projects[0] !== undefined) {
@@ -362,7 +374,14 @@ const ProjectDetail = () => {
         </Container>
       </Drawer>
       <hr />
-      <div>DATA: {JSON.stringify(log)}</div>
+      <ul>
+        DATA:{" "}
+        {log
+          ? log.map((logItem) => {
+              return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
+            })
+          : ""}
+      </ul>
       <hr />
     </div>
   );
