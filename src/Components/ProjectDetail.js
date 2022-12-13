@@ -137,7 +137,6 @@ const ProjectDetail = () => {
 			teamId: auth.teamId,
 		});
 		handleClose();
-		dispatch(fetchTasks());
 	};
 
 	const toggleDrawer = () => {
