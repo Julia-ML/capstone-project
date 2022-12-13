@@ -10,6 +10,7 @@ import { loginWithToken } from "../store";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import Profile from "./Profile";
 import Team from "./Team";
+
 const App = () => {
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();

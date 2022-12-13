@@ -14,23 +14,27 @@ import { useState } from "react";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { updateUser, deleteUser, logout } from "../store";
+import { updateUser, deleteUser, logout, fetchTeams } from "../store";
 import { useNavigate } from "react-router-dom";
+import ConfirmDelete from "./DeleteDialog";
+import AdminError from "./ErrorDialog";
 
 export const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
-  const { auth, users } = useSelector((state) => state);
+  const { auth, users, teams } = useSelector((state) => state);
   const [editToggle, setEditToggle] = useState({
     username: false,
     email: false,
     firstName: false,
     lastName: false,
+    password: false,
     checker: false,
   });
 
   const [userInfo, setUserInfo] = useState({
     username: "",
+    password: "",
     firstName: "",
     lastName: "",
     email: "",
@@ -39,11 +43,18 @@ export const Profile = () => {
   useEffect(() => {
     setUserInfo({
       username: auth.username,
+      password: auth.password,
       firstName: auth.firstName,
       lastName: auth.lastName,
       email: auth.email,
     });
   }, [auth]);
+
+  useEffect(() => {
+    dispatch(fetchTeams());
+  }, [auth]);
+
+  console.log('TEST TESTING', teams.adminId)
 
   const editMode = (type, cancel) => {
     setEditToggle({
@@ -199,9 +210,40 @@ export const Profile = () => {
               </div>
             )}
           </ListItem>
+          <ListItem>
+            {!editToggle.password ? (
+              <div>
+                <strong>Password: </strong>
+                {!editToggle.checker && (
+                  <Button onClick={() => editMode("password")}>
+                    <EditIcon />
+                  </Button>
+                )}
+              </div>
+            ) : (
+              <div>
+                <form
+                  onSubmit={(ev) =>
+                    updateInfo(ev, "password", { password: userInfo.password })
+                  }>
+                  <TextField
+                    label="Password"
+                    type="password"
+                    value={userInfo.password}
+                    name="password"
+                    onChange={onChange}
+                  />
+                  <Button type="submit">Update</Button>
+                </form>
+                <Button onClick={() => editMode("password", true)}>
+                  <CancelIcon />
+                </Button>
+              </div>
+            )}
+          </ListItem>
         </Stack>
+          {auth.id === teams.adminId ? <div><AdminError /></div>: <div><ConfirmDelete /></div>}
         <br></br>
-        <Button onClick = {() => { dispatch(deleteUser(auth)); navigate("/")}}>Delete Account</Button>
       </Paper>
     </Container>
   );
