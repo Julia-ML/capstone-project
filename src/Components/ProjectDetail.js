@@ -2,13 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-	createTask,
-	fetchProjects,
-	fetchUsers,
-	fetchTasks,
-	updateTask,
-} from "../store";
+import { createTask, fetchProjects, fetchUsers, fetchTasks } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -24,6 +18,7 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
+import axios from "axios";
 
 const ProjectDetail = () => {
 	const { projects, tasks, auth } = useSelector((state) => state);
@@ -79,20 +74,24 @@ const ProjectDetail = () => {
 	useEffect(() => {
 		setColumns({
 			1: {
+				id: 1,
 				name: "Backlog",
 				tasks: backlog,
 			},
 			2: {
+				id: 2,
 				name: "To Do",
 				tasks: todo,
 			},
 			3: {
+				id: 3,
 				name: "In Progress",
 				tasks: progress,
 			},
 			4: {
+				id: 4,
 				name: "Done",
-				items: done,
+				tasks: done,
 			},
 		});
 	}, [project, tasks]);
@@ -133,7 +132,7 @@ const ProjectDetail = () => {
 		setDrawerOpen(false);
 	};
 
-	const onDragEnd = (result, columns, setColumns) => {
+	const onDragEnd = async (result, columns, setColumns) => {
 		if (!result.destination) return;
 		const { source, destination } = result;
 		if (source.droppableId !== destination.droppableId) {
@@ -149,12 +148,31 @@ const ProjectDetail = () => {
 			// updates the status of the dragged task to the new column status
 			changedTask.status = newStatus;
 
-			// updates the database to reflect the new status
-			dispatch(updateTask(changedTask));
+			// re-sets the tasks for each column
+			const sourceColumn = columns[source.droppableId];
+			const destColumn = columns[destination.droppableId];
+			const sourceTasks = Array.from(sourceColumn.tasks);
+			const destTasks = Array.from(destColumn.tasks);
+			const [removed] = sourceTasks.splice(source.index, 1);
+			destTasks.splice(destination.index, 0, removed);
+			setColumns({
+				...columns,
+				[source.droppableId]: {
+					...sourceColumn,
+					tasks: sourceTasks,
+				},
+				[destination.droppableId]: {
+					...destColumn,
+					tasks: destTasks,
+				},
+			});
 
-			// calls fetchProjects and fetchTasks to refresh columns/tasks
-			dispatch(fetchProjects());
-			dispatch(fetchTasks());
+			// updates the database to reflect the new status
+			try {
+				await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
+			} catch (ex) {
+				setError(ex.response.data);
+			}
 		} else {
 			const column = columns[source.droppableId];
 			const copiedTasks = [...column.tasks];
@@ -193,7 +211,13 @@ const ProjectDetail = () => {
 								key={columnId}
 							>
 								<h2>{column.name}</h2>
-								<div style={{ margin: 8 }}>
+								<div
+									style={{
+										margin: 8,
+										display: "flex",
+										flexDirection: "column",
+									}}
+								>
 									<Droppable droppableId={columnId} key={columnId}>
 										{(provided, snapshot) => {
 											return (
@@ -210,7 +234,14 @@ const ProjectDetail = () => {
 													}}
 												>
 													{!column.tasks ? (
-														<div></div>
+														<div
+															style={{
+																display: "flex",
+																flexDirection: "column",
+																flexGrow: "1",
+																minHeight: "100px",
+															}}
+														></div>
 													) : (
 														column.tasks.map((task, index) => {
 															return (
