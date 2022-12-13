@@ -51,7 +51,6 @@ const ProjectDetail = () => {
 		const projectTasks = tasks.filter((task) => {
 			return task.projectId == id;
 		});
-		console.log(projectTasks, tasks);
 		if (projects[0] !== undefined) {
 			//kept getting project undefined error, changing from projects.length to this seems to fix it??
 			const project = projects.find((project) => project.id === id);
@@ -108,7 +107,10 @@ const ProjectDetail = () => {
 		newTask.name === "" || newTask.description === ""
 			? setDisabled(true)
 			: setDisabled(false);
-		setNewTask({ ...newTask, [ev.target.name]: ev.target.value });
+		setNewTask({
+			...newTask,
+			[ev.target.name]: ev.target.value,
+		});
 	};
 
 	const createNewTask = () => {
@@ -123,9 +125,19 @@ const ProjectDetail = () => {
 		if (newTask.status === "In Progress") {
 			setProgress([...progress, newTask]);
 		}
+		if (newTask.status === "Done") {
+			setDone([...done, newTask]);
+		}
 		setColumns({ ...columns });
-		setNewTask({ ...newTask, name: "", description: "", status: "To Do" });
+		setNewTask({
+			name: "",
+			description: "",
+			status: "To Do",
+			projectId: id,
+			teamId: auth.teamId,
+		});
 		handleClose();
+		dispatch(fetchTasks());
 	};
 
 	const toggleDrawer = () => {
@@ -136,19 +148,6 @@ const ProjectDetail = () => {
 		if (!result.destination) return;
 		const { source, destination } = result;
 		if (source.droppableId !== destination.droppableId) {
-			// gets the status of the destination column
-			const newStatus = columns[destination.droppableId].name;
-
-			// gets the actual DB ID of the task being dragged by removing the "a" at the end of the draggableId
-			const draggedId = result.draggableId.slice(0, -1);
-
-			// grabs the actual changed task
-			const changedTask = tasks.find((task) => task.id === draggedId);
-
-			// updates the status of the dragged task to the new column status
-			changedTask.status = newStatus;
-
-			// re-sets the tasks for each column
 			const sourceColumn = columns[source.droppableId];
 			const destColumn = columns[destination.droppableId];
 			const sourceTasks = Array.from(sourceColumn.tasks);
@@ -166,12 +165,14 @@ const ProjectDetail = () => {
 					tasks: destTasks,
 				},
 			});
+			const newStatus = columns[destination.droppableId].name;
+			const changedTask = removed;
+			changedTask.status = newStatus;
 
-			// updates the database to reflect the new status
 			try {
 				await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
 			} catch (ex) {
-				setError(ex.response.data);
+				console.log(ex);
 			}
 		} else {
 			const column = columns[source.droppableId];
