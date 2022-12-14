@@ -74,7 +74,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "ramir",
       lastName: "migues",
-      email: "ramir@email.com",
+      email: "ramir101@gmail.com",
     }),
   ]);
 
