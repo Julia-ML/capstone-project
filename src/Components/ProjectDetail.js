@@ -3,12 +3,12 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-  createTask,
-  fetchProjects,
-  fetchUsers,
-  fetchTasks,
-  fetchLog,
-  addLog,
+	createTask,
+	fetchProjects,
+	fetchUsers,
+	fetchTasks,
+	fetchLog,
+	addLog,
 } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -43,42 +43,43 @@ const ProjectDetail = () => {
 	const [disabled, setDisabled] = useState(true);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [drawerTask, setDrawerTask] = useState({});
-  const [newTask, setNewTask] = useState({
-    name: "",
-    description: "",
-    status: "To Do",
-    projectId: id,
-    teamId: "",
-  });
+	const [newTask, setNewTask] = useState({
+		name: "",
+		description: "",
+		status: "To Do",
+		projectId: id,
+		teamId: auth.teamId,
+	});
 
 	useEffect(() => {
-		dispatch(fetchProjects()), dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
+		dispatch(fetchProjects()),
+			dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
 	}, []);
 
 	useEffect(() => {
 		const projectTasks = tasks.filter((task) => {
 			return task.projectId == id;
 		});
-    
-       const rule = new schedule.RecurrenceRule();
-    //rule.hour = 0;
-    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-    const job = schedule.scheduleJob("* * * * *", function () {
-      let taskLength = projectTasks.length;
-      let doneTasks = projectTasks.filter(
-        (task) => task.status === "To Do"
-      ).length; //using to do for now instead of done bc done bug
 
-      const percent = doneTasks / taskLength; //returns % tasks done
+		const rule = new schedule.RecurrenceRule();
+		//rule.hour = 0;
+		rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
+		const job = schedule.scheduleJob("* * * * *", function () {
+			let taskLength = projectTasks.length;
+			let doneTasks = projectTasks.filter(
+				(task) => task.status === "To Do"
+			).length; //using to do for now instead of done bc done bug
 
-      if (percent) {
-        console.log(doneTasks, taskLength, Date());
-        //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
-      }
-      taskLength = 0;
-      doneTasks = 0;
-    });
-    
+			const percent = doneTasks / taskLength; //returns % tasks done
+
+			if (percent) {
+				console.log(doneTasks, taskLength, Date());
+				//dispatch(addLog({ date: Date(), value: percent, projectId: id }));
+			}
+			taskLength = 0;
+			doneTasks = 0;
+		});
+
 		if (projects[0] !== undefined) {
 			//kept getting project undefined error, changing from projects.length to this seems to fix it??
 			const project = projects.find((project) => project.id === id);
@@ -141,23 +142,32 @@ const ProjectDetail = () => {
 		});
 	};
 
-  const createNewTask = () => {
-    dispatch(createTask(newTask));
-    //doesn't show up in column after creating until you refresh?
-    if (newTask.status === "To Do") {
-      setTodo([...todo, newTask]);
-    }
-    if (newTask.status === "Backlog") {
-      setBacklog([...backlog, newTask]);
-    }
-    if (newTask.status === "In Progress") {
-      setProgress([...progress, newTask]);
-    }
-    setColumns({ ...columns });
-    setNewTask({ ...newTask, name: "", description: "", status: "To Do" });
-    dispatch(fetchTasks());
-    handleClose();
-  };
+	const createNewTask = () => {
+		dispatch(createTask(newTask));
+		//doesn't show up in column after creating until you refresh?
+		if (newTask.status === "To Do") {
+			setTodo([...todo, newTask]);
+		}
+		if (newTask.status === "Backlog") {
+			setBacklog([...backlog, newTask]);
+		}
+		if (newTask.status === "In Progress") {
+			setProgress([...progress, newTask]);
+		}
+		if (newTask.status === "Done") {
+			setProgress([...done, newTask]);
+		}
+		setColumns({ ...columns });
+		setNewTask({
+			name: "",
+			description: "",
+			status: "To Do",
+			projectId: id,
+			teamId: auth.teamId,
+		});
+		dispatch(fetchTasks());
+		handleClose();
+	};
 
 	const toggleDrawer = () => {
 		setDrawerOpen(false);
@@ -187,7 +197,7 @@ const ProjectDetail = () => {
 			const newStatus = columns[destination.droppableId].name;
 			const changedTask = removed;
 			changedTask.status = newStatus;
-
+			console.log(changedTask, "logging changed task");
 			try {
 				await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
 			} catch (ex) {
@@ -386,16 +396,16 @@ const ProjectDetail = () => {
 					<Typography>Status: {drawerTask.status}</Typography>
 				</Container>
 			</Drawer>
-      <hr />
-      <ul>
-        DATA:{" "}
-        {log
-          ? log.map((logItem) => {
-              return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
-            })
-          : ""}
-      </ul>
-      <hr />
+			<hr />
+			<ul>
+				DATA:{" "}
+				{log
+					? log.map((logItem) => {
+							return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
+					  })
+					: ""}
+			</ul>
+			<hr />
 		</div>
 	);
 };
