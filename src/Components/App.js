@@ -7,7 +7,7 @@ import ProjectDetail from "./ProjectDetail";
 import NavBar from "./Nav";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
-import { Link, Routes, Route, useNavigate } from "react-router-dom";
+import { Link, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import Profile from "./Profile";
 import Team from "./Team";
 
@@ -32,7 +32,9 @@ const App = () => {
         <Routes>
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/:teamIdEmail" element={<Login />} />
           <Route path="/team" element={<Team />} />
+          <Route path="/team/:teamIdEmail" element={<Team />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Home />} />
           <Route path="/projects" element={<ProjectGallery />} />

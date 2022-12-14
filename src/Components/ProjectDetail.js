@@ -29,37 +29,46 @@ const schedule = require("node-schedule");
 import axios from "axios";
 
 const ProjectDetail = () => {
-	const { projects, tasks, auth, log } = useSelector((state) => state);
-	const { id } = useParams();
-	const dispatch = useDispatch();
-	const navigate = useNavigate();
-	const [project, setProject] = useState({});
-	const [backlog, setBacklog] = useState([]);
-	const [todo, setTodo] = useState([]);
-	const [progress, setProgress] = useState([]);
-	const [done, setDone] = useState([]);
-	const [columns, setColumns] = useState([]);
-	const [open, setOpen] = useState(false);
-	const [disabled, setDisabled] = useState(true);
-	const [drawerOpen, setDrawerOpen] = useState(false);
-	const [drawerTask, setDrawerTask] = useState({});
-	const [newTask, setNewTask] = useState({
-		name: "",
-		description: "",
-		status: "To Do",
-		projectId: id,
-		teamId: auth.teamId,
-	});
+  const { projects, tasks, auth, log } = useSelector((state) => state);
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [project, setProject] = useState({});
+  const [backlog, setBacklog] = useState([]);
+  const [todo, setTodo] = useState([]);
+  const [progress, setProgress] = useState([]);
+  const [done, setDone] = useState([]);
+  const [columns, setColumns] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const [drawerTask, setDrawerTask] = useState({});
+  const [newTask, setNewTask] = useState({
+    name: "",
+    description: "",
+    status: "To Do",
+    projectId: id,
+    teamId: "",
+  });
 
-	useEffect(() => {
-		dispatch(fetchProjects()),
-			dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
-	}, []);
+  useEffect(() => {
+    dispatch(fetchProjects()),
+      dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
+  }, []);
 
-	useEffect(() => {
-		const projectTasks = tasks.filter((task) => {
-			return task.projectId == id;
-		});
+  useEffect(() => {
+    const projectTasks = tasks.filter((task) => {
+      return task.projectId == id;
+    });
+
+    const rule = new schedule.RecurrenceRule();
+    //rule.hour = 0;
+    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
+    const job = schedule.scheduleJob("* * * * *", function () {
+      let taskLength = projectTasks.length;
+      let doneTasks = projectTasks.filter(
+        (task) => task.status === "To Do"
+      ).length; //using to do for now instead of done bc done bug
 
 		const rule = new schedule.RecurrenceRule();
 		//rule.hour = 0;
@@ -80,67 +89,68 @@ const ProjectDetail = () => {
 			doneTasks = 0;
 		});
 
-		if (projects[0] !== undefined) {
-			//kept getting project undefined error, changing from projects.length to this seems to fix it??
-			const project = projects.find((project) => project.id === id);
-			projectTasks.length
-				? `${
-						(setProject(project),
-						setBacklog(
-							projectTasks.filter((task) => task.status === "Backlog")
-						),
-						setTodo(projectTasks.filter((task) => task.status === "To Do")),
-						setProgress(
-							projectTasks.filter((task) => task.status === "In Progress")
-						),
-						setDone(projectTasks.filter((task) => task.status === "Done")))
-				  }`
-				: setProject(project);
-		}
-	}, [projects, tasks]);
+    if (projects[0] !== undefined) {
+      //kept getting project undefined error, changing from projects.length to this seems to fix it??
+      const project = projects.find((project) => project.id === id);
+      projectTasks.length
+        ? `${
+            (setProject(project),
+            setNewTask({ ...newTask, teamId: project.teamId }),
+            setBacklog(
+              projectTasks.filter((task) => task.status === "Backlog")
+            ),
+            setTodo(projectTasks.filter((task) => task.status === "To Do")),
+            setProgress(
+              projectTasks.filter((task) => task.status === "In Progress")
+            ),
+            setDone(projectTasks.filter((task) => task.status === "Done")))
+          }`
+        : setProject(project);
+    }
+  }, [projects, tasks]);
 
-	useEffect(() => {
-		setColumns({
-			1: {
-				id: 1,
-				name: "Backlog",
-				tasks: backlog,
-			},
-			2: {
-				id: 2,
-				name: "To Do",
-				tasks: todo,
-			},
-			3: {
-				id: 3,
-				name: "In Progress",
-				tasks: progress,
-			},
-			4: {
-				id: 4,
-				name: "Done",
-				tasks: done,
-			},
-		});
-	}, [project, tasks]);
+  useEffect(() => {
+    setColumns({
+      1: {
+        id: 1,
+        name: "Backlog",
+        tasks: backlog,
+      },
+      2: {
+        id: 2,
+        name: "To Do",
+        tasks: todo,
+      },
+      3: {
+        id: 3,
+        name: "In Progress",
+        tasks: progress,
+      },
+      4: {
+        id: 4,
+        name: "Done",
+        tasks: done,
+      },
+    });
+  }, [project, tasks]);
 
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
 
-	const handleClose = () => {
-		setOpen(false);
-	};
+  const handleClose = () => {
+    setOpen(false);
+  };
 
-	const onChange = (ev) => {
-		newTask.name === "" || newTask.description === ""
-			? setDisabled(true)
-			: setDisabled(false);
-		setNewTask({
-			...newTask,
-			[ev.target.name]: ev.target.value,
-		});
-	};
+  const onChange = (ev) => {
+    newTask.name === "" || newTask.description === ""
+      ? setDisabled(true)
+      : setDisabled(false);
+    setNewTask({
+      ...newTask,
+      [ev.target.name]: ev.target.value,
+    });
+  };
 
 	const createNewTask = () => {
 		dispatch(createTask(newTask));
@@ -169,114 +179,114 @@ const ProjectDetail = () => {
 		handleClose();
 	};
 
-	const toggleDrawer = () => {
-		setDrawerOpen(false);
-	};
+  const toggleDrawer = () => {
+    setDrawerOpen(false);
+  };
 
-	const onDragEnd = async (result, columns, setColumns) => {
-		if (!result.destination) return;
-		const { source, destination } = result;
-		if (source.droppableId !== destination.droppableId) {
-			const sourceColumn = columns[source.droppableId];
-			const destColumn = columns[destination.droppableId];
-			const sourceTasks = Array.from(sourceColumn.tasks);
-			const destTasks = Array.from(destColumn.tasks);
-			const [removed] = sourceTasks.splice(source.index, 1);
-			destTasks.splice(destination.index, 0, removed);
-			setColumns({
-				...columns,
-				[source.droppableId]: {
-					...sourceColumn,
-					tasks: sourceTasks,
-				},
-				[destination.droppableId]: {
-					...destColumn,
-					tasks: destTasks,
-				},
-			});
-			const newStatus = columns[destination.droppableId].name;
-			const changedTask = removed;
-			changedTask.status = newStatus;
-			console.log(changedTask, "logging changed task");
-			try {
-				await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
-			} catch (ex) {
-				console.log(ex);
-			}
-		} else {
-			const column = columns[source.droppableId];
-			const copiedTasks = [...column.tasks];
-			const [removed] = copiedTasks.splice(source.index, 1);
-			copiedTasks.splice(destination.index, 0, removed);
-			setColumns({
-				...columns,
-				[source.droppableId]: {
-					...column,
-					tasks: copiedTasks,
-				},
-			});
-		}
-	};
+  const onDragEnd = async (result, columns, setColumns) => {
+    if (!result.destination) return;
+    const { source, destination } = result;
+    if (source.droppableId !== destination.droppableId) {
+      const sourceColumn = columns[source.droppableId];
+      const destColumn = columns[destination.droppableId];
+      const sourceTasks = Array.from(sourceColumn.tasks);
+      const destTasks = Array.from(destColumn.tasks);
+      const [removed] = sourceTasks.splice(source.index, 1);
+      destTasks.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...sourceColumn,
+          tasks: sourceTasks,
+        },
+        [destination.droppableId]: {
+          ...destColumn,
+          tasks: destTasks,
+        },
+      });
+      const newStatus = columns[destination.droppableId].name;
+      const changedTask = removed;
+      changedTask.status = newStatus;
 
-	return (
-		<div>
-			<br />
-			<Typography variant='h4' align='center'>
-				{project.name}
-			</Typography>
-			<Container
-				sx={{ display: "flex", justifyContent: "center", height: "100%" }}
-			>
-				<DragDropContext
-					onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
-				>
-					{Object.entries(columns).map(([columnId, column], index) => {
-						return (
-							<div
-								style={{
-									display: "flex",
-									flexDirection: "column",
-									alignItems: "center",
-								}}
-								key={columnId}
-							>
-								<h2>{column.name}</h2>
-								<div
-									style={{
-										margin: 8,
-										display: "flex",
-										flexDirection: "column",
-									}}
-								>
-									<Droppable droppableId={columnId} key={columnId}>
-										{(provided, snapshot) => {
-											return (
-												<div
-													{...provided.droppableProps}
-													ref={provided.innerRef}
-													style={{
-														background: snapshot.isDraggingOver
-															? "lightblue"
-															: "lightgrey",
-														padding: 4,
-														width: 250,
-														minHeight: 500,
-													}}
-												>
-													{!column.tasks ? (
-														<div
-															style={{
-																display: "flex",
-																flexDirection: "column",
-																flexGrow: "1",
-																minHeight: "100px",
-															}}
-														></div>
-													) : (
-														column.tasks.map((task, index) => {
-															return (
-																<Draggable
-																	/* I have no idea why this fixes it, 
+      try {
+        await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
+      } catch (ex) {
+        console.log(ex);
+      }
+    } else {
+      const column = columns[source.droppableId];
+      const copiedTasks = [...column.tasks];
+      const [removed] = copiedTasks.splice(source.index, 1);
+      copiedTasks.splice(destination.index, 0, removed);
+      setColumns({
+        ...columns,
+        [source.droppableId]: {
+          ...column,
+          tasks: copiedTasks,
+        },
+      });
+    }
+  };
+
+  return (
+    <div>
+      <br />
+      <Typography variant="h4" align="center">
+        {project.name}
+      </Typography>
+      <Container
+        sx={{ display: "flex", justifyContent: "center", height: "100%" }}
+      >
+        <DragDropContext
+          onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
+        >
+          {Object.entries(columns).map(([columnId, column], index) => {
+            return (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+                key={columnId}
+              >
+                <h2>{column.name}</h2>
+                <div
+                  style={{
+                    margin: 8,
+                    display: "flex",
+                    flexDirection: "column",
+                  }}
+                >
+                  <Droppable droppableId={columnId} key={columnId}>
+                    {(provided, snapshot) => {
+                      return (
+                        <div
+                          {...provided.droppableProps}
+                          ref={provided.innerRef}
+                          style={{
+                            background: snapshot.isDraggingOver
+                              ? "lightblue"
+                              : "lightgrey",
+                            padding: 4,
+                            width: 250,
+                            minHeight: 500,
+                          }}
+                        >
+                          {!column.tasks ? (
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                flexGrow: "1",
+                                minHeight: "100px",
+                              }}
+                            ></div>
+                          ) : (
+                            column.tasks.map((task, index) => {
+                              return (
+                                <Draggable
+                                  /* I have no idea why this fixes it, 
                                 without +'a' there's an error that says it doesnt have a key/draggableId */
 																	key={task.id + "a"}
 																	draggableId={task.id + "a"}

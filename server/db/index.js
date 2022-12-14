@@ -78,6 +78,7 @@ const syncAndSeed = async () => {
 		}),
 	]);
 
+
 	// create projects to give to teams and managers
 	const [newProj, snackProj, larryProj] = await Promise.all([
 		Project.create({

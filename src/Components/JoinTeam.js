@@ -1,7 +1,9 @@
 import { Button, Paper, TextField, Typography } from "@mui/material";
 import React from "react";
+import { useEffect } from "react";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { updateUser } from "../store";
 
 export const JoinTeam = () => {
@@ -11,6 +13,12 @@ export const JoinTeam = () => {
   const onChange = (ev) => {
     setInput({ ...input, [ev.target.name]: ev.target.value });
   };
+
+  const { teamIdEmail } = useParams();
+  console.log(teamIdEmail, "teams");
+  useEffect(() => {
+    setInput({ teamId: teamIdEmail });
+  }, [teamIdEmail]);
 
   const formSubmit = async (ev) => {
     ev.preventDefault();
@@ -32,7 +40,7 @@ export const JoinTeam = () => {
         />
         <Button type="submit" variant="contained">
           {" "}
-          Create Team{" "}
+          Join Team{" "}
         </Button>
       </form>
     </Paper>

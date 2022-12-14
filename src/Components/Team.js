@@ -5,6 +5,7 @@ import {
   ListItem,
   Paper,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
 import { fetchTeams, setNewAdmin } from "../store";
@@ -16,6 +17,8 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import { JoinTeam } from "./JoinTeam";
 import CancelIcon from "@mui/icons-material/Cancel";
 import { RemoveTeamMember } from "../store";
+import axios from "axios";
+import { useState } from "react";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -29,6 +32,24 @@ const Team = () => {
   if (auth.id === teams.adminId) {
     adminView = true;
   }
+
+  const [recipientInfo, setRecipientInfo] = useState({
+    email: "",
+  });
+
+  const onChange = (ev) => {
+    setRecipientInfo({ ...recipientInfo, [ev.target.name]: ev.target.value });
+  };
+
+  const inviteToTeam = async (ev) => {
+    ev.preventDefault();
+    await axios.post("/api/emails/invite/team", {
+      teamId: teams.id,
+      recipient: recipientInfo.email,
+      senderName: auth.firstName,
+    });
+    setRecipientInfo("");
+  };
 
   return (
     <Container>
@@ -63,11 +84,20 @@ const Team = () => {
                 })}
             </Stack>
           </Typography>
-          <CopyToClipboard text={teams.id}>
-            <Button variant="contained" fullWidth>
-              Copy your team ID - send to teammate
+          <form onSubmit={(ev) => inviteToTeam(ev)}>
+            <Typography variant="h3" align="center">
+              Invite new user to team
+            </Typography>
+            <TextField
+              label="Recipient's email address"
+              name="email"
+              onChange={onChange}
+              required
+            />
+            <Button variant="contained" fullWidth type="submit">
+              Invite User
             </Button>
-          </CopyToClipboard>
+          </form>
         </Paper>
       ) : (
         <div>
