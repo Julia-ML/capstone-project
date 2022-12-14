@@ -15,6 +15,9 @@ const teams = (state = [], action) => {
       }, []),
     };
   }
+  if (action.type === "NEW_ADMIN_TEAM") {
+    return { ...state, adminId: action.newAdmin.adminId };
+  }
   return state;
 };
 
@@ -39,6 +42,18 @@ export const RemoveTeamMember = (member) => {
       },
     });
     dispatch({ type: "REMOVE_MEMBER_TEAM", removedMember: response.data });
+  };
+};
+
+export const setNewAdmin = (newAdmin) => {
+  return async (dispatch) => {
+    const token = window.localStorage.getItem("token");
+    const response = await axios.put("/api/teams/update/admin", newAdmin, {
+      headers: {
+        authorization: token,
+      },
+    });
+    dispatch({ type: "NEW_ADMIN_TEAM", newAdmin: response.data });
   };
 };
 

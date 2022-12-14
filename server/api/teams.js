@@ -30,6 +30,20 @@ app.post("/", async (req, res, next) => {
   }
 });
 
+app.put("/update/admin", async (req, res, next) => {
+  try {
+    const adminUser = await User.findByToken(req.headers.authorization);
+    if (adminUser) {
+      const updatedTeam = await Team.findByPk(adminUser.teamId);
+      updatedTeam.update({ adminId: req.body.id });
+      res.send(updatedTeam);
+    }
+    res.send("invalid token");
+  } catch (ex) {
+    next(ex);
+  }
+});
+
 app.put("/remove/member", async (req, res, next) => {
   try {
     const adminUser = await User.findByToken(req.headers.authorization);
