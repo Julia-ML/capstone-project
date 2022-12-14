@@ -9,6 +9,7 @@ import {
 	fetchTasks,
 	fetchLog,
 	addLog,
+	updateTask,
 } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -142,6 +143,13 @@ const ProjectDetail = () => {
 		});
 	};
 
+	const onEdit = (ev) => {
+		setDrawerTask({
+			...drawerTask,
+			[ev.target.name]: ev.target.value,
+		});
+	};
+
 	const createNewTask = () => {
 		dispatch(createTask(newTask));
 		//doesn't show up in column after creating until you refresh?
@@ -167,6 +175,27 @@ const ProjectDetail = () => {
 		});
 		dispatch(fetchTasks());
 		handleClose();
+	};
+
+	const editTask = () => {
+		dispatch(updateTask(drawerTask));
+		toggleDrawer();
+		//doesn't show up in column after creating until you refresh?
+		if (drawerTask.status === "To Do") {
+			setTodo([...todo, drawerTask]);
+		}
+		if (drawerTask.status === "Backlog") {
+			setBacklog([...backlog, drawerTask]);
+		}
+		if (drawerTask.status === "In Progress") {
+			setProgress([...progress, drawerTask]);
+		}
+		if (drawerTask.status === "Done") {
+			setProgress([...done, drawerTask]);
+		}
+		setColumns({ ...columns });
+		setDrawerTask({});
+		dispatch(fetchTasks());
 	};
 
 	const toggleDrawer = () => {
@@ -388,13 +417,50 @@ const ProjectDetail = () => {
 					sx: { width: "40%" },
 				}}
 			>
-				<Container>
-					<br />
-					<Typography variant='h6'>{drawerTask.name}</Typography>
-					<br />
-					<Typography paragraph={true}>{drawerTask.description}</Typography>
-					<Typography>Status: {drawerTask.status}</Typography>
-				</Container>
+				<FormControl sx={{ padding: 2, margin: "normal" }}>
+					<Typography variant='h3'>Task Details</Typography>
+					<TextField
+						autoFocus
+						id='name'
+						label='name'
+						name='name'
+						type='text'
+						variant='standard'
+						margin='normal'
+						fullWidth
+						value={drawerTask.name}
+						onChange={onEdit}
+					/>
+					<TextField
+						autoFocus
+						id='desc'
+						label='description'
+						name='description'
+						type='text'
+						variant='standard'
+						margin='normal'
+						value={drawerTask.description}
+						onChange={onEdit}
+						fullWidth
+						multiline
+					/>
+					<Select
+						name='status'
+						value={drawerTask.status}
+						onChange={onEdit}
+						label='status'
+						margin='normal'
+					>
+						<MenuItem value={"To Do"}>To Do</MenuItem>
+						<MenuItem value={"In Progress"}>In Progress</MenuItem>
+						<MenuItem value={"Done"}>Done</MenuItem>
+						<MenuItem value={"Backlog"}>Backlog</MenuItem>
+					</Select>
+					<FormHelperText>Status</FormHelperText>
+					<Button variant='contained' onClick={editTask}>
+						Update Task
+					</Button>
+				</FormControl>
 			</Drawer>
 			<hr />
 			<ul>
