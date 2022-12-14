@@ -3,13 +3,13 @@ import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import {
-	createTask,
-	fetchProjects,
-	fetchUsers,
-	fetchTasks,
-	fetchLog,
-	addLog,
-	updateTask,
+  createTask,
+  fetchProjects,
+  fetchUsers,
+  fetchTasks,
+  fetchLog,
+  addLog,
+  updateTask,
 } from "../store";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -61,54 +61,59 @@ const ProjectDetail = () => {
     const projectTasks = tasks.filter((task) => {
       return task.projectId == id;
     });
+  });
 
-    const rule = new schedule.RecurrenceRule();
-    //rule.hour = 0;
-    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-    const job = schedule.scheduleJob("* * * * *", function () {
+  const rule = new schedule.RecurrenceRule();
+  //rule.hour = 0;
+  rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
+  const job = schedule.scheduleJob(
+    "* * * * *",
+    function () {
       let taskLength = projectTasks.length;
       let doneTasks = projectTasks.filter(
         (task) => task.status === "To Do"
       ).length; //using to do for now instead of done bc done bug
 
-		const rule = new schedule.RecurrenceRule();
-		//rule.hour = 0;
-		rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-		const job = schedule.scheduleJob("* * * * *", function () {
-			let taskLength = projectTasks.length;
-			let doneTasks = projectTasks.filter(
-				(task) => task.status === "To Do"
-			).length; //using to do for now instead of done bc done bug
+      const rule = new schedule.RecurrenceRule();
+      //rule.hour = 0;
+      rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
+      const job = schedule.scheduleJob("* * * * *", function () {
+        let taskLength = projectTasks.length;
+        let doneTasks = projectTasks.filter(
+          (task) => task.status === "To Do"
+        ).length; //using to do for now instead of done bc done bug
 
-			const percent = doneTasks / taskLength; //returns % tasks done
+        const percent = doneTasks / taskLength; //returns % tasks done
 
-			if (percent) {
-				console.log(doneTasks, taskLength, Date());
-				//dispatch(addLog({ date: Date(), value: percent, projectId: id }));
-			}
-			taskLength = 0;
-			doneTasks = 0;
-		});
+        if (percent) {
+          console.log(doneTasks, taskLength, Date());
+          //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
+        }
+        taskLength = 0;
+        doneTasks = 0;
+      });
 
-    if (projects[0] !== undefined) {
-      //kept getting project undefined error, changing from projects.length to this seems to fix it??
-      const project = projects.find((project) => project.id === id);
-      projectTasks.length
-        ? `${
-            (setProject(project),
-            setNewTask({ ...newTask, teamId: project.teamId }),
-            setBacklog(
-              projectTasks.filter((task) => task.status === "Backlog")
-            ),
-            setTodo(projectTasks.filter((task) => task.status === "To Do")),
-            setProgress(
-              projectTasks.filter((task) => task.status === "In Progress")
-            ),
-            setDone(projectTasks.filter((task) => task.status === "Done")))
-          }`
-        : setProject(project);
-    }
-  }, [projects, tasks]);
+      if (projects[0] !== undefined) {
+        //kept getting project undefined error, changing from projects.length to this seems to fix it??
+        const project = projects.find((project) => project.id === id);
+        projectTasks.length
+          ? `${
+              (setProject(project),
+              setNewTask({ ...newTask, teamId: project.teamId }),
+              setBacklog(
+                projectTasks.filter((task) => task.status === "Backlog")
+              ),
+              setTodo(projectTasks.filter((task) => task.status === "To Do")),
+              setProgress(
+                projectTasks.filter((task) => task.status === "In Progress")
+              ),
+              setDone(projectTasks.filter((task) => task.status === "Done")))
+            }`
+          : setProject(project);
+      }
+    },
+    [projects, tasks]
+  );
 
   useEffect(() => {
     setColumns({
@@ -153,66 +158,64 @@ const ProjectDetail = () => {
     });
   };
 
-	const onEdit = (ev) => {
-		setDrawerTask({
-			...drawerTask,
-			[ev.target.name]: ev.target.value,
-		});
-	};
+  const onEdit = (ev) => {
+    setDrawerTask({
+      ...drawerTask,
+      [ev.target.name]: ev.target.value,
+    });
+  };
 
-	const createNewTask = () => {
-		dispatch(createTask(newTask));
-		//doesn't show up in column after creating until you refresh?
-		if (newTask.status === "To Do") {
-			setTodo([...todo, newTask]);
-		}
-		if (newTask.status === "Backlog") {
-			setBacklog([...backlog, newTask]);
-		}
-		if (newTask.status === "In Progress") {
-			setProgress([...progress, newTask]);
-		}
-		if (newTask.status === "Done") {
-			setProgress([...done, newTask]);
-		}
-		setColumns({ ...columns });
-		setNewTask({
-			name: "",
-			description: "",
-			status: "To Do",
-			projectId: id,
-			teamId: auth.teamId,
-		});
-		dispatch(fetchTasks());
-		handleClose();
-	};
+  const createNewTask = () => {
+    dispatch(createTask(newTask));
+    //doesn't show up in column after creating until you refresh?
+    if (newTask.status === "To Do") {
+      setTodo([...todo, newTask]);
+    }
+    if (newTask.status === "Backlog") {
+      setBacklog([...backlog, newTask]);
+    }
+    if (newTask.status === "In Progress") {
+      setProgress([...progress, newTask]);
+    }
+    if (newTask.status === "Done") {
+      setProgress([...done, newTask]);
+    }
+    setColumns({ ...columns });
+    setNewTask({
+      name: "",
+      description: "",
+      status: "To Do",
+      projectId: id,
+      teamId: auth.teamId,
+    });
+    dispatch(fetchTasks());
+    handleClose();
+  };
 
+  const editTask = () => {
+    dispatch(updateTask(drawerTask));
+    toggleDrawer();
+    //doesn't show up in column after creating until you refresh?
+    if (drawerTask.status === "To Do") {
+      setTodo([...todo, drawerTask]);
+    }
+    if (drawerTask.status === "Backlog") {
+      setBacklog([...backlog, drawerTask]);
+    }
+    if (drawerTask.status === "In Progress") {
+      setProgress([...progress, drawerTask]);
+    }
+    if (drawerTask.status === "Done") {
+      setProgress([...done, drawerTask]);
+    }
+    setColumns({ ...columns });
+    setDrawerTask({});
+    dispatch(fetchTasks());
+  };
 
-	const editTask = () => {
-		dispatch(updateTask(drawerTask));
-		toggleDrawer();
-		//doesn't show up in column after creating until you refresh?
-		if (drawerTask.status === "To Do") {
-			setTodo([...todo, drawerTask]);
-		}
-		if (drawerTask.status === "Backlog") {
-			setBacklog([...backlog, drawerTask]);
-		}
-		if (drawerTask.status === "In Progress") {
-			setProgress([...progress, drawerTask]);
-		}
-		if (drawerTask.status === "Done") {
-			setProgress([...done, drawerTask]);
-		}
-		setColumns({ ...columns });
-		setDrawerTask({});
-		dispatch(fetchTasks());
-	};
-
-	const toggleDrawer = () => {
-		setDrawerOpen(false);
-	};
-
+  const toggleDrawer = () => {
+    setDrawerOpen(false);
+  };
 
   const onDragEnd = async (result, columns, setColumns) => {
     if (!result.destination) return;
@@ -319,173 +322,173 @@ const ProjectDetail = () => {
                                 <Draggable
                                   /* I have no idea why this fixes it, 
                                 without +'a' there's an error that says it doesnt have a key/draggableId */
-																	key={task.id + "a"}
-																	draggableId={task.id + "a"}
-																	index={index}
-																>
-																	{(provided, snapshot) => {
-																		return (
-																			<div
-																				ref={provided.innerRef}
-																				{...provided.draggableProps}
-																				{...provided.dragHandleProps}
-																				style={{
-																					userSelect: "none",
-																					padding: 16,
-																					margin: "0 0 8px 0",
-																					minHeight: "50px",
-																					backgroundColor: snapshot.isDragging
-																						? "#263B4A"
-																						: "#456C86",
-																					color: "white",
-																					...provided.draggableProps.style,
-																				}}
-																			>
-																				<Button
-																					onClick={() => {
-																						setDrawerTask(task);
-																						setDrawerOpen(true);
-																					}}
-																				>
-																					{task.name}
-																				</Button>
-																			</div>
-																		);
-																	}}
-																</Draggable>
-															);
-														})
-													)}
-													{provided.placeholder}
-												</div>
-											);
-										}}
-									</Droppable>
-								</div>
-								<Button variant='contained' onClick={handleClickOpen}>
-									+ Add a task
-								</Button>
-								<Dialog open={open} onClose={handleClose}>
-									<DialogTitle>New Task</DialogTitle>
-									<DialogContent>
-										<DialogContentText>
-											Input task name and description:
-										</DialogContentText>
-										<TextField
-											autoFocus
-											margin='dense'
-											id='name'
-											label='name'
-											name='name'
-											type='text'
-											fullWidth
-											variant='standard'
-											value={newTask.name}
-											onChange={onChange}
-										/>
-										<TextField
-											autoFocus
-											id='desc'
-											label='description'
-											name='description'
-											type='text'
-											fullWidth
-											variant='standard'
-											value={newTask.description}
-											onChange={onChange}
-											margin='normal'
-											multiline
-										/>
-										<Select
-											name='status'
-											value={newTask.status}
-											onChange={onChange}
-											label='status'
-										>
-											<MenuItem value={"To Do"}>To Do</MenuItem>
-											<MenuItem value={"In Progress"}>In Progress</MenuItem>
-											<MenuItem value={"Done"}>Done</MenuItem>
-											<MenuItem value={"Backlog"}>Backlog</MenuItem>
-										</Select>
-										<FormHelperText>Status</FormHelperText>
-									</DialogContent>
-									<DialogActions>
-										<Button onClick={handleClose}>Cancel</Button>
-										<Button disabled={disabled} onClick={createNewTask}>
-											Create
-										</Button>
-									</DialogActions>
-								</Dialog>
-							</div>
-						);
-					})}
-				</DragDropContext>
-			</Container>
-			<Drawer
-				anchor={"right"}
-				open={drawerOpen}
-				onClose={toggleDrawer}
-				PaperProps={{
-					sx: { width: "40%" },
-				}}
-			>
-				<FormControl sx={{ padding: 2, margin: "normal" }}>
-					<Typography variant='h3'>Task Details</Typography>
-					<TextField
-						autoFocus
-						id='name'
-						label='name'
-						name='name'
-						type='text'
-						variant='standard'
-						margin='normal'
-						fullWidth
-						value={drawerTask.name}
-						onChange={onEdit}
-					/>
-					<TextField
-						autoFocus
-						id='desc'
-						label='description'
-						name='description'
-						type='text'
-						variant='standard'
-						margin='normal'
-						value={drawerTask.description}
-						onChange={onEdit}
-						fullWidth
-						multiline
-					/>
-					<Select
-						name='status'
-						value={drawerTask.status}
-						onChange={onEdit}
-						label='status'
-						margin='normal'
-					>
-						<MenuItem value={"To Do"}>To Do</MenuItem>
-						<MenuItem value={"In Progress"}>In Progress</MenuItem>
-						<MenuItem value={"Done"}>Done</MenuItem>
-						<MenuItem value={"Backlog"}>Backlog</MenuItem>
-					</Select>
-					<FormHelperText>Status</FormHelperText>
-					<Button variant='contained' onClick={editTask}>
-						Update Task
-					</Button>
-				</FormControl>
-			</Drawer>
-			<hr />
-			<ul>
-				DATA:{" "}
-				{log
-					? log.map((logItem) => {
-							return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
-					  })
-					: ""}
-			</ul>
-			<hr />
-		</div>
-	);
+                                  key={task.id + "a"}
+                                  draggableId={task.id + "a"}
+                                  index={index}
+                                >
+                                  {(provided, snapshot) => {
+                                    return (
+                                      <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        style={{
+                                          userSelect: "none",
+                                          padding: 16,
+                                          margin: "0 0 8px 0",
+                                          minHeight: "50px",
+                                          backgroundColor: snapshot.isDragging
+                                            ? "#263B4A"
+                                            : "#456C86",
+                                          color: "white",
+                                          ...provided.draggableProps.style,
+                                        }}
+                                      >
+                                        <Button
+                                          onClick={() => {
+                                            setDrawerTask(task);
+                                            setDrawerOpen(true);
+                                          }}
+                                        >
+                                          {task.name}
+                                        </Button>
+                                      </div>
+                                    );
+                                  }}
+                                </Draggable>
+                              );
+                            })
+                          )}
+                          {provided.placeholder}
+                        </div>
+                      );
+                    }}
+                  </Droppable>
+                </div>
+                <Button variant="contained" onClick={handleClickOpen}>
+                  + Add a task
+                </Button>
+                <Dialog open={open} onClose={handleClose}>
+                  <DialogTitle>New Task</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText>
+                      Input task name and description:
+                    </DialogContentText>
+                    <TextField
+                      autoFocus
+                      margin="dense"
+                      id="name"
+                      label="name"
+                      name="name"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                      value={newTask.name}
+                      onChange={onChange}
+                    />
+                    <TextField
+                      autoFocus
+                      id="desc"
+                      label="description"
+                      name="description"
+                      type="text"
+                      fullWidth
+                      variant="standard"
+                      value={newTask.description}
+                      onChange={onChange}
+                      margin="normal"
+                      multiline
+                    />
+                    <Select
+                      name="status"
+                      value={newTask.status}
+                      onChange={onChange}
+                      label="status"
+                    >
+                      <MenuItem value={"To Do"}>To Do</MenuItem>
+                      <MenuItem value={"In Progress"}>In Progress</MenuItem>
+                      <MenuItem value={"Done"}>Done</MenuItem>
+                      <MenuItem value={"Backlog"}>Backlog</MenuItem>
+                    </Select>
+                    <FormHelperText>Status</FormHelperText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleClose}>Cancel</Button>
+                    <Button disabled={disabled} onClick={createNewTask}>
+                      Create
+                    </Button>
+                  </DialogActions>
+                </Dialog>
+              </div>
+            );
+          })}
+        </DragDropContext>
+      </Container>
+      <Drawer
+        anchor={"right"}
+        open={drawerOpen}
+        onClose={toggleDrawer}
+        PaperProps={{
+          sx: { width: "40%" },
+        }}
+      >
+        <FormControl sx={{ padding: 2, margin: "normal" }}>
+          <Typography variant="h3">Task Details</Typography>
+          <TextField
+            autoFocus
+            id="name"
+            label="name"
+            name="name"
+            type="text"
+            variant="standard"
+            margin="normal"
+            fullWidth
+            value={drawerTask.name}
+            onChange={onEdit}
+          />
+          <TextField
+            autoFocus
+            id="desc"
+            label="description"
+            name="description"
+            type="text"
+            variant="standard"
+            margin="normal"
+            value={drawerTask.description}
+            onChange={onEdit}
+            fullWidth
+            multiline
+          />
+          <Select
+            name="status"
+            value={drawerTask.status}
+            onChange={onEdit}
+            label="status"
+            margin="normal"
+          >
+            <MenuItem value={"To Do"}>To Do</MenuItem>
+            <MenuItem value={"In Progress"}>In Progress</MenuItem>
+            <MenuItem value={"Done"}>Done</MenuItem>
+            <MenuItem value={"Backlog"}>Backlog</MenuItem>
+          </Select>
+          <FormHelperText>Status</FormHelperText>
+          <Button variant="contained" onClick={editTask}>
+            Update Task
+          </Button>
+        </FormControl>
+      </Drawer>
+      <hr />
+      <ul>
+        DATA:{" "}
+        {log
+          ? log.map((logItem) => {
+              return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
+            })
+          : ""}
+      </ul>
+      <hr />
+    </div>
+  );
 };
 
 export default ProjectDetail;
