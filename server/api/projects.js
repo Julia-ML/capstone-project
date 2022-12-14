@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express.Router();
-const { Project, Task, User } = require("../db");
+const { Project, Task, User, Log } = require("../db");
 module.exports = app;
 
 app.get("/", async (req, res, next) => {
@@ -40,6 +40,29 @@ app.delete("/:id", async (req, res, next) => {
     const project = await Project.findByPk(req.params.id);
     project.destroy();
     res.sendStatus(204);
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+app.get("/log/:id", async (req, res, next) => {
+  try {
+    res.send(
+      await Log.findAll({
+        where: {
+          projectId: req.params.id,
+        },
+      })
+    );
+  } catch (ex) {
+    next(ex);
+  }
+});
+
+app.post("/addlog", async (req, res, next) => {
+  try {
+    const newLogItem = await Log.create(req.body);
+    res.send(newLogItem);
   } catch (ex) {
     next(ex);
   }
