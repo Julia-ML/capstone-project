@@ -21,7 +21,7 @@ import AdminError from "./ErrorDialog";
 
 export const Profile = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { auth, users, teams } = useSelector((state) => state);
   const [editToggle, setEditToggle] = useState({
     username: false,
@@ -53,8 +53,6 @@ export const Profile = () => {
   useEffect(() => {
     dispatch(fetchTeams());
   }, [auth]);
-
-  console.log('TEST TESTING', teams.adminId)
 
   const editMode = (type, cancel) => {
     setEditToggle({
@@ -242,7 +240,15 @@ export const Profile = () => {
             )}
           </ListItem>
         </Stack>
-          {auth.id === teams.adminId ? <div><AdminError /></div>: <div><ConfirmDelete /></div>}
+        {auth.id === teams.adminId ? (
+          <div>
+            <AdminError />
+          </div>
+        ) : (
+          <div>
+            <ConfirmDelete />
+          </div>
+        )}
         <br></br>
       </Paper>
     </Container>
