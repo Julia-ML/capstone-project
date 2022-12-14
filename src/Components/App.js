@@ -7,7 +7,14 @@ import ProjectDetail from "./ProjectDetail";
 import NavBar from "./Nav";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
-import { Link, Routes, Route, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  Routes,
+  Route,
+  useNavigate,
+  useParams,
+  useLocation,
+} from "react-router-dom";
 import Profile from "./Profile";
 import Team from "./Team";
 
@@ -15,11 +22,25 @@ const App = () => {
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     dispatch(loginWithToken());
   }, []);
 
+  if (!auth.id && pathname !== "/" && !pathname.includes("login")) {
+    return (
+      <div>
+        <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
+        <nav>
+          <div className="nav">
+            <NavBar />
+          </div>
+        </nav>
+        <Login />
+      </div>
+    );
+  }
   return (
     <div>
       <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
