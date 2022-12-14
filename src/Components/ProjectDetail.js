@@ -68,13 +68,13 @@ const ProjectDetail = () => {
     const job = schedule.scheduleJob("* * * * *", function () {
       let taskLength = projectTasks.length;
       let doneTasks = projectTasks.filter(
-        (task) => task.status === "To Do"
-      ).length; //using to do for now instead of done bc done bug
+        (task) => task.status === "Done"
+      ).length;
 
       const percent = doneTasks / taskLength; //returns % tasks done
 
-      if (percent) {
-        console.log(doneTasks, taskLength, Date());
+      if (percent || percent === 0) {
+        //console.log(doneTasks, taskLength, Date());
         //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
       }
       taskLength = 0;
