@@ -11,6 +11,7 @@ import {
   addLog,
   updateTask,
 } from "../store";
+import graph from "./graph";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -60,25 +61,6 @@ const ProjectDetail = () => {
   useEffect(() => {
     const projectTasks = tasks.filter((task) => {
       return task.projectId == id;
-    });
-
-    const rule = new schedule.RecurrenceRule();
-    //rule.hour = 0;
-    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-    const job = schedule.scheduleJob("* * * * *", function () {
-      let taskLength = projectTasks.length;
-      let doneTasks = projectTasks.filter(
-        (task) => task.status === "To Do"
-      ).length; //using to do for now instead of done bc done bug
-
-      const percent = doneTasks / taskLength; //returns % tasks done
-
-      if (percent) {
-        console.log(doneTasks, taskLength, Date());
-        //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
-      }
-      taskLength = 0;
-      doneTasks = 0;
     });
 
     if (projects[0] !== undefined) {
@@ -464,14 +446,7 @@ const ProjectDetail = () => {
         </FormControl>
       </Drawer>
       <hr />
-      <ul>
-        DATA:{" "}
-        {log
-          ? log.map((logItem) => {
-              return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
-            })
-          : ""}
-      </ul>
+      <div>{log ? graph(log) : ""}</div>
       <hr />
     </div>
   );
