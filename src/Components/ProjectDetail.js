@@ -11,6 +11,7 @@ import {
   addLog,
   updateTask,
 } from "../store";
+import graph from "./graph";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -464,14 +465,7 @@ const ProjectDetail = () => {
         </FormControl>
       </Drawer>
       <hr />
-      <ul>
-        DATA:{" "}
-        {log
-          ? log.map((logItem) => {
-              return <li key={logItem.id}>{(logItem.value * 1).toFixed(2)}</li>;
-            })
-          : ""}
-      </ul>
+      <div>{log ? graph(log) : ""}</div>
       <hr />
     </div>
   );

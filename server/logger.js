@@ -9,8 +9,13 @@ const logger = async (Project, Task, Log) => {
     const doneTasks = projectTasks
       ? projectTasks.filter((task) => task.status === "Done")
       : [];
-    const percent = doneTasks.length / projectTasks.length;
-    Log.create({ date: Date(), value: percent, projectId: i.id });
+    //  const percent = doneTasks.length / projectTasks.length;
+    Log.create({
+      date: Date(),
+      value: doneTasks.length,
+      total: projectTasks.length,
+      projectId: i.id,
+    });
   }
 };
 
