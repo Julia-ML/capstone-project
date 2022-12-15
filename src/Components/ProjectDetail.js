@@ -63,25 +63,6 @@ const ProjectDetail = () => {
       return task.projectId == id;
     });
 
-    const rule = new schedule.RecurrenceRule();
-    //rule.hour = 0;
-    rule.minute = [new schedule.Range(0, 59)]; //runs ever min for testing
-    const job = schedule.scheduleJob("* * * * *", function () {
-      let taskLength = projectTasks.length;
-      let doneTasks = projectTasks.filter(
-        (task) => task.status === "Done"
-      ).length;
-
-      const percent = doneTasks / taskLength; //returns % tasks done
-
-      if (percent || percent === 0) {
-        //console.log(doneTasks, taskLength, Date());
-        //dispatch(addLog({ date: Date(), value: percent, projectId: id }));
-      }
-      taskLength = 0;
-      doneTasks = 0;
-    });
-
     if (projects[0] !== undefined) {
       //kept getting project undefined error, changing from projects.length to this seems to fix it??
       const project = projects.find((project) => project.id === id);
