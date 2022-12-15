@@ -15,7 +15,6 @@ const init = async () => {
 
 init();
 
-const job = schedule.scheduleJob("0 * * * * *", function () {
-  console.log("???");
+const job = schedule.scheduleJob("0 21 * * *", function () {
   logger(Project, Task, Log);
 });
