@@ -9,17 +9,17 @@ import TaskCard from "./TaskCard";
 const TaskGallery = () => {
 	const { tasks } = useSelector((state) => state);
 	const dispatch = useDispatch();
-	// const [_tasks, setTasks] = useState([]);
+	const [_tasks, setTasks] = useState([]);
 
 	useEffect(() => {
 		dispatch(fetchTasks());
 	}, []);
 
-	// useEffect(() => {
-	// 	if (tasks[0] !== undefined) {
-	// 		setTasks(tasks);
-	// 	}
-	// }, [tasks]);
+	useEffect(() => {
+		if (tasks[0] !== undefined) {
+			setTasks(tasks);
+		}
+	}, [tasks]);
 
 	return (
 		<Container>
@@ -33,7 +33,7 @@ const TaskGallery = () => {
 					padding: "1rem",
 				}}
 			>
-				{tasks.map((task) => {
+				{_tasks.map((task) => {
 					return <TaskCard task={task} key={task.id} />;
 				})}
 			</Grid>
