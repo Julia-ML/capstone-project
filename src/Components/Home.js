@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects, fetchTeams } from "../store";
 import { useNavigate } from "react-router-dom";
+import EmailSummary from "./EmailSummary";
 
 const Home = () => {
   const { auth } = useSelector((state) => state);
@@ -16,6 +17,7 @@ const Home = () => {
   return (
     <div>
       <div>My Dashboard for: {date.toDateString()}</div>
+      <EmailSummary />
     </div>
   );
 };

@@ -61,3 +61,32 @@ app.post("/invite/team", async (req, res, next) => {
     next(ex);
   }
 });
+
+app.post("/summary", async (req, res, next) => {
+  try {
+    console.log(req.body, "testing project");
+    // const transporter = nodemailer.createTransport({
+    //   service: "Zoho",
+    //   auth: {
+    //     user: "devtest2207@zohomail.com",
+    //     pass: process.env.EMAILPASS,
+    //   },
+    // });
+    // const mailOptions = {
+    //   from: "devtest2207@zohomail.com",
+    //   to: req.body.recipient,
+    //   subject: `subject here`,
+    //   html: `html here`,
+    // };
+    // transporter.sendMail(mailOptions, function (error, info) {
+    //   if (error) {
+    //     console.log(error);
+    //   } else {
+    //     console.log("Summary Email sent" + info.response);
+    //   }
+    // });
+    res.sendStatus(201);
+  } catch (ex) {
+    next(ex);
+  }
+});
