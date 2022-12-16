@@ -8,62 +8,64 @@ import NavBar from "./Nav";
 import { useSelector, useDispatch } from "react-redux";
 import { loginWithToken } from "../store";
 import {
-  Link,
-  Routes,
-  Route,
-  useNavigate,
-  useParams,
-  useLocation,
+	Link,
+	Routes,
+	Route,
+	useNavigate,
+	useParams,
+	useLocation,
 } from "react-router-dom";
 import Profile from "./Profile";
 import Team from "./Team";
+import TaskGallery from "./TaskGallery";
 
 const App = () => {
-  const { auth } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { pathname } = useLocation();
+	const { auth } = useSelector((state) => state);
+	const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const { pathname } = useLocation();
 
-  useEffect(() => {
-    dispatch(loginWithToken());
-  }, []);
+	useEffect(() => {
+		dispatch(loginWithToken());
+	}, []);
 
-  if (!auth.id && pathname !== "/" && !pathname.includes("login")) {
-    return (
-      <div>
-        <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
-        <nav>
-          <div className="nav">
-            <NavBar />
-          </div>
-        </nav>
-        <Login />
-      </div>
-    );
-  }
-  return (
-    <div>
-      <h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
-      <div>
-        <nav>
-          <div className="nav">
-            <NavBar />
-          </div>
-        </nav>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/login/:teamIdEmail" element={<Login />} />
-          <Route path="/team" element={<Team />} />
-          <Route path="/team/:teamIdEmail" element={<Team />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/dashboard" element={<Home />} />
-          <Route path="/projects" element={<ProjectGallery />} />
-          <Route path="/projects/:id" element={<ProjectDetail />} />
-        </Routes>
-      </div>
-    </div>
-  );
+	if (!auth.id && pathname !== "/" && !pathname.includes("login")) {
+		return (
+			<div>
+				<h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
+				<nav>
+					<div className="nav">
+						<NavBar />
+					</div>
+				</nav>
+				<Login />
+			</div>
+		);
+	}
+	return (
+		<div>
+			<h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
+			<div>
+				<nav>
+					<div className="nav">
+						<NavBar />
+					</div>
+				</nav>
+				<Routes>
+					<Route path="/" element={<LandingPage />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/login/:teamIdEmail" element={<Login />} />
+					<Route path="/team" element={<Team />} />
+					<Route path="/team/:teamIdEmail" element={<Team />} />
+					<Route path="/profile" element={<Profile />} />
+					<Route path="/dashboard" element={<Home />} />
+					<Route path="/projects" element={<ProjectGallery />} />
+					<Route path="/projects/:id" element={<ProjectDetail />} />
+					<Route path="/tasks" element={<TaskGallery />} />
+				</Routes>
+			</div>
+		</div>
+	);
 };
 
 export default App;
