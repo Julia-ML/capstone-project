@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTasks, fetchUsers, fetchProjects } from "../store";
+import { fetchTasks, fetchUsers, fetchProjects, fetchTeams } from "../store";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -17,32 +17,26 @@ const TaskGallery = () => {
 		dispatch(fetchTasks());
 		dispatch(fetchUsers());
 		dispatch(fetchProjects());
+		dispatch(fetchTeams());
 	}, []);
 
 	useEffect(() => {
 		if (tasks[0] !== undefined) {
 			setTasks(tasks);
+			if (projects[0] !== undefined) {
+				setProjects(projects);
+			}
+			if (users[0] !== undefined) {
+				setUsers(users);
+			}
 		}
-	}, [tasks]);
-
-	useEffect(() => {
-		if (projects[0] !== undefined) {
-			setProjects(projects);
-		}
-	}, [projects]);
-
-	useEffect(() => {
-		if (users[0] !== undefined) {
-			setUsers(users);
-		}
-	}, [users]);
+	}, [tasks, projects, users]);
 
 	return (
 		<Container>
 			<Typography variant="h3">Team Tasks</Typography>
 			<Grid
 				container
-				xs={12}
 				spacing={3}
 				sx={{
 					margin: "1rem",
@@ -54,7 +48,6 @@ const TaskGallery = () => {
 						(project) => project.id === task.projectId
 					);
 					const user = _users.find((user) => user.id === task.userId);
-					console.log(user, "logging user!");
 					return (
 						<TaskCard task={task} project={project} user={user} key={task.id} />
 					);

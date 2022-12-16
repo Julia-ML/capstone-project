@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchProjects, fetchUsers, fetchTasks, updateTask } from "../store";
+import { Link, useNavigate } from "react-router-dom";
+import { fetchTasks, updateTask } from "../store";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -13,14 +14,16 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Drawer from "@mui/material/Drawer";
 import Tooltip from "@mui/material/Tooltip";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 
 const TaskCard = (props) => {
 	const { task, project, user } = props;
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
 	const [drawerOpen, setDrawerOpen] = useState(false);
-	const [drawerTask, setDrawerTask] = useState({});
+	const [drawerTask, setDrawerTask] = useState(task);
 
 	const handleClickOpen = () => {
 		setOpen(true);
@@ -46,6 +49,7 @@ const TaskCard = (props) => {
 		toggleDrawer();
 		setDrawerTask({});
 		dispatch(fetchTasks());
+		window.location.reload();
 	};
 
 	return (
@@ -57,7 +61,6 @@ const TaskCard = (props) => {
 				flexDirection: "column",
 				boxShadow: 5,
 				borderRadius: 2,
-				justifyContent: "center",
 				margin: "1rem",
 				padding: "1rem",
 				width: "300px",
@@ -65,7 +68,11 @@ const TaskCard = (props) => {
 		>
 			<Grid item>
 				<Typography variant="h6">
-					{task.name} {"  "}
+					{task === undefined ? "" : task.name}
+				</Typography>
+			</Grid>
+			<Grid container sx={{ display: "flex", flexDirection: "row" }}>
+				<Grid item>
 					<Tooltip title="Edit task">
 						<IconButton
 							onClick={() => {
@@ -76,19 +83,37 @@ const TaskCard = (props) => {
 							<EditIcon />
 						</IconButton>
 					</Tooltip>
-				</Typography>
+				</Grid>
+				<Grid item>
+					{project === undefined ? (
+						""
+					) : (
+						<Link to={`/projects/${project.id}`}>
+							<Tooltip title="Go to project page">
+								<IconButton>
+									<DashboardIcon />
+								</IconButton>
+							</Tooltip>
+						</Link>
+					)}
+				</Grid>
 			</Grid>
 			<br />
 			<Grid item align="left">
-				<Typography>Description: {task.description}</Typography>
+				<Typography variant="subtitle2">
+					Project: {project === undefined ? "" : project.name}
+				</Typography>
 			</Grid>
 			<Grid item align="left">
-				<Typography>Project: {project.name}</Typography>
-			</Grid>
-			<Grid item align="left">
-				<Typography>
+				<Typography variant="subtitle2">
 					Assigned to: {user === undefined ? "" : user.firstName}
 				</Typography>
+			</Grid>
+			<Grid item align="left">
+				<Typography>Description:</Typography>
+			</Grid>
+			<Grid item align="left">
+				<Typography>{task === undefined ? "" : task.description}</Typography>
 			</Grid>
 			<Drawer
 				anchor={"right"}
