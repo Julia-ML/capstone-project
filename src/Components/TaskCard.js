@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects, fetchUsers, fetchTasks, updateTask } from "../store";
 import Grid from "@mui/material/Grid";
@@ -9,13 +9,13 @@ import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Drawer from "@mui/material/Drawer";
+import Tooltip from "@mui/material/Tooltip";
 
 const TaskCard = (props) => {
-	const { task } = props;
+	const { task, project, user } = props;
 	const dispatch = useDispatch();
 	const [open, setOpen] = useState(false);
 	const [disabled, setDisabled] = useState(true);
@@ -66,19 +66,29 @@ const TaskCard = (props) => {
 			<Grid item>
 				<Typography variant="h6">
 					{task.name} {"  "}
-					<IconButton>
-						<EditIcon
+					<Tooltip title="Edit task">
+						<IconButton
 							onClick={() => {
 								setDrawerTask(task);
 								setDrawerOpen(true);
 							}}
-						/>
-					</IconButton>
+						>
+							<EditIcon />
+						</IconButton>
+					</Tooltip>
 				</Typography>
 			</Grid>
 			<br />
 			<Grid item align="left">
 				<Typography>Description: {task.description}</Typography>
+			</Grid>
+			<Grid item align="left">
+				<Typography>Project: {project.name}</Typography>
+			</Grid>
+			<Grid item align="left">
+				<Typography>
+					Assigned to: {user === undefined ? "" : user.firstName}
+				</Typography>
 			</Grid>
 			<Drawer
 				anchor={"right"}
