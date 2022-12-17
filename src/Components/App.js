@@ -18,6 +18,7 @@ import {
 import Profile from "./Profile";
 import Team from "./Team";
 import TaskGallery from "./TaskGallery";
+import Typography from "@mui/material/Typography";
 
 const App = () => {
 	const { auth } = useSelector((state) => state);
@@ -32,7 +33,6 @@ const App = () => {
 	if (!auth.id && pathname !== "/" && !pathname.includes("login")) {
 		return (
 			<div>
-				<h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
 				<nav>
 					<div className="nav">
 						<NavBar />
@@ -44,7 +44,6 @@ const App = () => {
 	}
 	return (
 		<div>
-			<h1 onClick={() => navigate("/")}>Daily Standup Replacer</h1>
 			<div>
 				<nav>
 					<div className="nav">
