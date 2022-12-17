@@ -1,28 +1,49 @@
-import { Button } from "@mui/material";
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import React from "react";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 
 const EmailSummary = () => {
   const { projects } = useSelector((state) => state);
-  console.log(projects);
+  const [selectedProject, setSelectedProject] = useState("");
 
-  const handleClick = async (project) => {
-    const response = await axios.post("/api/emails/summary", { project });
+  const handleClick = async () => {
+    const response = await axios.post("/api/emails/summary", selectedProject);
+    setSelectedProject({});
+  };
+  const handleChange = (ev) => {
+    setSelectedProject(ev.target.value);
   };
 
   return (
-    <div className="email-summary-buttons">
-      {projects.map((project, idx) => {
-        return (
-          <div key={idx}>
-            <Button variant="contained" onClick={() => handleClick(project)}>
-              Send email summary for {project.name}
-            </Button>
-            <br />
-          </div>
-        );
-      })}
+    <div className="email-summary">
+      <Typography variant="h3">Summary Email for team</Typography>
+      <FormControl>
+        <InputLabel>Select a project</InputLabel>
+        <Select
+          value={selectedProject}
+          label="Choose Project"
+          onChange={handleChange}>
+          {projects.map((project, idx) => {
+            return (
+              <MenuItem value={project} key={idx}>
+                {project.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+        <Button variant="contained" onClick={() => handleClick()}>
+          Send Summary email
+        </Button>
+      </FormControl>
     </div>
   );
 };

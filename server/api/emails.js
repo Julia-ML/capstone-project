@@ -66,10 +66,10 @@ app.post("/invite/team", async (req, res, next) => {
 
 app.post("/summary", async (req, res, next) => {
   try {
-    const recipient = await User.findByPk(req.body.project.userId);
+    const recipient = await User.findByPk(req.body.userId);
     const teamMembers = await User.findAll({
       where: {
-        teamId: req.body.project.teamId,
+        teamId: req.body.teamId,
       },
     });
     const dateFormatter = (dateString) => {
@@ -80,13 +80,13 @@ app.post("/summary", async (req, res, next) => {
     };
     const emailHTML = `
     <div>
-      <h2>Daily summary of project - ${req.body.project.name}</h2>
+      <h2>Daily summary of project - ${req.body.name}</h2>
       <div>
         <h3>List of tasks</h3>
         <div>
           <h4>Backlog:</h4>
             <ul>
-            ${req.body.project.tasks
+            ${req.body.tasks
               .map((task) => {
                 if (task.status === "Backlog") {
                   return `
@@ -115,7 +115,7 @@ app.post("/summary", async (req, res, next) => {
         <div>
           <h4>To Do:</h4>
             <ul>
-              ${req.body.project.tasks
+              ${req.body.tasks
                 .map((task) => {
                   if (task.status === "To Do") {
                     return `
@@ -144,7 +144,7 @@ app.post("/summary", async (req, res, next) => {
         <div>
           <h4>In Progress:</h4>
             <ul>
-              ${req.body.project.tasks
+              ${req.body.tasks
                 .map((task) => {
                   if (task.status === "In Progress") {
                     return `
@@ -173,7 +173,7 @@ app.post("/summary", async (req, res, next) => {
         <div>
           <h4>Done:</h4>
             <ul>
-              ${req.body.project.tasks
+              ${req.body.tasks
                 .map((task) => {
                   if (task.status === "Done") {
                     return `
@@ -212,7 +212,7 @@ app.post("/summary", async (req, res, next) => {
       const mailOptions = {
         from: "devtest2207@zohomail.com",
         to: member.email,
-        subject: `Daily summary of project - ${req.body.project.name}`,
+        subject: `Daily summary of project - ${req.body.name}`,
         html: emailHTML,
       };
       transporter.use("compile", htmlToText());
@@ -239,7 +239,7 @@ app.post("/summary", async (req, res, next) => {
     // const mailOptions = {
     //   from: "devtest2207@zohomail.com",
     //   to: recipient.email,
-    //   subject: `Daily summary of project - ${req.body.project.name}`,
+    //   subject: `Daily summary of project - ${req.body.name}`,
     //   html: emailHTML,
     // };
     // transporter.use("compile", htmlToText());

@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { fetchTeams, setNewAdmin } from "../store";
+import { fetchProjects, fetchTeams, setNewAdmin } from "../store";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
@@ -19,6 +19,7 @@ import CancelIcon from "@mui/icons-material/Cancel";
 import { RemoveTeamMember } from "../store";
 import axios from "axios";
 import { useState } from "react";
+import EmailSummary from "./EmailSummary";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -27,6 +28,7 @@ const Team = () => {
 
   useEffect(() => {
     dispatch(fetchTeams());
+    dispatch(fetchProjects());
   }, [auth]);
 
   if (auth.id === teams.adminId) {
@@ -103,6 +105,12 @@ const Team = () => {
         <div>
           <CreateTeam />
           <JoinTeam />
+        </div>
+      )}
+      {adminView && (
+        <div>
+          <br />
+          <EmailSummary />
         </div>
       )}
     </Container>

@@ -50,7 +50,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "lucy",
       lastName: "lucylastname",
-      email: "dorcha123@gmail.com",
+      email: "newlin5@gmail.com",
       teamId: teamMoe.id,
     }),
     User.create({
@@ -74,7 +74,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "ramir",
       lastName: "migues",
-      email: "ramir101@gmail.com",
+      email: "dorcha123@gmail.com",
     }),
   ]);
 

@@ -17,7 +17,6 @@ const Home = () => {
   return (
     <div>
       <div>My Dashboard for: {date.toDateString()}</div>
-      <EmailSummary />
     </div>
   );
 };
