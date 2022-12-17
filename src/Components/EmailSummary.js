@@ -10,6 +10,7 @@ const EmailSummary = () => {
   const handleClick = async (project) => {
     const response = await axios.post("/api/emails/summary", { project });
   };
+
   return (
     <div className="email-summary-buttons">
       {projects.map((project, idx) => {

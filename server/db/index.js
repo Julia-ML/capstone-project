@@ -42,7 +42,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "moe",
       lastName: "moelastname",
-      email: "moe@email.com",
+      email: "ramir101@gmail.com",
       teamId: teamMoe.id,
     }),
     User.create({
@@ -50,7 +50,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "lucy",
       lastName: "lucylastname",
-      email: "lucy@email.com",
+      email: "dorcha123@gmail.com",
       teamId: teamMoe.id,
     }),
     User.create({
@@ -58,7 +58,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "larry",
       lastName: "larrylastname",
-      email: "larry@email.com",
+      email: "ramir101@gmail.com",
       teamId: teamLarry.id,
     }),
     User.create({
@@ -66,7 +66,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "ethyl",
       lastName: "ethyllastname",
-      email: "ethyl@email.com",
+      email: "ramir101@gmail.com",
       teamId: teamLarry.id,
     }),
     User.create({
@@ -74,7 +74,7 @@ const syncAndSeed = async () => {
       password: "123",
       firstName: "ramir",
       lastName: "migues",
-      email: "ramir@email.com",
+      email: "ramir101@gmail.com",
     }),
   ]);
 
@@ -115,6 +115,7 @@ const syncAndSeed = async () => {
       description: "We need to create the base repository.",
       projectId: snackProj.id,
       status: "To Do",
+      userId: moe.id,
       teamId: teamMoe.id,
     }),
     Task.create({
@@ -122,6 +123,7 @@ const syncAndSeed = async () => {
       description: "We need to create the base repository.",
       projectId: larryProj.id,
       status: "To Do",
+      userId: larry.id,
       teamId: teamLarry.id,
     }),
     Task.create({
@@ -144,6 +146,7 @@ const syncAndSeed = async () => {
       description: "Use the existing Excel template in the folder.",
       projectId: newProj.id,
       teamId: teamMoe.id,
+      userId: moe.id,
       deadline: "2023-01-15T22:00:00.000Z",
     }),
     Task.create({
