@@ -27,7 +27,6 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
-import BasicDatePicker from "./BasicDatePicker";
 import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -137,16 +136,19 @@ const ProjectDetail = () => {
         ...drawerTask,
         [ev.target.name]: ev.target.value,
       });
+      if (ev.target.name === "status") {
+        dispatch(fetchTasks());
+      }
     }
   };
 
   const onDeadlineEdit = (date) => {
     setDrawerTask({ ...drawerTask, deadline: date });
+    dispatch(fetchTasks());
   };
 
   const createNewTask = () => {
     dispatch(createTask(newTask));
-    //doesn't show up in column after creating until you refresh?
     if (newTask.status === "To Do") {
       setTodo([...todo, newTask]);
     }
@@ -174,19 +176,18 @@ const ProjectDetail = () => {
   const editTask = () => {
     dispatch(updateTask(drawerTask));
     toggleDrawer();
-    //doesn't show up in column after creating until you refresh?
-    if (drawerTask.status === "To Do") {
-      setTodo([...todo, drawerTask]);
-    }
-    if (drawerTask.status === "Backlog") {
-      setBacklog([...backlog, drawerTask]);
-    }
-    if (drawerTask.status === "In Progress") {
-      setProgress([...progress, drawerTask]);
-    }
-    if (drawerTask.status === "Done") {
-      setProgress([...done, drawerTask]);
-    }
+    // if (drawerTask.status === "To Do") {
+    //   setTodo([...todo, drawerTask]);
+    // }
+    // if (drawerTask.status === "Backlog") {
+    //   setBacklog([...backlog, drawerTask]);
+    // }
+    // if (drawerTask.status === "In Progress") {
+    //   setProgress([...progress, drawerTask]);
+    // }
+    // if (drawerTask.status === "Done") {
+    //   setProgress([...done, drawerTask]);
+    // }
     setColumns({ ...columns });
     setDrawerTask({});
     dispatch(fetchTasks());
@@ -477,6 +478,14 @@ const ProjectDetail = () => {
                 }}
                 renderInput={(params) => <TextField {...params} />}
               />
+              <Button
+                onClick={() => {
+                  setValue(null);
+                  setDrawerTask({ ...drawerTask, deadline: null });
+                }}
+              >
+                clear date
+              </Button>
             </LocalizationProvider>
             <FormHelperText>Deadline</FormHelperText>
           </FormControl>
