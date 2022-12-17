@@ -11,7 +11,7 @@ import {
   addLog,
   updateTask,
 } from "../store";
-import graph from "./graph";
+import DoneGraph from "./DoneGraph";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
@@ -495,7 +495,7 @@ const ProjectDetail = () => {
         </FormControl>
       </Drawer>
       <hr />
-      <div>{log ? graph(log) : ""}</div>
+      <div>{log ? <DoneGraph log={log} /> : ""}</div>
       <hr />
     </div>
   );

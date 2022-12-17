@@ -189,7 +189,7 @@ const syncAndSeed = async () => {
       projectId: newProj.id,
     }),
     Log.create({
-      date: "Fri Dec 15 2022 21:58:38 GMT+0000 (Coordinated Universal Time)",
+      date: "Fri Dec 16 2022 21:58:38 GMT+0000 (Coordinated Universal Time)",
       value: 6,
       total: 7,
       projectId: newProj.id,
