@@ -270,7 +270,13 @@ const TaskGallery = () => {
 					);
 					const user = _users.find((user) => user.id === task.userId);
 					return (
-						<TaskCard task={task} project={project} user={user} key={task.id} />
+						<TaskCard
+							task={task}
+							project={project}
+							user={user}
+							_users={_users}
+							key={task.id}
+						/>
 					);
 				})}
 			</Grid>
