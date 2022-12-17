@@ -9,7 +9,8 @@ import {
   Legend,
 } from "recharts";
 
-const graph = (log) => {
+const DoneGraph = (props) => {
+  const log = props.log;
   if (log.length > 7) {
     log = log.slice(-7);
   }
@@ -32,4 +33,4 @@ const graph = (log) => {
   );
 };
 
-export default graph;
+export default DoneGraph;
