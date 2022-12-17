@@ -19,9 +19,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 const TaskCard = (props) => {
 	const { task, project, user } = props;
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [open, setOpen] = useState(false);
-	const [disabled, setDisabled] = useState(true);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [drawerTask, setDrawerTask] = useState(task);
 
@@ -106,14 +104,22 @@ const TaskCard = (props) => {
 			</Grid>
 			<Grid item align="left">
 				<Typography variant="subtitle2">
-					Assigned to: {user === undefined ? "" : user.firstName}
+					Status: {task === undefined ? "" : task.status}
 				</Typography>
 			</Grid>
 			<Grid item align="left">
-				<Typography>Description:</Typography>
+				<Typography variant="subtitle2">
+					Assigned to: {user === undefined ? "" : user.firstName}
+				</Typography>
+			</Grid>
+			<hr />
+			<Grid item align="left">
+				<Typography variant="subtitle2">Description:</Typography>
 			</Grid>
 			<Grid item align="left">
-				<Typography>{task === undefined ? "" : task.description}</Typography>
+				<Typography variant="subtitle2">
+					{task === undefined ? "" : task.description}
+				</Typography>
 			</Grid>
 			<Drawer
 				anchor={"right"}

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { fetchTasks, fetchUsers, fetchProjects, fetchTeams } from "../store";
+import { fetchTasks, fetchProjects, fetchTeams } from "../store";
 import TaskCard from "./TaskCard";
 import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
@@ -15,11 +16,11 @@ const TaskGallery = () => {
 	const { tasks, projects, teams } = useSelector((state) => state);
 	const dispatch = useDispatch();
 	const [_tasks, setTasks] = useState([]);
-	const [team, setTeam] = useState({});
 	const [_users, setUsers] = useState([]);
 	const [_projects, setProjects] = useState([]);
 	const [projectFilter, setProjectFilter] = useState("");
 	const [userFilter, setUserFilter] = useState("");
+	const [statusFilter, setStatusFilter] = useState("");
 
 	useEffect(() => {
 		dispatch(fetchTasks());
@@ -39,42 +40,137 @@ const TaskGallery = () => {
 		}
 	}, [tasks, projects, teams]);
 
-	// Create the select boxes first
-	// Create the onChange functions to change project, user, status
-	/*
-		Method for filtering multiple layers on one page
-		- If a project is selected, filter by project first
-		- If a status is selected, filter by status next
-		- If a user is selected, filter by user
-		if (projectFilter) (
-			_tasks.filter((task)=>{return task.projectId === projectFilter})
-		)
-		
-	*/
+	useEffect(() => {
+		if (projectFilter.length && userFilter.length && statusFilter.length) {
+			setTasks(
+				tasks.filter((task) => {
+					return (
+						task.projectId === projectFilter &&
+						task.userId === userFilter &&
+						task.status === statusFilter
+					);
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			userFilter.length &&
+			!statusFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.projectId === projectFilter && task.userId === userFilter;
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			statusFilter.length &&
+			!userFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return (
+						task.projectId === projectFilter && task.status === statusFilter
+					);
+				})
+			);
+		} else if (
+			userFilter.length &&
+			statusFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.userId === userFilter && task.status === statusFilter;
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			!userFilter.length &&
+			!statusFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.projectId === projectFilter;
+				})
+			);
+		} else if (
+			userFilter.length &&
+			!statusFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.userId === userFilter;
+				})
+			);
+		} else if (
+			statusFilter.length &&
+			!userFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.status === statusFilter;
+				})
+			);
+		} else {
+			setTasks(tasks);
+		}
+	}, [projectFilter, userFilter, statusFilter]);
 
 	const projectfilterChange = (ev) => {
-		ev.preventDefault();
+		if (ev.target.value === "") {
+			dispatch(fetchTasks());
+			return;
+		}
 		const newId = ev.target.value.id;
 		setProjectFilter(newId);
-		console.log(projectFilter, "logging project filter id!");
+	};
+
+	const userfilterChange = (ev) => {
+		if (ev.target.value === "") {
+			dispatch(fetchTasks());
+			return;
+		}
+		const newId = ev.target.value.id;
+		setUserFilter(newId);
+	};
+
+	const statusfilterChange = (ev) => {
+		if (ev.target.value === "") {
+			dispatch(fetchTasks());
+			return;
+		}
+		const newId = ev.target.value;
+		setStatusFilter(newId);
+	};
+
+	const clearFilters = () => {
+		setStatusFilter("");
+		setProjectFilter("");
+		setUserFilter("");
 	};
 
 	return (
 		<Container>
-			<Typography variant='h3'>Team Tasks</Typography>
-			<Grid container>
+			<br />
+			<Typography variant="h3" align="center">
+				{teams.name} Tasks
+			</Typography>
+			<Grid container sx={{ display: "flex", justifyContent: "flex-start" }}>
 				<Grid
 					item
 					sx={{ margin: "1rem", padding: "1rem", width: "200px" }}
 					xs={3}
 				>
-					<FormControl sx={{ m: 1, minWidth: 120 }}>
+					<FormControl sx={{ m: 1, minWidth: 200 }}>
 						<Select
-							variant='filled'
+							variant="filled"
 							onChange={projectfilterChange}
 							defaultValue={""}
 							value={projectFilter}
-							id={"select"}
+							id={"selectproject"}
+							label={"Project"}
 						>
 							<MenuItem value={""} key={"none"}>
 								<em>None</em>
@@ -90,20 +186,74 @@ const TaskGallery = () => {
 						<FormHelperText>Filter by project</FormHelperText>
 					</FormControl>
 				</Grid>
-				<Grid item sx={{ margin: "1rem", padding: "1rem" }}>
-					<Typography variant='subtitle1'>Filter Status</Typography>
+				<Grid
+					item
+					sx={{ margin: "1rem", padding: "1rem", width: "200px" }}
+					xs={3}
+				>
+					<FormControl sx={{ m: 1, minWidth: 200 }}>
+						<Select
+							variant="filled"
+							onChange={userfilterChange}
+							defaultValue={""}
+							value={userFilter}
+							id={"selectuser"}
+							label={"name"}
+						>
+							<MenuItem value={""} key={"none"}>
+								<em>None</em>
+							</MenuItem>
+							{_users.map((user) => {
+								return (
+									<MenuItem key={user.id} value={user}>
+										{user.firstName}
+									</MenuItem>
+								);
+							})}
+						</Select>
+						<FormHelperText>Filter by assigned team member</FormHelperText>
+					</FormControl>
 				</Grid>
 				<Grid
 					item
-					sx={{ border: 1, margin: "1rem", padding: "1rem", width: "300px" }}
+					sx={{ margin: "1rem", padding: "1rem", width: "200px" }}
+					xs={3}
 				>
-					<Typography variant='subtitle1'>
-						<ul>
-							{_users.map((user) => {
-								return <li key={user.id}>{user.firstName}</li>;
-							})}
-						</ul>
-					</Typography>
+					<FormControl sx={{ m: 1, minWidth: 200 }}>
+						<Select
+							variant="filled"
+							onChange={statusfilterChange}
+							defaultValue={""}
+							value={statusFilter}
+							id={"selectstatus"}
+						>
+							<MenuItem value={""} key={"none"}>
+								<em>None</em>
+							</MenuItem>
+							<MenuItem value="Backlog" key={"Backlog"}>
+								Backlog
+							</MenuItem>
+							<MenuItem value="To Do" key={"To Do"}>
+								To Do
+							</MenuItem>
+							<MenuItem value="In Progress" key={"In Progress"}>
+								In Progress
+							</MenuItem>
+							<MenuItem value="Done" key={"Done"}>
+								Done
+							</MenuItem>
+						</Select>
+						<FormHelperText>Filter by task status</FormHelperText>
+					</FormControl>
+				</Grid>
+				<Grid
+					item
+					sx={{ margin: "1rem", padding: "1rem", width: "200px" }}
+					xs={3}
+				>
+					<Button variant="contained" onClick={clearFilters}>
+						Clear all filters
+					</Button>
 				</Grid>
 			</Grid>
 			<Grid
