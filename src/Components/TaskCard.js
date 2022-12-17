@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 import { fetchTasks, updateTask } from "../store";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
@@ -8,38 +8,40 @@ import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import TextField from "@mui/material/TextField";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Drawer from "@mui/material/Drawer";
 import Tooltip from "@mui/material/Tooltip";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+import { Dayjs } from "dayjs";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const TaskCard = (props) => {
-	const { task, project, user } = props;
+	const { task, project, user, _users } = props;
 	const dispatch = useDispatch();
 	const [open, setOpen] = useState(false);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [drawerTask, setDrawerTask] = useState(task);
-
-	const handleClickOpen = () => {
-		setOpen(true);
-	};
-
-	const handleClose = () => {
-		setOpen(false);
-	};
+	const [value, setValue] = useState(Dayjs);
 
 	const toggleDrawer = () => {
 		setDrawerOpen(false);
 	};
 
 	const onEdit = (ev) => {
-		setDrawerTask({
-			...drawerTask,
-			[ev.target.name]: ev.target.value,
-		});
+		if (ev) {
+			setDrawerTask({
+				...drawerTask,
+				[ev.target.name]: ev.target.value,
+			});
+			if (ev.target.name === "status") {
+				dispatch(fetchTasks());
+			}
+		}
 	};
 
 	const editTask = () => {
@@ -47,8 +49,13 @@ const TaskCard = (props) => {
 		toggleDrawer();
 		setDrawerTask({});
 		dispatch(fetchTasks());
-		window.location.reload();
 	};
+
+	const onDeadlineEdit = (date) => {
+		setDrawerTask({ ...drawerTask, deadline: date });
+		dispatch(fetchTasks());
+	};
+
 	let newDate = "";
 	if (task.deadline) {
 		newDate = new Date(task.deadline).toLocaleString();
@@ -138,7 +145,7 @@ const TaskCard = (props) => {
 					sx: { width: "40%" },
 				}}
 			>
-				<FormControl sx={{ padding: 2, margin: "normal" }}>
+				<FormControl sx={{ padding: 2 }} margin="dense">
 					<Typography variant="h3">Task Details</Typography>
 					<TextField
 						autoFocus
@@ -147,7 +154,6 @@ const TaskCard = (props) => {
 						name="name"
 						type="text"
 						variant="standard"
-						margin="normal"
 						fullWidth
 						value={drawerTask.name}
 						onChange={onEdit}
@@ -159,25 +165,63 @@ const TaskCard = (props) => {
 						name="description"
 						type="text"
 						variant="standard"
-						margin="normal"
 						value={drawerTask.description}
 						onChange={onEdit}
 						fullWidth
 						multiline
 					/>
-					<Select
-						name="status"
-						value={drawerTask.status}
-						onChange={onEdit}
-						label="status"
-						margin="normal"
-					>
-						<MenuItem value={"To Do"}>To Do</MenuItem>
-						<MenuItem value={"In Progress"}>In Progress</MenuItem>
-						<MenuItem value={"Done"}>Done</MenuItem>
-						<MenuItem value={"Backlog"}>Backlog</MenuItem>
-					</Select>
-					<FormHelperText>Status</FormHelperText>
+					<br />
+					<FormControl>
+						<Select name="status" value={drawerTask.status} onChange={onEdit}>
+							<MenuItem value={"To Do"}>To Do</MenuItem>
+							<MenuItem value={"In Progress"}>In Progress</MenuItem>
+							<MenuItem value={"Done"}>Done</MenuItem>
+							<MenuItem value={"Backlog"}>Backlog</MenuItem>
+						</Select>
+						<FormHelperText>Status</FormHelperText>
+					</FormControl>
+					<FormControl>
+						<Select
+							name="userId"
+							value={drawerTask.userId}
+							onChange={onEdit}
+							fullWidth
+						>
+							<MenuItem value={""}>none</MenuItem>
+							{_users === undefined
+								? ""
+								: _users.map((teamMem) => {
+										return (
+											<MenuItem value={teamMem.id} key={teamMem.id}>
+												{teamMem.username}
+											</MenuItem>
+										);
+								  })}
+						</Select>
+						<FormHelperText>Assign to</FormHelperText>
+					</FormControl>
+					<FormControl>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DatePicker
+								value={drawerTask.deadline || value}
+								onChange={(newValue) => {
+									console.log(newValue.$d);
+									setValue(newValue);
+									onDeadlineEdit(newValue.$d);
+								}}
+								renderInput={(params) => <TextField {...params} />}
+							/>
+							<Button
+								onClick={() => {
+									setValue(null);
+									setDrawerTask({ ...drawerTask, deadline: null });
+								}}
+							>
+								clear date
+							</Button>
+						</LocalizationProvider>
+						<FormHelperText>Deadline</FormHelperText>
+					</FormControl>
 					<Button variant="contained" onClick={editTask}>
 						Update Task
 					</Button>
