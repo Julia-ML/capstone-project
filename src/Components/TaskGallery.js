@@ -12,18 +12,19 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 
 const TaskGallery = () => {
-	const { tasks, projects, auth, teams, users } = useSelector((state) => state);
+	const { tasks, projects, teams } = useSelector((state) => state);
 	const dispatch = useDispatch();
 	const [_tasks, setTasks] = useState([]);
 	const [team, setTeam] = useState({});
 	const [_users, setUsers] = useState([]);
 	const [_projects, setProjects] = useState([]);
+	const [projectFilter, setProjectFilter] = useState("");
+	const [userFilter, setUserFilter] = useState("");
 
 	useEffect(() => {
 		dispatch(fetchTasks());
 		dispatch(fetchProjects());
 		dispatch(fetchTeams());
-		dispatch(fetchUsers());
 	}, []);
 
 	useEffect(() => {
@@ -50,24 +51,46 @@ const TaskGallery = () => {
 		)
 		
 	*/
-	console.log(auth.teamId, "logging auth");
-	console.log(teams.users, "logging team users");
-	console.log(_users, "logging users");
+
+	const projectfilterChange = (ev) => {
+		ev.preventDefault();
+		const newId = ev.target.value.id;
+		setProjectFilter(newId);
+		console.log(projectFilter, "logging project filter id!");
+	};
 
 	return (
 		<Container>
 			<Typography variant='h3'>Team Tasks</Typography>
 			<Grid container>
-				<Grid item sx={{ border: 1, margin: "1rem", padding: "1rem" }}>
-					<Typography variant='subtitle1'>
-						<ul>
+				<Grid
+					item
+					sx={{ margin: "1rem", padding: "1rem", width: "200px" }}
+					xs={3}
+				>
+					<FormControl sx={{ m: 1, minWidth: 120 }}>
+						<Select
+							variant='filled'
+							onChange={projectfilterChange}
+							defaultValue={""}
+							value={projectFilter}
+							id={"select"}
+						>
+							<MenuItem value={""} key={"none"}>
+								<em>None</em>
+							</MenuItem>
 							{_projects.map((project) => {
-								return <li key={project.id}>{project.name}</li>;
+								return (
+									<MenuItem key={project.id} value={project}>
+										{project.name}
+									</MenuItem>
+								);
 							})}
-						</ul>
-					</Typography>
+						</Select>
+						<FormHelperText>Filter by project</FormHelperText>
+					</FormControl>
 				</Grid>
-				<Grid item sx={{ border: 1, margin: "1rem", padding: "1rem" }}>
+				<Grid item sx={{ margin: "1rem", padding: "1rem" }}>
 					<Typography variant='subtitle1'>Filter Status</Typography>
 				</Grid>
 				<Grid
