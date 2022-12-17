@@ -49,6 +49,10 @@ const TaskCard = (props) => {
 		dispatch(fetchTasks());
 		window.location.reload();
 	};
+	let newDate = "";
+	if (task.deadline) {
+		newDate = new Date(task.deadline).toLocaleString();
+	}
 
 	return (
 		<Grid
@@ -105,6 +109,11 @@ const TaskCard = (props) => {
 			<Grid item align="left">
 				<Typography variant="subtitle2">
 					Status: {task === undefined ? "" : task.status}
+				</Typography>
+			</Grid>
+			<Grid item align="left">
+				<Typography variant="subtitle2">
+					Deadline: {task.deadline === undefined ? "" : newDate}
 				</Typography>
 			</Grid>
 			<Grid item align="left">
