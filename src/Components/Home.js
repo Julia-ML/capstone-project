@@ -4,15 +4,15 @@ import { fetchProjects, fetchTeams, fetchTasks } from "../store";
 import { useNavigate } from "react-router-dom";
 //import UserTasksGraph from "./UserTasksGraph";
 //import TeamTasksGraph from "./TeamTasksGraph";
-import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
-import MenuList from '@mui/material/MenuList';
-import MenuItem from '@mui/material/MenuItem';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ContentCut from '@mui/icons-material/ContentCut';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
-import PersonIcon from '@mui/icons-material/Person';
+import Divider from "@mui/material/Divider";
+import Paper from "@mui/material/Paper";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ContentCut from "@mui/icons-material/ContentCut";
+import EqualizerIcon from "@mui/icons-material/Equalizer";
+import PersonIcon from "@mui/icons-material/Person";
 import Post from "./Post";
 import DashboardCard from "./DashboardCard";
 import Metrics from "./Metrics";
@@ -31,7 +31,7 @@ const Home = () => {
     <div display="flex">
       <div>My Dashboard for: {date.toDateString()}</div> <div>Due Soon: </div>
       <div>
-          <Paper sx={{ width: 200, maxWidth: '100%' }}>
+        <Paper sx={{ width: 200, maxWidth: "100%" }}>
           <MenuList>
             <MenuItem onClick={() => setActive("MetricsCard")}>
               <ListItemIcon>
@@ -48,8 +48,8 @@ const Home = () => {
           </MenuList>
         </Paper>
         <div class="dash-card">
-          {active === "PostingCard" && <DashboardCard comp={<Post />}/>}
-          {active === "MetricsCard" && <DashboardCard comp={<Metrics />}/>}
+          {active === "PostingCard" && <DashboardCard comp={<Post />} />}
+          {active === "MetricsCard" && <DashboardCard comp={<Metrics />} />}
         </div>
       </div>
     </div>

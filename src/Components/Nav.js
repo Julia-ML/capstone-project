@@ -21,14 +21,12 @@ function NavBar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
-
         <Toolbar>
           <IconButton
             size="large"
             edge="start"
             color="inherit"
             aria-label="menu"
-
             sx={{ mr: 2 }}
           ></IconButton>
 
@@ -37,18 +35,14 @@ function NavBar() {
               {auth.id && (
                 <div>
                   <Button color="inherit" onClick={() => navigate("/")}>
-
                     <Typography variant="h5" color="inherit">
-
                       Daily Standup Replacer
                     </Typography>
                   </Button>
                   <Button
                     color="inherit"
-
                     onClick={() => navigate("/dashboard")}
                   >
-
                     Dashboard
                   </Button>
                   {auth.teamId && (
@@ -59,10 +53,8 @@ function NavBar() {
                   {auth.teamId && (
                     <Button
                       color="inherit"
-
                       onClick={() => navigate("/projects")}
                     >
-
                       Projects
                     </Button>
                   )}
@@ -85,8 +77,8 @@ function NavBar() {
               onClick={() => {
                 dispatch(logout());
                 navigate("/");
-
-              }}>
+              }}
+            >
               Logout
             </Button>
           ) : (

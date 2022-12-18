@@ -63,14 +63,16 @@ const Login = () => {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ margin: "auto", width: "50%" }}>
+                sx={{ margin: "auto", width: "50%" }}
+              >
                 Login
               </Button>
               <br></br>
               <Button
                 sx={{ margin: "auto", width: "50%" }}
                 onClick={() => setToggle(true)}
-                variant="contained">
+                variant="contained"
+              >
                 Create Account
               </Button>
             </form>

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchTasks, fetchProjects, fetchTeams } from "../store";
 import TaskCard from "./TaskCard";
+import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -266,7 +267,7 @@ const TaskGallery = () => {
           margin: "1rem",
           padding: "1rem",
           overflowY: "scroll",
-          height: 285,
+          height: "55vh",
         }}
       >
         {_tasks.map((task) => {
