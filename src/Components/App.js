@@ -36,6 +36,7 @@ const App = () => {
         <nav>
           <div className="nav">
             <NavBar />
+            <div style={{ height: "60px" }}></div>
           </div>
         </nav>
         <Login />
