@@ -3,15 +3,7 @@ import { attemptLogin } from "../store";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Register from "./Register";
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Button, Container, TextField, Typography } from "@mui/material";
 
 const Login = () => {
   const dispatch = useDispatch();
