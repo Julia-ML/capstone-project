@@ -41,14 +41,14 @@ const Login = () => {
     <Container>
       <Box sx={{ margin: "auto", width: "50%" }}>
         {!toggle && (
-          <div>
+          <Container>
             <Typography variant="h3" align="center" mt={7}>
               {" "}
               Login{" "}
             </Typography>
             <form onSubmit={login}>
               <TextField
-                sx={{ margin: "auto", width: "50%" }}
+                sx={{ margin: "auto", width: "50%", background: "#424242" }}
                 label="Username"
                 value={credentials.username}
                 onChange={onChange}
@@ -58,7 +58,7 @@ const Login = () => {
               />
 
               <TextField
-                sx={{ margin: "auto", width: "50%" }}
+                sx={{ margin: "auto", width: "50%", background: "#424242" }}
                 type="password"
                 label="Password"
                 value={credentials.password}
@@ -82,7 +82,7 @@ const Login = () => {
                 Create Account
               </Button>
             </form>
-          </div>
+          </Container>
         )}
         {toggle && <Register toggle={toggle} setToggle={setToggle} />}
       </Box>
