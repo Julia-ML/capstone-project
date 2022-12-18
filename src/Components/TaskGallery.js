@@ -156,11 +156,9 @@ const TaskGallery = () => {
 
   return (
     <Container>
-      <br />
-      <Typography variant="h4" align="center">
+      <Typography variant="h5" align="center" sx={{ margin: 3 }}>
         {teams.name} Tasks
       </Typography>
-      <br />
       <hr />
       <Grid
         container

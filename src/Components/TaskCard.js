@@ -91,7 +91,14 @@ const TaskCard = (props) => {
               </Typography>
             </Button>
           </Grid>
-          <Grid container sx={{ display: "flex", flexDirection: "row" }}>
+          <Grid
+            container
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: 1.5,
+            }}
+          >
             <Grid item>
               <Tooltip title="Edit task">
                 <IconButton
@@ -100,7 +107,7 @@ const TaskCard = (props) => {
                     setDrawerOpen(true);
                   }}
                 >
-                  <EditIcon />
+                  <EditIcon fontSize="small" />
                 </IconButton>
               </Tooltip>
             </Grid>
@@ -111,14 +118,13 @@ const TaskCard = (props) => {
                 <Link to={`/projects/${project.id}`}>
                   <Tooltip title="Go to project page">
                     <IconButton>
-                      <DashboardIcon />
+                      <DashboardIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
                 </Link>
               )}
             </Grid>
           </Grid>
-          <br />
           <Grid item align="left">
             <Typography variant="subtitle2">
               Project: {project === undefined ? "" : project.name}
