@@ -120,24 +120,27 @@ const TaskGallery = () => {
 
   const projectfilterChange = (ev) => {
     if (ev.target.value === "") {
+      setProjectFilter("");
       dispatch(fetchTasks());
       return;
     }
-    const newId = ev.target.value.id;
+    const newId = ev.target.value;
     setProjectFilter(newId);
   };
 
   const userfilterChange = (ev) => {
     if (ev.target.value === "") {
+      setUserFilter("");
       dispatch(fetchTasks());
       return;
     }
-    const newId = ev.target.value.id;
+    const newId = ev.target.value;
     setUserFilter(newId);
   };
 
   const statusfilterChange = (ev) => {
     if (ev.target.value === "") {
+      setStatusFilter("");
       dispatch(fetchTasks());
       return;
     }
@@ -186,7 +189,7 @@ const TaskGallery = () => {
               </MenuItem>
               {_projects.map((project) => {
                 return (
-                  <MenuItem key={project.id} value={project}>
+                  <MenuItem key={project.id} value={project.id}>
                     {project.name}
                   </MenuItem>
                 );
@@ -210,7 +213,7 @@ const TaskGallery = () => {
               </MenuItem>
               {_users.map((user) => {
                 return (
-                  <MenuItem key={user.id} value={user}>
+                  <MenuItem key={user.id} value={user.id}>
                     {user.firstName}
                   </MenuItem>
                 );
