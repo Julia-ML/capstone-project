@@ -265,6 +265,8 @@ const TaskGallery = () => {
         sx={{
           margin: "1rem",
           padding: "1rem",
+          overflowY: "scroll",
+          height: 285,
         }}
       >
         {_tasks.map((task) => {
