@@ -193,7 +193,7 @@ const Team = () => {
               indicatorColor="secondary"
               centered>
               <Tab value="joinTeam" label="Invite member" />
-              <Tab value="createTeam" label="Team overview" />
+              <Tab value="createTeam" label="Create Team" />
             </Tabs>
           </Box>
           {selectedTab === "joinTeam" && <JoinTeam />}
