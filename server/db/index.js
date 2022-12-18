@@ -4,6 +4,7 @@ const Project = require("./Project");
 const Team = require("./Team");
 const Task = require("./Task");
 const Log = require("./Log");
+const Post = require("./Post");
 
 User.hasMany(Task);
 User.hasMany(Project);
@@ -18,6 +19,7 @@ Project.belongsTo(User);
 Project.hasMany(Task);
 Project.belongsTo(Team);
 Log.belongsTo(Project);
+Post.belongsTo(User);
 
 const syncAndSeed = async () => {
   await conn.sync({ force: true });
@@ -223,6 +225,21 @@ const syncAndSeed = async () => {
     }),
   ]);
 
+  await Promise.all([
+    Post.create({
+      text: "Hey team, I am having some issues with creating the wireframe, could I schedule a meet with someone?",
+      userId: moe.id,
+    }),
+    Post.create({
+      text: "Hello all! I am super excited to be assinging our first new tasks today, keep an eye on our tasks board!",
+      userId: lucy.id,
+    }),
+    Post.create({
+      text: "Need to push out the deadline for the new app, the security audit found more bugs than anticipated..",
+      userId: larry.id,
+    })
+  ])
+
   teamMoe.adminId = moe.id;
   teamMoe.save();
   teamLarry.adminId = larry.id;
@@ -244,4 +261,5 @@ module.exports = {
   Task,
   Team,
   Log,
+  Post,
 };

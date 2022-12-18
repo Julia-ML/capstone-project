@@ -1,13 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchProjects, fetchTeams, fetchTasks } from "../store";
 import { useNavigate } from "react-router-dom";
-import EmailSummary from "./EmailSummary";
 import UserTasksGraph from "./UserTasksGraph";
 import TeamTasksGraph from "./TeamTasksGraph";
-
+<<<<<<< Updated upstream
+=======
+import Divider from '@mui/material/Divider';
+import Paper from '@mui/material/Paper';
+import MenuList from '@mui/material/MenuList';
+import MenuItem from '@mui/material/MenuItem';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ContentCut from '@mui/icons-material/ContentCut';
+import EqualizerIcon from '@mui/icons-material/Equalizer';
+import PersonIcon from '@mui/icons-material/Person';
+import Post from "./Post";
+import DashboardCard from "./DashboardCard";
+import Metrics from "./Metrics";
+>>>>>>> Stashed changes
 
 const Home = () => {
+  const [active, setActive] = useState("");
   const { auth, tasks, projects } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -17,10 +31,37 @@ const Home = () => {
   }, []);
 
   return (
+<<<<<<< Updated upstream
+    <div display="flex">
+      <div>My Dashboard for: {date.toDateString()}</div> <div>Due Soon: </div>
+      <div>
+        {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
+        {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
+      </div>
+=======
     <div>
       <div>My Dashboard for: {date.toDateString()}</div>
-      {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
-      {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
+        <Paper sx={{ width: 200, maxWidth: '100%' }}>
+        <MenuList>
+          <MenuItem onClick={() => setActive("MetricsCard")}>
+            <ListItemIcon>
+              <EqualizerIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Metrics</ListItemText>
+          </MenuItem>
+          <MenuItem onClick={() => setActive("PostingCard")}>
+            <ListItemIcon>
+              <PersonIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText>Connect</ListItemText>
+          </MenuItem>
+        </MenuList>
+      </Paper>
+      <div class="dash-card">
+         {active === "PostingCard" && <DashboardCard comp={<Post />}/>}
+         {active === "MetricsCard" && <DashboardCard comp={<Metrics />}/>}
+       </div>
+>>>>>>> Stashed changes
     </div>
   );
 };
