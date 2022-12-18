@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import Register from "./Register";
 import {
+  Box,
   Button,
   Container,
   Grid,
@@ -38,53 +39,53 @@ const Login = () => {
 
   return (
     <Container>
-      <br></br>
-      <Paper elevation={10}>
+      <Box sx={{ margin: "auto", width: "50%" }}>
         {!toggle && (
           <div>
-            <Typography variant="h3" align="center">
+            <Typography variant="h3" align="center" mt={7}>
               {" "}
               Login{" "}
             </Typography>
             <form onSubmit={login}>
-              <Grid container>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    label="Username"
-                    value={credentials.username}
-                    onChange={onChange}
-                    name="username"
-                    margin="normal"
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <TextField
-                    type="password"
-                    label="Password"
-                    value={credentials.password}
-                    onChange={onChange}
-                    name="password"
-                    margin="normal"
-                    fullWidth
-                  />
-                </Grid>
-              </Grid>
-              <Button type="submit" variant="contained">
+              <TextField
+                sx={{ margin: "auto", width: "50%" }}
+                label="Username"
+                value={credentials.username}
+                onChange={onChange}
+                name="username"
+                margin="normal"
+                fullWidth
+              />
+
+              <TextField
+                sx={{ margin: "auto", width: "50%" }}
+                type="password"
+                label="Password"
+                value={credentials.password}
+                onChange={onChange}
+                name="password"
+                margin="normal"
+                fullWidth
+              />
+
+              <Button
+                type="submit"
+                variant="contained"
+                sx={{ margin: "auto", width: "50%" }}>
                 Login
               </Button>
+              <br></br>
+              <Button
+                sx={{ margin: "auto", width: "50%" }}
+                onClick={() => setToggle(true)}
+                variant="contained">
+                Create Account
+              </Button>
             </form>
-            <br></br>
-            <Button
-              fullWidth
-              onClick={() => setToggle(true)}
-              variant="contained">
-              Create Account
-            </Button>
           </div>
         )}
         {toggle && <Register toggle={toggle} setToggle={setToggle} />}
-      </Paper>
+      </Box>
     </Container>
   );
 };
