@@ -31,4 +31,14 @@ app.put("/:id", async (req, res, next) => {
 	}
 });
 
+app.delete("/:id", async (req, res, next) => {
+	try {
+		const task = await Task.findByPk(req.params.id);
+		await task.destroy();
+		res.sendStatus(204);
+	} catch (ex) {
+		next(ex);
+	}
+});
+
 module.exports = app;
