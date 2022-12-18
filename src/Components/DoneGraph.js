@@ -27,8 +27,8 @@ const DoneGraph = (props) => {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="total" fill="#3E7FCA" />
-      <Bar dataKey="done" fill="#82ca9d" />
+      <Bar dataKey="total" fill="#5b9aa0" />
+      <Bar dataKey="done" fill="#b2c2bf" />
     </BarChart>
   );
 };

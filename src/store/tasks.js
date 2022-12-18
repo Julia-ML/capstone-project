@@ -12,6 +12,9 @@ const tasks = (state = [], action) => {
 			task.id === action.task.id ? action.task : task
 		);
 	}
+	if (action.type === "DELETE_TASK") {
+		return state.filter((task) => task.id !== action.taskId);
+	}
 	return state;
 };
 
@@ -38,6 +41,13 @@ export const updateTask = (task) => {
 	return async (dispatch) => {
 		const response = await axios.put(`/api/tasks/${task.id}`, task);
 		dispatch({ type: "UPDATE_TASK", task: response.data });
+	};
+};
+
+export const deleteTask = (task) => {
+	return async (dispatch) => {
+		await axios.delete(`/api/tasks/${task.id}`);
+		dispatch({ type: "DELETE_TASK", taskId: task.id });
 	};
 };
 

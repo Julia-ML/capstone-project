@@ -40,10 +40,10 @@ const TeamTasksGraph = (props) => {
             key={entry.name}
             fill={
               entry.name === "Done"
-                ? "#3ECA7F"
+                ? "#eaece5"
                 : entry.name === "In Progress"
-                ? "#CA3EC5"
-                : "#3E7FCA"
+                ? "#b2c2bf"
+                : "#5b9aa0"
             }
           />
         ))}
