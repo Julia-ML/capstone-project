@@ -2,6 +2,7 @@ import React from "react";
 import {
   Button,
   Container,
+  Grid,
   ListItem,
   Paper,
   Stack,
@@ -59,32 +60,71 @@ const Team = () => {
         <Paper>
           <Typography mt={7} align="center" variant="h3">
             My Team
-            <Stack
-              spacing={2}
-              direction="column"
-              alignItems="flex-start"
-              justifyContent="center">
+            <Grid
+              container
+              spacing={3}
+              sx={{
+                margin: "1rem",
+                padding: "1rem",
+              }}>
               {teams.users &&
                 teams.users.map((user) => {
                   return (
-                    <ListItem key={user.id}>
-                      {user.firstName}
+                    <Grid
+                      key={user.id}
+                      container
+                      align="center"
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        boxShadow: 5,
+                        borderRadius: 2,
+                        margin: "1rem",
+                        padding: "1rem",
+                        width: "300px",
+                      }}>
+                      <Grid item>
+                        <Typography variant="h6">
+                          Username - {user.username}
+                        </Typography>
+                      </Grid>
+                      <Grid item align="left">
+                        <Typography variant="subtitle2">
+                          First Name: {user.firstName}
+                        </Typography>
+                      </Grid>
+                      <Grid item align="left">
+                        <Typography variant="subtitle2">
+                          Last Name: {user.lastName}
+                        </Typography>
+                      </Grid>
+                      <Grid item align="left">
+                        <Typography variant="subtitle2">
+                          Email: {user.email}
+                        </Typography>
+                      </Grid>
                       {adminView && user.id !== teams.adminId && (
-                        <div>
-                          <Button
-                            onClick={() => dispatch(RemoveTeamMember(user))}>
-                            {" "}
-                            <CancelIcon />
-                          </Button>
-                          <Button onClick={() => dispatch(setNewAdmin(user))}>
-                            Set as new admin
-                          </Button>
-                        </div>
+                        <Grid
+                          container
+                          sx={{ display: "flex", flexDirection: "row" }}>
+                          <Grid item>
+                            <Button
+                              onClick={() => dispatch(RemoveTeamMember(user))}>
+                              {" "}
+                              <CancelIcon />
+                            </Button>
+                          </Grid>
+                          <Grid item>
+                            <Button onClick={() => dispatch(setNewAdmin(user))}>
+                              Set as new admin
+                            </Button>
+                          </Grid>
+                        </Grid>
                       )}
-                    </ListItem>
+                    </Grid>
                   );
                 })}
-            </Stack>
+            </Grid>
           </Typography>
           <form onSubmit={(ev) => inviteToTeam(ev)}>
             <Typography variant="h3" align="center">
