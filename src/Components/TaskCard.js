@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchTasks, updateTask } from "../store";
+import TaskDelete from "./TaskDelete";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
@@ -105,6 +106,9 @@ const TaskCard = (props) => {
 							</Tooltip>
 						</Link>
 					)}
+				</Grid>
+				<Grid item>
+					<TaskDelete task={task} />
 				</Grid>
 			</Grid>
 			<br />
