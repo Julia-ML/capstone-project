@@ -19,7 +19,11 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
 
 const ProjectGallery = () => {
   const dispatch = useDispatch();
@@ -107,7 +111,7 @@ const ProjectGallery = () => {
 
   return (
     <div>
-      <Typography align="right" sx={{ marginRight: 6 }}>
+      <Typography align="right" sx={{ marginRight: 6, marginTop: 3 }}>
         <Button variant="contained" onClick={handleClickOpen}>
           Create New Project
         </Button>
@@ -170,7 +174,17 @@ const ProjectGallery = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Grid container spacing={2} columns={4} sx={{ margin: 3, width: "95%" }}>
+      <Grid
+        container
+        spacing={2}
+        columns={4}
+        sx={{
+          margin: 3,
+          width: "95%",
+          maxHeight: "400px",
+          overflowY: "scroll",
+        }}
+      >
         {projects.length
           ? projects.map((project) => {
               return (
@@ -197,15 +211,17 @@ const ProjectGallery = () => {
                       </Typography>
                       {auth.id === project.userId ? (
                         <Typography align="right">
-                          <Button
-                            onClick={() => {
-                              handleClickOpen();
-                              setEdit(true);
-                              setEditProject(project);
-                            }}
-                          >
-                            Edit
-                          </Button>
+                          <Tooltip title="Edit task">
+                            <IconButton
+                              onClick={() => {
+                                handleClickOpen();
+                                setEdit(true);
+                                setEditProject(project);
+                              }}
+                            >
+                              <EditIcon fontSize="small" />
+                            </IconButton>
+                          </Tooltip>
                         </Typography>
                       ) : (
                         ""
