@@ -1,8 +1,11 @@
 import {
+  Box,
   Button,
+  Container,
   FormControl,
   InputLabel,
   MenuItem,
+  Paper,
   Select,
   Typography,
 } from "@mui/material";
@@ -24,27 +27,31 @@ const EmailSummary = () => {
   };
 
   return (
-    <div className="email-summary">
-      <Typography variant="h3">Summary Email for team</Typography>
-      <FormControl>
-        <InputLabel>Select a project</InputLabel>
-        <Select
-          value={selectedProject}
-          label="Choose Project"
-          onChange={handleChange}>
-          {projects.map((project, idx) => {
-            return (
-              <MenuItem value={project} key={idx}>
-                {project.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-        <Button variant="contained" onClick={() => handleClick()}>
-          Send Summary email
-        </Button>
-      </FormControl>
-    </div>
+    <Container>
+      <Typography align="center" variant="h3" mt={7}>
+        Summary Email for team
+      </Typography>
+      <Box sx={{ margin: "auto", border: 1, width: "50%" }}>
+        <FormControl sx={{ margin: "auto", width: "100%" }}>
+          <InputLabel>Select a project</InputLabel>
+          <Select
+            value={selectedProject}
+            label="Choose Project"
+            onChange={handleChange}>
+            {projects.map((project, idx) => {
+              return (
+                <MenuItem value={project} key={idx}>
+                  {project.name}
+                </MenuItem>
+              );
+            })}
+          </Select>
+          <Button variant="contained" onClick={() => handleClick()}>
+            Send Summary email
+          </Button>
+        </FormControl>
+      </Box>
+    </Container>
   );
 };
 
