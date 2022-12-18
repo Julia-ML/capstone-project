@@ -5,6 +5,7 @@ import {
   createProject,
   deleteProject,
   putProject,
+  fetchTeams,
 } from "../store";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, Link } from "react-router-dom";
@@ -19,12 +20,17 @@ import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
+import Container from "@mui/material/Container";
 
 const ProjectGallery = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { auth, projects, users } = useSelector((state) => state);
+  const { auth, projects, users, teams } = useSelector((state) => state);
   const [edit, setEdit] = useState(false);
   const [open, setOpen] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -85,7 +91,7 @@ const ProjectGallery = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchProjects()), dispatch(fetchUsers());
+    dispatch(fetchProjects()), dispatch(fetchUsers()), dispatch(fetchTeams());
   }, []);
 
   const user = users.find((user) => user.id === auth.id);
@@ -106,11 +112,19 @@ const ProjectGallery = () => {
   }, [user]);
 
   return (
-    <div>
-      <Typography align="right" sx={{ marginRight: 6 }}>
-        <Button variant="contained" onClick={handleClickOpen}>
-          Create New Project
-        </Button>
+    <Container>
+      <Typography variant="h5" align="center" sx={{ margin: 3 }}>
+        {teams.name} Projects
+      </Typography>
+      <hr />
+      <Typography align="right" sx={{ marginRight: 6, marginTop: 3 }}>
+        {auth.id === teams.adminId ? (
+          <Button variant="contained" onClick={handleClickOpen}>
+            + Project
+          </Button>
+        ) : (
+          ""
+        )}
       </Typography>
       <Dialog open={open} onClose={handleClose}>
         {!edit ? (
@@ -170,46 +184,62 @@ const ProjectGallery = () => {
           </Button>
         </DialogActions>
       </Dialog>
-      <Grid container spacing={2} columns={4} sx={{ margin: 3, width: "95%" }}>
+      <Grid
+        container
+        rowSpacing={3}
+        columnSpacing={3}
+        columns={4}
+        sx={{
+          display: "flex",
+          width: "95%",
+          margin: 3,
+        }}
+      >
         {projects.length
           ? projects.map((project) => {
               return (
                 <Grid item key={project.id} xs={1} md={1} lg={1}>
-                  <Card key={project.id}>
+                  <Card key={project.id} sx={{ padding: 1 }}>
                     <CardContent>
-                      <Typography align="center">
+                      <Typography
+                        align="center"
+                        sx={{ display: "flex", justifyContent: "center" }}
+                      >
                         <Button
                           onClick={() => {
                             navigate(`/projects/${project.id}`);
                           }}
                         >
                           <Typography
-                            sx={{ fontSize: 20, fontWeight: "medium" }}
+                            sx={{ fontSize: 25, fontWeight: "bold" }}
                             align="center"
                           >
                             {project.name}
                           </Typography>
                         </Button>
+                        {auth.id === project.userId ? (
+                          <Typography align="right">
+                            <Tooltip title="Edit task">
+                              <IconButton
+                                onClick={() => {
+                                  handleClickOpen();
+                                  setEdit(true);
+                                  setEditProject(project);
+                                }}
+                              >
+                                <EditIcon fontSize="small" />
+                              </IconButton>
+                            </Tooltip>
+                          </Typography>
+                        ) : (
+                          ""
+                        )}
                       </Typography>
+                      <hr />
                       <br />
                       <Typography paragraph={true} sx={{ width: "90%" }}>
                         {project.description}
                       </Typography>
-                      {auth.id === project.userId ? (
-                        <Typography align="right">
-                          <Button
-                            onClick={() => {
-                              handleClickOpen();
-                              setEdit(true);
-                              setEditProject(project);
-                            }}
-                          >
-                            Edit
-                          </Button>
-                        </Typography>
-                      ) : (
-                        ""
-                      )}
                     </CardContent>
                   </Card>
                 </Grid>
@@ -217,7 +247,7 @@ const ProjectGallery = () => {
             })
           : ""}
       </Grid>
-    </div>
+    </Container>
   );
 };
 
