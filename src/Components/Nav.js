@@ -17,7 +17,7 @@ function NavBar() {
   const { auth } = useSelector((state) => state);
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton
             size="large"
@@ -78,7 +78,13 @@ function NavBar() {
               Logout
             </Button>
           ) : (
-            <div>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
               <Button color="inherit" onClick={() => navigate("/")}>
                 <Typography variant="h5" color="inherit">
                   Daily Standup Replacer
