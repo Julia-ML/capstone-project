@@ -12,11 +12,11 @@ import auth from "../store/auth";
 import { logout } from "../store";
 
 function NavBar() {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-  const { pathname } = useLocation();
-  const { auth } = useSelector((state) => state);
+	const { pathname } = useLocation();
+	const { auth } = useSelector((state) => state);
 
   return (
     <Box sx={{ flexGrow: 1 }}>

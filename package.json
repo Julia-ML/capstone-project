@@ -21,6 +21,7 @@
     "@mui/icons-material": "^5.10.16",
     "@mui/material": "^5.10.17",
     "@mui/x-date-pickers": "^5.0.10",
+    "add-to-calendar-button": "^1.18.8",
     "bcrypt": "^5.1.0",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
