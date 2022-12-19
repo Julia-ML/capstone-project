@@ -14,146 +14,146 @@ import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 
 const TaskGallery = () => {
-  const { tasks, projects, teams } = useSelector((state) => state);
-  const dispatch = useDispatch();
-  const [_tasks, setTasks] = useState([]);
-  const [_users, setUsers] = useState([]);
-  const [_projects, setProjects] = useState([]);
-  const [projectFilter, setProjectFilter] = useState("");
-  const [userFilter, setUserFilter] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
+	const { tasks, projects, teams } = useSelector((state) => state);
+	const dispatch = useDispatch();
+	const [_tasks, setTasks] = useState([]);
+	const [_users, setUsers] = useState([]);
+	const [_projects, setProjects] = useState([]);
+	const [projectFilter, setProjectFilter] = useState("");
+	const [userFilter, setUserFilter] = useState("");
+	const [statusFilter, setStatusFilter] = useState("");
 
-  useEffect(() => {
-    dispatch(fetchTasks());
-    dispatch(fetchProjects());
-    dispatch(fetchTeams());
-  }, []);
+	useEffect(() => {
+		dispatch(fetchTasks());
+		dispatch(fetchProjects());
+		dispatch(fetchTeams());
+	}, []);
 
-  useEffect(() => {
-    if (tasks[0] !== undefined) {
-      setTasks(tasks);
-      if (projects[0] !== undefined) {
-        setProjects(projects);
-      }
-    }
-    if (teams.users) {
-      setUsers(teams.users);
-    }
-  }, [tasks, projects, teams]);
+	useEffect(() => {
+		if (tasks[0] !== undefined) {
+			setTasks(tasks);
+			if (projects[0] !== undefined) {
+				setProjects(projects);
+			}
+		}
+		if (teams.users) {
+			setUsers(teams.users);
+		}
+	}, [tasks, projects, teams]);
 
-  useEffect(() => {
-    if (projectFilter.length && userFilter.length && statusFilter.length) {
-      setTasks(
-        tasks.filter((task) => {
-          return (
-            task.projectId === projectFilter &&
-            task.userId === userFilter &&
-            task.status === statusFilter
-          );
-        })
-      );
-    } else if (
-      projectFilter.length &&
-      userFilter.length &&
-      !statusFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return task.projectId === projectFilter && task.userId === userFilter;
-        })
-      );
-    } else if (
-      projectFilter.length &&
-      statusFilter.length &&
-      !userFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return (
-            task.projectId === projectFilter && task.status === statusFilter
-          );
-        })
-      );
-    } else if (
-      userFilter.length &&
-      statusFilter.length &&
-      !projectFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return task.userId === userFilter && task.status === statusFilter;
-        })
-      );
-    } else if (
-      projectFilter.length &&
-      !userFilter.length &&
-      !statusFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return task.projectId === projectFilter;
-        })
-      );
-    } else if (
-      userFilter.length &&
-      !statusFilter.length &&
-      !projectFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return task.userId === userFilter;
-        })
-      );
-    } else if (
-      statusFilter.length &&
-      !userFilter.length &&
-      !projectFilter.length
-    ) {
-      setTasks(
-        tasks.filter((task) => {
-          return task.status === statusFilter;
-        })
-      );
-    } else {
-      setTasks(tasks);
-    }
-  }, [projectFilter, userFilter, statusFilter]);
+	useEffect(() => {
+		if (projectFilter.length && userFilter.length && statusFilter.length) {
+			setTasks(
+				tasks.filter((task) => {
+					return (
+						task.projectId === projectFilter &&
+						task.userId === userFilter &&
+						task.status === statusFilter
+					);
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			userFilter.length &&
+			!statusFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.projectId === projectFilter && task.userId === userFilter;
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			statusFilter.length &&
+			!userFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return (
+						task.projectId === projectFilter && task.status === statusFilter
+					);
+				})
+			);
+		} else if (
+			userFilter.length &&
+			statusFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.userId === userFilter && task.status === statusFilter;
+				})
+			);
+		} else if (
+			projectFilter.length &&
+			!userFilter.length &&
+			!statusFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.projectId === projectFilter;
+				})
+			);
+		} else if (
+			userFilter.length &&
+			!statusFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.userId === userFilter;
+				})
+			);
+		} else if (
+			statusFilter.length &&
+			!userFilter.length &&
+			!projectFilter.length
+		) {
+			setTasks(
+				tasks.filter((task) => {
+					return task.status === statusFilter;
+				})
+			);
+		} else {
+			setTasks(tasks);
+		}
+	}, [projectFilter, userFilter, statusFilter]);
 
-  const projectfilterChange = (ev) => {
-    if (ev.target.value === "") {
-      setProjectFilter("");
-      dispatch(fetchTasks());
-      return;
-    }
-    const newId = ev.target.value;
-    setProjectFilter(newId);
-  };
+	const projectfilterChange = (ev) => {
+		if (ev.target.value === "") {
+			setProjectFilter("");
+			dispatch(fetchTasks());
+			return;
+		}
+		const newId = ev.target.value;
+		setProjectFilter(newId);
+	};
 
-  const userfilterChange = (ev) => {
-    if (ev.target.value === "") {
-      setUserFilter("");
-      dispatch(fetchTasks());
-      return;
-    }
-    const newId = ev.target.value;
-    setUserFilter(newId);
-  };
+	const userfilterChange = (ev) => {
+		if (ev.target.value === "") {
+			setUserFilter("");
+			dispatch(fetchTasks());
+			return;
+		}
+		const newId = ev.target.value;
+		setUserFilter(newId);
+	};
 
-  const statusfilterChange = (ev) => {
-    if (ev.target.value === "") {
-      setStatusFilter("");
-      dispatch(fetchTasks());
-      return;
-    }
-    const newId = ev.target.value;
-    setStatusFilter(newId);
-  };
+	const statusfilterChange = (ev) => {
+		if (ev.target.value === "") {
+			setStatusFilter("");
+			dispatch(fetchTasks());
+			return;
+		}
+		const newId = ev.target.value;
+		setStatusFilter(newId);
+	};
 
-  const clearFilters = () => {
-    setStatusFilter("");
-    setProjectFilter("");
-    setUserFilter("");
-  };
+	const clearFilters = () => {
+		setStatusFilter("");
+		setProjectFilter("");
+		setUserFilter("");
+	};
 
   return (
     <Container>

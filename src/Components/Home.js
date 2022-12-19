@@ -27,6 +27,10 @@ const Home = () => {
     dispatch(fetchProjects()), dispatch(fetchTasks());
   }, []);
 
+  if (!auth.teamId) {
+    navigate("/team");
+  }
+
   return (
     <div display="flex">
       <div>My Dashboard for: {date.toDateString()}</div> <div>Due Soon: </div>

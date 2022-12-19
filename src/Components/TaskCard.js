@@ -3,6 +3,7 @@ import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { fetchTasks, updateTask } from "../store";
 import TaskDelete from "./TaskDelete";
+import CalendarButton from "./CalendarButton";
 import Grid from "@mui/material/Grid";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
@@ -23,44 +24,44 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 const TaskCard = (props) => {
-  const { task, project, user, _users } = props;
-  const dispatch = useDispatch();
-  const [drawerOpen, setDrawerOpen] = useState(false);
-  const [drawerTask, setDrawerTask] = useState(task);
-  const [value, setValue] = useState(Dayjs);
+	const { task, project, user, _users } = props;
+	const dispatch = useDispatch();
+	const [drawerOpen, setDrawerOpen] = useState(false);
+	const [drawerTask, setDrawerTask] = useState(task);
+	const [value, setValue] = useState(Dayjs);
 
-  const toggleDrawer = () => {
-    setDrawerOpen(false);
-  };
+	const toggleDrawer = () => {
+		setDrawerOpen(false);
+	};
 
-  const onEdit = (ev) => {
-    if (ev) {
-      setDrawerTask({
-        ...drawerTask,
-        [ev.target.name]: ev.target.value,
-      });
-      if (ev.target.name === "status") {
-        dispatch(fetchTasks());
-      }
-    }
-  };
+	const onEdit = (ev) => {
+		if (ev) {
+			setDrawerTask({
+				...drawerTask,
+				[ev.target.name]: ev.target.value,
+			});
+			if (ev.target.name === "status") {
+				dispatch(fetchTasks());
+			}
+		}
+	};
 
-  const editTask = () => {
-    dispatch(updateTask(drawerTask));
-    toggleDrawer();
-    setDrawerTask({});
-    dispatch(fetchTasks());
-  };
+	const editTask = () => {
+		dispatch(updateTask(drawerTask));
+		toggleDrawer();
+		setDrawerTask({});
+		dispatch(fetchTasks());
+	};
 
-  const onDeadlineEdit = (date) => {
-    setDrawerTask({ ...drawerTask, deadline: date });
-    dispatch(fetchTasks());
-  };
+	const onDeadlineEdit = (date) => {
+		setDrawerTask({ ...drawerTask, deadline: date });
+		dispatch(fetchTasks());
+	};
 
-  let newDate = "";
-  if (task.deadline) {
-    newDate = new Date(task.deadline).toLocaleString();
-  }
+	let newDate = "";
+	if (task.deadline) {
+		newDate = new Date(task.deadline).toLocaleString();
+	}
 
   return (
     <Grid
@@ -116,6 +117,7 @@ const TaskCard = (props) => {
               </Link>
             )}
           </Grid>
+          <Grid item>{!task.deadline ? "" : <CalendarButton task={task} />}</Grid>
           <Grid item>
             <TaskDelete task={task} />
           </Grid>
