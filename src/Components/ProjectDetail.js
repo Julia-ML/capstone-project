@@ -8,9 +8,10 @@ import {
 	fetchUsers,
 	fetchTasks,
 	fetchLog,
-	addLog,
 	updateTask,
 } from "../store";
+import TaskDelete from "./TaskDelete";
+import Grid from "@mui/material/Grid";
 import DoneGraph from "./DoneGraph";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
@@ -20,13 +21,15 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
-import InputLabel from "@mui/material/InputLabel";
 import FormControl from "@mui/material/FormControl";
 import FormHelperText from "@mui/material/FormHelperText";
 import Typography from "@mui/material/Typography";
 import Drawer from "@mui/material/Drawer";
+import Tooltip from "@mui/material/Tooltip";
+import IconButton from "@mui/material/IconButton";
+import EditIcon from "@mui/icons-material/Edit";
 import { Dayjs } from "dayjs";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -37,7 +40,6 @@ const ProjectDetail = () => {
 	const { projects, tasks, auth, log, users } = useSelector((state) => state);
 	const { id } = useParams();
 	const dispatch = useDispatch();
-	const navigate = useNavigate();
 	const [project, setProject] = useState({});
 	const [backlog, setBacklog] = useState([]);
 	const [todo, setTodo] = useState([]);
@@ -130,6 +132,15 @@ const ProjectDetail = () => {
 		});
 	};
 
+	const getUserName = (task) => {
+		if (task.userId) {
+			const assigned = users.find((user) => user.id === task.userId);
+			return assigned.username;
+		} else {
+			return "";
+		}
+	};
+
 	const onEdit = (ev) => {
 		if (ev) {
 			setDrawerTask({
@@ -176,18 +187,6 @@ const ProjectDetail = () => {
 	const editTask = () => {
 		dispatch(updateTask(drawerTask));
 		toggleDrawer();
-		// if (drawerTask.status === "To Do") {
-		//   setTodo([...todo, drawerTask]);
-		// }
-		// if (drawerTask.status === "Backlog") {
-		//   setBacklog([...backlog, drawerTask]);
-		// }
-		// if (drawerTask.status === "In Progress") {
-		//   setProgress([...progress, drawerTask]);
-		// }
-		// if (drawerTask.status === "Done") {
-		//   setProgress([...done, drawerTask]);
-		// }
 		setColumns({ ...columns });
 		setDrawerTask({});
 		dispatch(fetchTasks());
@@ -245,7 +244,7 @@ const ProjectDetail = () => {
 	return (
 		<div>
 			<br />
-			<Typography variant="h4" align="center">
+			<Typography variant='h4' align='center'>
 				{project.name}
 			</Typography>
 			<Container
@@ -275,7 +274,7 @@ const ProjectDetail = () => {
 									<Droppable droppableId={columnId} key={columnId}>
 										{(provided, snapshot) => {
 											return (
-												<div
+												<Container
 													{...provided.droppableProps}
 													ref={provided.innerRef}
 													style={{
@@ -284,18 +283,19 @@ const ProjectDetail = () => {
 															: "lightgrey",
 														padding: 4,
 														width: 250,
-														minHeight: 500,
+														height: 500,
+														overflowY: "scroll",
 													}}
 												>
 													{!column.tasks ? (
-														<div
+														<Container
 															style={{
 																display: "flex",
 																flexDirection: "column",
-																flexGrow: "1",
+																// flexGrow: "1",
 																minHeight: "100px",
 															}}
-														></div>
+														></Container>
 													) : (
 														column.tasks.map((task, index) => {
 															return (
@@ -307,12 +307,21 @@ const ProjectDetail = () => {
 																	index={index}
 																>
 																	{(provided, snapshot) => {
+																		let newDate = "";
+																		if (task.deadline) {
+																			newDate = new Date(
+																				task.deadline
+																			).toLocaleString();
+																		}
 																		return (
-																			<div
+																			<Grid
+																				container
 																				ref={provided.innerRef}
 																				{...provided.draggableProps}
 																				{...provided.dragHandleProps}
 																				style={{
+																					display: "flex",
+																					flexDirection: "column",
 																					userSelect: "none",
 																					padding: 16,
 																					margin: "0 0 8px 0",
@@ -324,15 +333,65 @@ const ProjectDetail = () => {
 																					...provided.draggableProps.style,
 																				}}
 																			>
-																				<Button
-																					onClick={() => {
-																						setDrawerTask(task);
-																						setDrawerOpen(true);
+																				<Grid item>
+																					<Typography
+																						variant='subtitle1'
+																						sx={{
+																							textAlign: "left",
+																							fontWeight: "bold",
+																						}}
+																					>
+																						{task.name}
+																					</Typography>
+																				</Grid>
+																				<Grid item>
+																					<Typography
+																						variant='subtitle2'
+																						sx={{ textAlign: "left" }}
+																					>
+																						Due:{" "}
+																						{task.deadline === undefined
+																							? ""
+																							: newDate}
+																					</Typography>
+																				</Grid>
+																				<Grid item>
+																					<Typography
+																						variant='subtitle2'
+																						sx={{ textAlign: "left" }}
+																					>
+																						{task.userId === undefined
+																							? null
+																							: `Assigned: ${getUserName(
+																									task
+																							  )}`}
+																					</Typography>
+																				</Grid>
+																				<Grid
+																					container
+																					style={{
+																						display: "flex",
+																						border: "1px",
+																						justifyContent: "space-between",
 																					}}
 																				>
-																					{task.name}
-																				</Button>
-																			</div>
+																					<Grid item>
+																						<TaskDelete task={task} />
+																					</Grid>
+																					<Grid item>
+																						<Tooltip title='Edit task'>
+																							<IconButton
+																								onClick={() => {
+																									setDrawerTask(task);
+																									setDrawerOpen(true);
+																								}}
+																							>
+																								<EditIcon />
+																							</IconButton>
+																						</Tooltip>
+																					</Grid>
+																				</Grid>
+																			</Grid>
 																		);
 																	}}
 																</Draggable>
@@ -340,12 +399,12 @@ const ProjectDetail = () => {
 														})
 													)}
 													{provided.placeholder}
-												</div>
+												</Container>
 											);
 										}}
 									</Droppable>
 								</div>
-								<Button variant="contained" onClick={handleClickOpen}>
+								<Button variant='contained' onClick={handleClickOpen}>
 									+ Add a task
 								</Button>
 								<Dialog open={open} onClose={handleClose}>
@@ -356,34 +415,34 @@ const ProjectDetail = () => {
 										</DialogContentText>
 										<TextField
 											autoFocus
-											margin="dense"
-											id="name"
-											label="name"
-											name="name"
-											type="text"
+											margin='dense'
+											id='name'
+											label='name'
+											name='name'
+											type='text'
 											fullWidth
-											variant="standard"
+											variant='standard'
 											value={newTask.name}
 											onChange={onChange}
 										/>
 										<TextField
 											autoFocus
-											id="desc"
-											label="description"
-											name="description"
-											type="text"
+											id='desc'
+											label='description'
+											name='description'
+											type='text'
 											fullWidth
-											variant="standard"
+											variant='standard'
 											value={newTask.description}
 											onChange={onChange}
-											margin="dense"
+											margin='dense'
 											multiline
 										/>
 										<Select
-											name="status"
+											name='status'
 											value={newTask.status}
 											onChange={onChange}
-											label="status"
+											label='status'
 										>
 											<MenuItem value={"To Do"}>To Do</MenuItem>
 											<MenuItem value={"In Progress"}>In Progress</MenuItem>
@@ -412,26 +471,26 @@ const ProjectDetail = () => {
 					sx: { width: "40%" },
 				}}
 			>
-				<FormControl sx={{ padding: 2 }} margin="dense">
-					<Typography variant="h3">Task Details</Typography>
+				<FormControl sx={{ padding: 2 }} margin='dense'>
+					<Typography variant='h3'>Task Details</Typography>
 					<TextField
 						autoFocus
-						id="name"
-						label="name"
-						name="name"
-						type="text"
-						variant="standard"
+						id='name'
+						label='name'
+						name='name'
+						type='text'
+						variant='standard'
 						fullWidth
 						value={drawerTask.name}
 						onChange={onEdit}
 					/>
 					<TextField
 						autoFocus
-						id="desc"
-						label="description"
-						name="description"
-						type="text"
-						variant="standard"
+						id='desc'
+						label='description'
+						name='description'
+						type='text'
+						variant='standard'
 						value={drawerTask.description}
 						onChange={onEdit}
 						fullWidth
@@ -439,7 +498,7 @@ const ProjectDetail = () => {
 					/>
 					<br />
 					<FormControl>
-						<Select name="status" value={drawerTask.status} onChange={onEdit}>
+						<Select name='status' value={drawerTask.status} onChange={onEdit}>
 							<MenuItem value={"To Do"}>To Do</MenuItem>
 							<MenuItem value={"In Progress"}>In Progress</MenuItem>
 							<MenuItem value={"Done"}>Done</MenuItem>
@@ -449,7 +508,7 @@ const ProjectDetail = () => {
 					</FormControl>
 					<FormControl>
 						<Select
-							name="userId"
+							name='userId'
 							value={drawerTask.userId}
 							onChange={onEdit}
 							fullWidth
@@ -489,7 +548,7 @@ const ProjectDetail = () => {
 						</LocalizationProvider>
 						<FormHelperText>Deadline</FormHelperText>
 					</FormControl>
-					<Button variant="contained" onClick={editTask}>
+					<Button variant='contained' onClick={editTask}>
 						Update Task
 					</Button>
 				</FormControl>
