@@ -1,11 +1,12 @@
 import React from "react";
 import {
-  AppBar,
+  Alert,
   Box,
   Button,
   Container,
   Grid,
   Paper,
+  Snackbar,
   Tab,
   Tabs,
   TextField,
@@ -22,7 +23,6 @@ import { RemoveTeamMember } from "../store";
 import axios from "axios";
 import { useState } from "react";
 import EmailSummary from "./EmailSummary";
-import { width } from "@mui/system";
 
 const Team = () => {
   const dispatch = useDispatch();
@@ -30,6 +30,38 @@ const Team = () => {
   let adminView = false;
 
   const [selectedTab, setSelectedTab] = useState("team");
+
+  const [alertConditions, setAlertConditions] = useState({
+    removedUser: false,
+    newAdmin: false,
+    invitedUser: false,
+  });
+
+  const [recipientInfo, setRecipientInfo] = useState({
+    email: "",
+  });
+
+  const closeRemovedUser = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, removedUser: false });
+  };
+
+  const closeNewAdmin = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, newAdmin: false });
+  };
+
+  const closeInvitedUser = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, invitedUser: false });
+    setRecipientInfo({ email: "" });
+  };
 
   const tabChange = (ev, newValue) => {
     setSelectedTab(newValue);
@@ -50,10 +82,6 @@ const Team = () => {
     adminView = true;
   }
 
-  const [recipientInfo, setRecipientInfo] = useState({
-    email: "",
-  });
-
   const onChange = (ev) => {
     setRecipientInfo({ ...recipientInfo, [ev.target.name]: ev.target.value });
   };
@@ -65,7 +93,17 @@ const Team = () => {
       recipient: recipientInfo.email,
       senderName: auth.firstName,
     });
-    setRecipientInfo("");
+    setAlertConditions({ ...alertConditions, invitedUser: true });
+  };
+
+  const removeUser = (user) => {
+    dispatch(RemoveTeamMember(user));
+    setAlertConditions({ ...alertConditions, removedUser: true });
+  };
+
+  const switchAdmin = (user) => {
+    dispatch(setNewAdmin(user));
+    setAlertConditions({ ...alertConditions, newAdmin: true });
   };
 
   return (
@@ -140,16 +178,15 @@ const Team = () => {
                             sx={{ display: "flex", flexDirection: "row" }}>
                             <Grid item>
                               <Button
-                                onClick={() =>
-                                  dispatch(RemoveTeamMember(user))
-                                }>
+                                onClick={() => {
+                                  removeUser(user);
+                                }}>
                                 {" "}
                                 <CancelIcon />
                               </Button>
                             </Grid>
                             <Grid item>
-                              <Button
-                                onClick={() => dispatch(setNewAdmin(user))}>
+                              <Button onClick={() => switchAdmin(user)}>
                                 Set as new admin
                               </Button>
                             </Grid>
@@ -171,6 +208,7 @@ const Team = () => {
                 label="Recipient's email address"
                 name="email"
                 onChange={onChange}
+                value={recipientInfo.email}
                 required
               />
               <Button
@@ -200,6 +238,51 @@ const Team = () => {
           {selectedTab === "createTeam" && <CreateTeam />}
         </Paper>
       )}
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.removedUser}
+        onClose={closeRemovedUser}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert
+          onClose={closeRemovedUser}
+          severity="success"
+          sx={{ width: "100%" }}>
+          User removed Successfully
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.newAdmin}
+        onClose={closeNewAdmin}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert
+          onClose={closeNewAdmin}
+          severity="success"
+          sx={{ width: "100%" }}>
+          New Admin set Successfully
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.invitedUser}
+        onClose={closeInvitedUser}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert
+          onClose={closeInvitedUser}
+          severity="success"
+          sx={{ width: "100%" }}>
+          Invite Successfully sent to {recipientInfo.email}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
