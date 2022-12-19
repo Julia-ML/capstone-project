@@ -48,6 +48,7 @@ export const deleteTask = (task) => {
 	return async (dispatch) => {
 		await axios.delete(`/api/tasks/${task.id}`);
 		dispatch({ type: "DELETE_TASK", taskId: task.id });
+		dispatch(fetchTasks());
 	};
 };
 
