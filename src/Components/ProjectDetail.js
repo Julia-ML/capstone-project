@@ -11,6 +11,7 @@ import {
 	updateTask,
 } from "../store";
 import TaskDelete from "./TaskDelete";
+import CalendarButton from "./CalendarButton";
 import Grid from "@mui/material/Grid";
 import DoneGraph from "./DoneGraph";
 import ColumnGraph from "./ColumnGraph";
@@ -379,6 +380,14 @@ const ProjectDetail = () => {
 																					<Grid item>
 																						<TaskDelete task={task} />
 																					</Grid>
+																					{!task.deadline ? (
+																						""
+																					) : (
+																						<Grid item>
+																							<CalendarButton task={task} />
+																						</Grid>
+																					)}
+
 																					<Grid item>
 																						<Tooltip title='Edit task'>
 																							<IconButton
