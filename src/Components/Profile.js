@@ -1,8 +1,11 @@
 import {
+  Alert,
+  Box,
   Button,
   Container,
   ListItem,
   Paper,
+  Snackbar,
   Stack,
   TextField,
   Typography,
@@ -32,6 +35,49 @@ export const Profile = () => {
     checker: false,
   });
 
+  const [alertConditions, setAlertConditions] = useState({
+    usernameUpdated: false,
+    emailUpdated: false,
+    firstUpdated: false,
+    lastUpdated: false,
+    passwordUpdated: false,
+  });
+
+  const closeUser = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, usernameUpdated: false });
+  };
+
+  const closeEmail = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, emailUpdated: false });
+  };
+
+  const closeFirst = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, firstUpdated: false });
+  };
+
+  const closeLast = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, lastUpdated: false });
+  };
+
+  const closePassword = (ev, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setAlertConditions({ ...alertConditions, passwordUpdated: false });
+  };
+
   const [userInfo, setUserInfo] = useState({
     username: "",
     password: "",
@@ -60,6 +106,7 @@ export const Profile = () => {
       [type]: !editToggle[type],
       checker: !editToggle.checker,
     });
+
     if (cancel) {
       setUserInfo({ ...userInfo, [type]: auth[type] });
     }
@@ -69,38 +116,42 @@ export const Profile = () => {
     setUserInfo({ ...userInfo, [ev.target.name]: ev.target.value });
   };
 
-  const updateInfo = (ev, type, updated) => {
+  const updateInfo = (ev, type, updated, alert) => {
     ev.preventDefault();
     dispatch(updateUser(updated));
     editMode(type, true);
+    setAlertConditions({ ...alertConditions, [alert]: true });
   };
 
   return (
-    <Container>
+    <Container sx={{ margin: "auto", width: "50%" }}>
       <Paper>
         <Typography mt={7} align="center" variant="h3">
           Account Information
         </Typography>
-        <Stack
-          spacing={2}
-          direction="column"
-          alignItems="flex-start"
-          justifyContent="center">
+        <Stack spacing={2} direction="column">
           <ListItem>
             {!editToggle.username ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Username: {auth.username} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("username")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "username", { username: userInfo.username })
+                    updateInfo(
+                      ev,
+                      "username",
+                      {
+                        username: userInfo.username,
+                      },
+                      "usernameUpdated"
+                    )
                   }>
                   <TextField
                     label="Username"
@@ -108,29 +159,38 @@ export const Profile = () => {
                     name="username"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box>
+                    <Button sx={{ margin: "auto", width: "50%" }} type="submit">
+                      Update
+                    </Button>
+                    <Button onClick={() => editMode("username", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("username", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.email ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Email: {auth.email} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("email")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "email", { email: userInfo.email })
+                    updateInfo(
+                      ev,
+                      "email",
+                      { email: userInfo.email },
+                      "emailUpdated"
+                    )
                   }>
                   <TextField
                     label="Email"
@@ -138,31 +198,38 @@ export const Profile = () => {
                     name="email"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("email", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("email", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.firstName ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>First Name: {auth.firstName} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("firstName")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "firstName", {
-                      firstName: userInfo.firstName,
-                    })
+                    updateInfo(
+                      ev,
+                      "firstName",
+                      {
+                        firstName: userInfo.firstName,
+                      },
+                      "firstUpdated"
+                    )
                   }>
                   <TextField
                     label="First Name"
@@ -170,29 +237,38 @@ export const Profile = () => {
                     name="firstName"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("firstName", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("firstName", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.lastName ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Last Name: {auth.lastName} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("lastName")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "lastName", { lastName: userInfo.lastName })
+                    updateInfo(
+                      ev,
+                      "lastName",
+                      {
+                        lastName: userInfo.lastName,
+                      },
+                      "lastUpdated"
+                    )
                   }>
                   <TextField
                     label="Last Name"
@@ -200,29 +276,38 @@ export const Profile = () => {
                     name="lastName"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("lastName", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("lastName", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.password ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Password: </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("password")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "password", { password: userInfo.password })
+                    updateInfo(
+                      ev,
+                      "password",
+                      {
+                        password: userInfo.password,
+                      },
+                      "passwordUpdated"
+                    )
                   }>
                   <TextField
                     label="Password"
@@ -231,26 +316,92 @@ export const Profile = () => {
                     name="password"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("password", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("password", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
+          <ListItem>
+            <Box sx={{ margin: "auto" }}>
+              {auth.id === teams.adminId ? (
+                <div>
+                  <AdminError />
+                </div>
+              ) : (
+                <ConfirmDelete />
+              )}
+            </Box>
+          </ListItem>
         </Stack>
-        {auth.id === teams.adminId ? (
-          <div>
-            <AdminError />
-          </div>
-        ) : (
-          <div>
-            <ConfirmDelete />
-          </div>
-        )}
-        <br></br>
       </Paper>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.usernameUpdated}
+        onClose={closeUser}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert onClose={closeUser} severity="success" sx={{ width: "100%" }}>
+          Username updated successfully to {auth.username}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.emailUpdated}
+        onClose={closeEmail}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert onClose={closeEmail} severity="success" sx={{ width: "100%" }}>
+          Email updated successfully to {auth.email}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.firstUpdated}
+        onClose={closeFirst}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert onClose={closeFirst} severity="success" sx={{ width: "100%" }}>
+          First name updated successfully to {auth.firstName}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.lastUpdated}
+        onClose={closeLast}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert onClose={closeLast} severity="success" sx={{ width: "100%" }}>
+          Last name updated successfully to {auth.lastName}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        autoHideDuration={4000}
+        open={alertConditions.passwordUpdated}
+        onClose={closePassword}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "center",
+        }}>
+        <Alert
+          onClose={closePassword}
+          severity="success"
+          sx={{ width: "100%" }}>
+          Password successfully updated
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
