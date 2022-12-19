@@ -132,6 +132,15 @@ const ProjectDetail = () => {
 		});
 	};
 
+	const getUserName = (task) => {
+		if (task.userId) {
+			const assigned = users.find((user) => user.id === task.userId);
+			return assigned.username;
+		} else {
+			return "";
+		}
+	};
+
 	const onEdit = (ev) => {
 		if (ev) {
 			setDrawerTask({
@@ -298,6 +307,12 @@ const ProjectDetail = () => {
 																	index={index}
 																>
 																	{(provided, snapshot) => {
+																		let newDate = "";
+																		if (task.deadline) {
+																			newDate = new Date(
+																				task.deadline
+																			).toLocaleString();
+																		}
 																		return (
 																			<Grid
 																				container
@@ -319,23 +334,45 @@ const ProjectDetail = () => {
 																				}}
 																			>
 																				<Grid item>
-																					<Button
-																						onClick={() => {
-																							setDrawerTask(task);
-																							setDrawerOpen(true);
+																					<Typography
+																						variant="subtitle1"
+																						sx={{
+																							textAlign: "left",
+																							fontWeight: "bold",
 																						}}
 																					>
-																						<Typography
-																							variant="subtitle1"
-																							sx={{ textAlign: "left" }}
-																						>
-																							{task.name}
-																						</Typography>
-																					</Button>
+																						{task.name}
+																					</Typography>
+																				</Grid>
+																				<Grid item>
+																					<Typography
+																						variant="subtitle2"
+																						sx={{ textAlign: "left" }}
+																					>
+																						Due:{" "}
+																						{task.deadline === undefined
+																							? ""
+																							: newDate}
+																					</Typography>
+																				</Grid>
+																				<Grid item>
+																					<Typography
+																						variant="subtitle2"
+																						sx={{ textAlign: "left" }}
+																					>
+																						{task.userId === undefined
+																							? null
+																							: `Assigned: ${getUserName(
+																									task
+																							  )}`}
+																					</Typography>
 																				</Grid>
 																				<Grid
 																					container
-																					style={{ display: "flex" }}
+																					style={{
+																						display: "flex",
+																						border: "1px",
+																					}}
 																				>
 																					<Grid item>
 																						<TaskDelete task={task} />
