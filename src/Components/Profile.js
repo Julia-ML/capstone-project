@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Container,
   ListItem,
@@ -76,31 +77,29 @@ export const Profile = () => {
   };
 
   return (
-    <Container>
+    <Container sx={{ margin: "auto", width: "50%" }}>
       <Paper>
         <Typography mt={7} align="center" variant="h3">
           Account Information
         </Typography>
-        <Stack
-          spacing={2}
-          direction="column"
-          alignItems="flex-start"
-          justifyContent="center">
+        <Stack spacing={2} direction="column">
           <ListItem>
             {!editToggle.username ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Username: {auth.username} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("username")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "username", { username: userInfo.username })
+                    updateInfo(ev, "username", {
+                      username: userInfo.username,
+                    })
                   }>
                   <TextField
                     label="Username"
@@ -108,26 +107,30 @@ export const Profile = () => {
                     name="username"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box>
+                    <Button sx={{ margin: "auto", width: "50%" }} type="submit">
+                      Update
+                    </Button>
+                    <Button onClick={() => editMode("username", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("username", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.email ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Email: {auth.email} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("email")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
                     updateInfo(ev, "email", { email: userInfo.email })
@@ -138,26 +141,28 @@ export const Profile = () => {
                     name="email"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("email", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("email", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.firstName ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>First Name: {auth.firstName} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("firstName")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
                     updateInfo(ev, "firstName", {
@@ -170,29 +175,33 @@ export const Profile = () => {
                     name="firstName"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("firstName", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("firstName", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.lastName ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Last Name: {auth.lastName} </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("lastName")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "lastName", { lastName: userInfo.lastName })
+                    updateInfo(ev, "lastName", {
+                      lastName: userInfo.lastName,
+                    })
                   }>
                   <TextField
                     label="Last Name"
@@ -200,29 +209,33 @@ export const Profile = () => {
                     name="lastName"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("lastName", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("lastName", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
           <ListItem>
             {!editToggle.password ? (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <strong>Password: </strong>
                 {!editToggle.checker && (
                   <Button onClick={() => editMode("password")}>
                     <EditIcon />
                   </Button>
                 )}
-              </div>
+              </Box>
             ) : (
-              <div>
+              <Box sx={{ margin: "auto", width: "50%" }}>
                 <form
                   onSubmit={(ev) =>
-                    updateInfo(ev, "password", { password: userInfo.password })
+                    updateInfo(ev, "password", {
+                      password: userInfo.password,
+                    })
                   }>
                   <TextField
                     label="Password"
@@ -231,25 +244,28 @@ export const Profile = () => {
                     name="password"
                     onChange={onChange}
                   />
-                  <Button type="submit">Update</Button>
+                  <Box sx={{ margin: "auto", width: "50%" }}>
+                    <Button type="submit">Update</Button>
+                    <Button onClick={() => editMode("password", true)}>
+                      <CancelIcon />
+                    </Button>
+                  </Box>
                 </form>
-                <Button onClick={() => editMode("password", true)}>
-                  <CancelIcon />
-                </Button>
-              </div>
+              </Box>
             )}
           </ListItem>
+          <ListItem>
+            <Box sx={{ margin: "auto" }}>
+              {auth.id === teams.adminId ? (
+                <div>
+                  <AdminError />
+                </div>
+              ) : (
+                <ConfirmDelete />
+              )}
+            </Box>
+          </ListItem>
         </Stack>
-        {auth.id === teams.adminId ? (
-          <div>
-            <AdminError />
-          </div>
-        ) : (
-          <div>
-            <ConfirmDelete />
-          </div>
-        )}
-        <br></br>
       </Paper>
     </Container>
   );
