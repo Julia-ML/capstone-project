@@ -6,19 +6,19 @@ import TeamTasksGraph from "./TeamTasksGraph";
 import { fetchTasks, fetchProjects } from "../store";
 
 const Metrics = () => {
-    const { auth, tasks } = useSelector((state) => state);
-    const dispatch = useDispatch();
+  const { auth, tasks } = useSelector((state) => state);
+  const dispatch = useDispatch();
 
-    useEffect(() => {
-        dispatch(fetchProjects()), dispatch(fetchTasks());
-      }, []);
+  useEffect(() => {
+    dispatch(fetchProjects()), dispatch(fetchTasks());
+  }, []);
 
-    return (
-        <div>
-            {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
-            {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
-        </div>
-    )
-}
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
+      {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
+    </div>
+  );
+};
 
 export default Metrics;

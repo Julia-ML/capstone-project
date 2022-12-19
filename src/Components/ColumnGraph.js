@@ -1,33 +1,29 @@
 import React from "react";
-import {
-  ResponsiveContainer,
-  PieChart,
-  Pie,
-  Tooltip,
-  Legend,
-  Cell,
-} from "recharts";
+import { PieChart, Pie, Legend, Cell, Label } from "recharts";
 import Typography from "@mui/material/Typography";
 
-const UserTasksGraph = (props) => {
-  //props takes in all team tasks and user id
+const ColumnGraph = (props) => {
   console.log("props", props);
-  const teamTasks = props.tasks;
-  const userTasks = teamTasks.filter((task) => task.userId === props.id);
-  const progress = userTasks.filter((task) => task.status === "In Progress");
-  const done = userTasks.filter((task) => task.status === "Done");
+  const tasks = props.tasks;
+  const projectTasks = tasks.filter(
+    (task) => task.projectId === props.projectId
+  );
+  const backlog = projectTasks.filter((task) => task.status === "Backlog");
+  const todo = projectTasks.filter((task) => task.status === "To Do");
+  const progress = projectTasks.filter((task) => task.status === "In Progress");
+  const done = projectTasks.filter((task) => task.status === "Done");
 
   const data = [
-    { name: "My To-Do", value: userTasks.length },
+    { name: "Backlog", value: backlog.length },
+    { name: "To Do", value: todo.length },
     { name: "In Progress", value: progress.length },
     { name: "Done", value: done.length },
   ];
 
   return (
     <span>
-      {" "}
       <Typography width="100%" align="center">
-        My Tasks
+        Task Status
       </Typography>
       <PieChart width={730} height={250}>
         <Legend />
@@ -50,7 +46,9 @@ const UserTasksGraph = (props) => {
                   ? "#eaece5"
                   : entry.name === "In Progress"
                   ? "#b2c2bf"
-                  : "#5b9aa0"
+                  : entry.name === "To Do"
+                  ? "#5b9aa0"
+                  : "#5A5A5A"
               }
             />
           ))}
@@ -60,4 +58,4 @@ const UserTasksGraph = (props) => {
   );
 };
 
-export default UserTasksGraph;
+export default ColumnGraph;

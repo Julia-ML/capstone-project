@@ -5,6 +5,7 @@ import { fetchTasks, updateTask } from "../store";
 import TaskDelete from "./TaskDelete";
 import CalendarButton from "./CalendarButton";
 import Grid from "@mui/material/Grid";
+import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import Button from "@mui/material/Button";
@@ -62,181 +63,188 @@ const TaskCard = (props) => {
 		newDate = new Date(task.deadline).toLocaleString();
 	}
 
-	return (
-		<Grid
-			container
-			align='center'
-			sx={{
-				display: "flex",
-				flexDirection: "column",
-				boxShadow: 5,
-				borderRadius: 2,
-				margin: "1rem",
-				padding: "1rem",
-				width: "300px",
-			}}
-		>
-			<Grid item>
-				<Typography variant='h6'>
-					{task === undefined ? "" : task.name}
-				</Typography>
-			</Grid>
-			<Grid
-				container
-				sx={{ display: "flex", flexDirection: "row", justifyContent: "center" }}
-			>
-				<Grid item>
-					<Tooltip title='Edit task'>
-						<IconButton
-							onClick={() => {
-								setDrawerTask(task);
-								setDrawerOpen(true);
-							}}
-						>
-							<EditIcon />
-						</IconButton>
-					</Tooltip>
-				</Grid>
-				<Grid item>
-					{project === undefined ? (
-						""
-					) : (
-						<Link to={`/projects/${project.id}`}>
-							<Tooltip title='Go to project page'>
-								<IconButton>
-									<DashboardIcon />
-								</IconButton>
-							</Tooltip>
-						</Link>
-					)}
-				</Grid>
-				<Grid item>{!task.deadline ? "" : <CalendarButton task={task} />}</Grid>
-				<Grid item>
-					<TaskDelete task={task} />
-				</Grid>
-			</Grid>
-			<br />
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>
-					Project: {project === undefined ? "" : project.name}
-				</Typography>
-			</Grid>
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>
-					Status: {task === undefined ? "" : task.status}
-				</Typography>
-			</Grid>
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>
-					Deadline: {task.deadline === undefined ? "" : newDate}
-				</Typography>
-			</Grid>
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>
-					Assigned to: {user === undefined ? "" : user.firstName}
-				</Typography>
-			</Grid>
-			<hr />
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>Description:</Typography>
-			</Grid>
-			<Grid item align='left'>
-				<Typography variant='subtitle2'>
-					{task === undefined ? "" : task.description}
-				</Typography>
-			</Grid>
-			<Drawer
-				anchor={"right"}
-				open={drawerOpen}
-				onClose={toggleDrawer}
-				PaperProps={{
-					sx: { width: "40%" },
-				}}
-			>
-				<FormControl sx={{ padding: 2 }} margin='dense'>
-					<Typography variant='h3'>Task Details</Typography>
-					<TextField
-						autoFocus
-						id='name'
-						label='name'
-						name='name'
-						type='text'
-						variant='standard'
-						fullWidth
-						value={drawerTask.name}
-						onChange={onEdit}
-					/>
-					<TextField
-						autoFocus
-						id='desc'
-						label='description'
-						name='description'
-						type='text'
-						variant='standard'
-						value={drawerTask.description}
-						onChange={onEdit}
-						fullWidth
-						multiline
-					/>
-					<br />
-					<FormControl>
-						<Select name='status' value={drawerTask.status} onChange={onEdit}>
-							<MenuItem value={"To Do"}>To Do</MenuItem>
-							<MenuItem value={"In Progress"}>In Progress</MenuItem>
-							<MenuItem value={"Done"}>Done</MenuItem>
-							<MenuItem value={"Backlog"}>Backlog</MenuItem>
-						</Select>
-						<FormHelperText>Status</FormHelperText>
-					</FormControl>
-					<FormControl>
-						<Select
-							name='userId'
-							value={drawerTask.userId}
-							onChange={onEdit}
-							fullWidth
-						>
-							<MenuItem value={""}>none</MenuItem>
-							{_users === undefined
-								? ""
-								: _users.map((teamMem) => {
-										return (
-											<MenuItem value={teamMem.id} key={teamMem.id}>
-												{teamMem.username}
-											</MenuItem>
-										);
-								  })}
-						</Select>
-						<FormHelperText>Assign to</FormHelperText>
-					</FormControl>
-					<FormControl>
-						<LocalizationProvider dateAdapter={AdapterDayjs}>
-							<DatePicker
-								value={drawerTask.deadline || value}
-								onChange={(newValue) => {
-									console.log(newValue.$d);
-									setValue(newValue);
-									onDeadlineEdit(newValue.$d);
-								}}
-								renderInput={(params) => <TextField {...params} />}
-							/>
-							<Button
-								onClick={() => {
-									setValue(null);
-									setDrawerTask({ ...drawerTask, deadline: null });
-								}}
-							>
-								clear date
-							</Button>
-						</LocalizationProvider>
-						<FormHelperText>Deadline</FormHelperText>
-					</FormControl>
-					<Button variant='contained' onClick={editTask}>
-						Update Task
-					</Button>
-				</FormControl>
-			</Drawer>
-		</Grid>
-	);
+  return (
+    <Grid
+      container
+      align="center"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        boxShadow: 5,
+        borderRadius: 2,
+        margin: "1rem",
+        marginBottom: 0,
+        padding: "1rem",
+        width: 300,
+      }}
+    >
+      <Paper elevation={3} sx={{ padding: 3 }}>
+        <Grid item>
+          <Typography variant="h6">
+            {task === undefined ? "" : task.name}
+          </Typography>
+        </Grid>
+        <Grid
+          container
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+          }}
+        >
+          <Grid item>
+            <Tooltip title="Edit task">
+              <IconButton
+                onClick={() => {
+                  setDrawerTask(task);
+                  setDrawerOpen(true);
+                }}
+              >
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+          </Grid>
+          <Grid item>
+            {project === undefined ? (
+              ""
+            ) : (
+              <Link to={`/projects/${project.id}`}>
+                <Tooltip title="Go to project page">
+                  <IconButton>
+                    <DashboardIcon />
+                  </IconButton>
+                </Tooltip>
+              </Link>
+            )}
+          </Grid>
+          <Grid item>{!task.deadline ? "" : <CalendarButton task={task} />}</Grid>
+          <Grid item>
+            <TaskDelete task={task} />
+          </Grid>
+        </Grid>
+        <br />
+        <Grid item align="left">
+          <Typography variant="subtitle2">
+            Project: {project === undefined ? "" : project.name}
+          </Typography>
+        </Grid>
+        <Grid item align="left">
+          <Typography variant="subtitle2">
+            Status: {task === undefined ? "" : task.status}
+          </Typography>
+        </Grid>
+        <Grid item align="left">
+          <Typography variant="subtitle2">
+            Deadline: {task.deadline === undefined ? "" : newDate}
+          </Typography>
+        </Grid>
+        <Grid item align="left">
+          <Typography variant="subtitle2">
+            Assigned to: {user === undefined ? "" : user.firstName}
+          </Typography>
+        </Grid>
+        <hr />
+        <Grid item align="left">
+          <Typography variant="subtitle2">Description:</Typography>
+        </Grid>
+        <Grid item align="left">
+          <Typography variant="subtitle2">
+            {task === undefined ? "" : task.description}
+          </Typography>
+        </Grid>
+        <Drawer
+          anchor={"right"}
+          open={drawerOpen}
+          onClose={toggleDrawer}
+          PaperProps={{
+            sx: { width: "40%" },
+          }}
+        >
+          <FormControl sx={{ padding: 2 }} margin="dense">
+            <Typography variant="h3">Task Details</Typography>
+            <TextField
+              autoFocus
+              id="name"
+              label="name"
+              name="name"
+              type="text"
+              variant="standard"
+              fullWidth
+              value={drawerTask.name}
+              onChange={onEdit}
+            />
+            <TextField
+              autoFocus
+              id="desc"
+              label="description"
+              name="description"
+              type="text"
+              variant="standard"
+              value={drawerTask.description}
+              onChange={onEdit}
+              fullWidth
+              multiline
+            />
+            <br />
+            <FormControl>
+              <Select name="status" value={drawerTask.status} onChange={onEdit}>
+                <MenuItem value={"To Do"}>To Do</MenuItem>
+                <MenuItem value={"In Progress"}>In Progress</MenuItem>
+                <MenuItem value={"Done"}>Done</MenuItem>
+                <MenuItem value={"Backlog"}>Backlog</MenuItem>
+              </Select>
+              <FormHelperText>Status</FormHelperText>
+            </FormControl>
+            <FormControl>
+              <Select
+                name="userId"
+                value={drawerTask.userId}
+                onChange={onEdit}
+                fullWidth
+              >
+                <MenuItem value={""}>none</MenuItem>
+                {_users === undefined
+                  ? ""
+                  : _users.map((teamMem) => {
+                      return (
+                        <MenuItem value={teamMem.id} key={teamMem.id}>
+                          {teamMem.username}
+                        </MenuItem>
+                      );
+                    })}
+              </Select>
+              <FormHelperText>Assign to</FormHelperText>
+            </FormControl>
+            <FormControl>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  value={drawerTask.deadline || value}
+                  onChange={(newValue) => {
+                    console.log(newValue.$d);
+                    setValue(newValue);
+                    onDeadlineEdit(newValue.$d);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+                <Button
+                  onClick={() => {
+                    setValue(null);
+                    setDrawerTask({ ...drawerTask, deadline: null });
+                  }}
+                >
+                  clear date
+                </Button>
+              </LocalizationProvider>
+              <FormHelperText>Deadline</FormHelperText>
+            </FormControl>
+            <Button variant="contained" onClick={editTask}>
+              Update Task
+            </Button>
+          </FormControl>
+        </Drawer>
+      </Paper>
+    </Grid>
+  );
 };
 
 export default TaskCard;
