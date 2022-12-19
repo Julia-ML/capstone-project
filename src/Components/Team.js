@@ -230,7 +230,7 @@ const Team = () => {
               textColor="secondary"
               indicatorColor="secondary"
               centered>
-              <Tab value="joinTeam" label="Invite member" />
+              <Tab value="joinTeam" label="Join a team" />
               <Tab value="createTeam" label="Create Team" />
             </Tabs>
           </Box>

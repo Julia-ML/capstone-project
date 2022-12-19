@@ -15,7 +15,6 @@ export const JoinTeam = () => {
   };
 
   const { teamIdEmail } = useParams();
-  console.log(teamIdEmail, "teams");
   useEffect(() => {
     setInput({ teamId: teamIdEmail });
   }, [teamIdEmail]);
