@@ -1,4 +1,4 @@
-import { Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import React from "react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -15,7 +15,6 @@ export const JoinTeam = () => {
   };
 
   const { teamIdEmail } = useParams();
-  console.log(teamIdEmail, "teams");
   useEffect(() => {
     setInput({ teamId: teamIdEmail });
   }, [teamIdEmail]);
@@ -25,7 +24,7 @@ export const JoinTeam = () => {
     dispatch(updateUser(input));
   };
   return (
-    <Paper>
+    <Box sx={{ margin: "auto", width: "50%" }}>
       <Typography mt={7} align="center" variant="h3">
         Join a team
       </Typography>
@@ -43,6 +42,6 @@ export const JoinTeam = () => {
           Join Team{" "}
         </Button>
       </form>
-    </Paper>
+    </Box>
   );
 };

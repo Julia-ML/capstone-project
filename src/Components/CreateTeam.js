@@ -1,4 +1,4 @@
-import { Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, TextField, Typography } from "@mui/material";
 import axios from "axios";
 import React from "react";
 import { useState } from "react";
@@ -26,7 +26,7 @@ const CreateTeam = () => {
   };
 
   return (
-    <Paper>
+    <Box sx={{ margin: "auto", width: "50%" }}>
       <Typography mt={7} align="center" variant="h3">
         Create a team
       </Typography>
@@ -45,7 +45,7 @@ const CreateTeam = () => {
           Create Team{" "}
         </Button>
       </form>
-    </Paper>
+    </Box>
   );
 };
 
