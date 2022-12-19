@@ -244,7 +244,7 @@ const ProjectDetail = () => {
 	return (
 		<div>
 			<br />
-			<Typography variant="h4" align="center">
+			<Typography variant='h4' align='center'>
 				{project.name}
 			</Typography>
 			<Container
@@ -335,7 +335,7 @@ const ProjectDetail = () => {
 																			>
 																				<Grid item>
 																					<Typography
-																						variant="subtitle1"
+																						variant='subtitle1'
 																						sx={{
 																							textAlign: "left",
 																							fontWeight: "bold",
@@ -346,7 +346,7 @@ const ProjectDetail = () => {
 																				</Grid>
 																				<Grid item>
 																					<Typography
-																						variant="subtitle2"
+																						variant='subtitle2'
 																						sx={{ textAlign: "left" }}
 																					>
 																						Due:{" "}
@@ -357,7 +357,7 @@ const ProjectDetail = () => {
 																				</Grid>
 																				<Grid item>
 																					<Typography
-																						variant="subtitle2"
+																						variant='subtitle2'
 																						sx={{ textAlign: "left" }}
 																					>
 																						{task.userId === undefined
@@ -372,13 +372,14 @@ const ProjectDetail = () => {
 																					style={{
 																						display: "flex",
 																						border: "1px",
+																						justifyContent: "space-between",
 																					}}
 																				>
 																					<Grid item>
 																						<TaskDelete task={task} />
 																					</Grid>
 																					<Grid item>
-																						<Tooltip title="Edit task">
+																						<Tooltip title='Edit task'>
 																							<IconButton
 																								onClick={() => {
 																									setDrawerTask(task);
@@ -403,7 +404,7 @@ const ProjectDetail = () => {
 										}}
 									</Droppable>
 								</div>
-								<Button variant="contained" onClick={handleClickOpen}>
+								<Button variant='contained' onClick={handleClickOpen}>
 									+ Add a task
 								</Button>
 								<Dialog open={open} onClose={handleClose}>
@@ -414,34 +415,34 @@ const ProjectDetail = () => {
 										</DialogContentText>
 										<TextField
 											autoFocus
-											margin="dense"
-											id="name"
-											label="name"
-											name="name"
-											type="text"
+											margin='dense'
+											id='name'
+											label='name'
+											name='name'
+											type='text'
 											fullWidth
-											variant="standard"
+											variant='standard'
 											value={newTask.name}
 											onChange={onChange}
 										/>
 										<TextField
 											autoFocus
-											id="desc"
-											label="description"
-											name="description"
-											type="text"
+											id='desc'
+											label='description'
+											name='description'
+											type='text'
 											fullWidth
-											variant="standard"
+											variant='standard'
 											value={newTask.description}
 											onChange={onChange}
-											margin="dense"
+											margin='dense'
 											multiline
 										/>
 										<Select
-											name="status"
+											name='status'
 											value={newTask.status}
 											onChange={onChange}
-											label="status"
+											label='status'
 										>
 											<MenuItem value={"To Do"}>To Do</MenuItem>
 											<MenuItem value={"In Progress"}>In Progress</MenuItem>
@@ -470,26 +471,26 @@ const ProjectDetail = () => {
 					sx: { width: "40%" },
 				}}
 			>
-				<FormControl sx={{ padding: 2 }} margin="dense">
-					<Typography variant="h3">Task Details</Typography>
+				<FormControl sx={{ padding: 2 }} margin='dense'>
+					<Typography variant='h3'>Task Details</Typography>
 					<TextField
 						autoFocus
-						id="name"
-						label="name"
-						name="name"
-						type="text"
-						variant="standard"
+						id='name'
+						label='name'
+						name='name'
+						type='text'
+						variant='standard'
 						fullWidth
 						value={drawerTask.name}
 						onChange={onEdit}
 					/>
 					<TextField
 						autoFocus
-						id="desc"
-						label="description"
-						name="description"
-						type="text"
-						variant="standard"
+						id='desc'
+						label='description'
+						name='description'
+						type='text'
+						variant='standard'
 						value={drawerTask.description}
 						onChange={onEdit}
 						fullWidth
@@ -497,7 +498,7 @@ const ProjectDetail = () => {
 					/>
 					<br />
 					<FormControl>
-						<Select name="status" value={drawerTask.status} onChange={onEdit}>
+						<Select name='status' value={drawerTask.status} onChange={onEdit}>
 							<MenuItem value={"To Do"}>To Do</MenuItem>
 							<MenuItem value={"In Progress"}>In Progress</MenuItem>
 							<MenuItem value={"Done"}>Done</MenuItem>
@@ -507,7 +508,7 @@ const ProjectDetail = () => {
 					</FormControl>
 					<FormControl>
 						<Select
-							name="userId"
+							name='userId'
 							value={drawerTask.userId}
 							onChange={onEdit}
 							fullWidth
@@ -547,7 +548,7 @@ const ProjectDetail = () => {
 						</LocalizationProvider>
 						<FormHelperText>Deadline</FormHelperText>
 					</FormControl>
-					<Button variant="contained" onClick={editTask}>
+					<Button variant='contained' onClick={editTask}>
 						Update Task
 					</Button>
 				</FormControl>
