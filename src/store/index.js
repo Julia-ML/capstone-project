@@ -7,6 +7,7 @@ import projects from "./projects";
 import teams from "./teams";
 import tasks from "./tasks";
 import log from "./log";
+import posts from "./posts";
 
 const reducer = combineReducers({
   auth,
@@ -15,6 +16,7 @@ const reducer = combineReducers({
   teams,
   tasks,
   log,
+  posts,
 });
 
 const store = createStore(reducer, applyMiddleware(thunk, logger));
@@ -27,3 +29,4 @@ export * from "./projects";
 export * from "./teams";
 export * from "./tasks";
 export * from "./log";
+export * from "./posts";

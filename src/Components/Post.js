@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchPosts } from '../store/posts.js'
+import { fetchPosts } from '../store/posts.js';
 import { createPost } from '../store/posts.js';
+import { fetchUsers } from '../store/users.js';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import InputLabel from '@mui/material/InputLabel';
 import PropTypes from 'prop-types';
+import Card from '@mui/material/Card';
+import CardContent from "@mui/material/CardContent";
+import Grid from "@mui/material/Grid";
 import { styled } from '@mui/material/styles';
 import Rating from '@mui/material/Rating';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
@@ -17,8 +21,15 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import Typography from '@mui/material/Typography';
 import auth from '../store/auth.js';
 
+// const formatDate = (createdAt) => {
+//   const date = new Date(createdAT);
+//   const formattedDate = createdAt.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+//   return formattedDate
+// }
+
 const Post = () => {
-    const { posts } = useSelector(state => state)
+  let createdAT = ''
+    const { posts, users } = useSelector(state => state)
     const dispatch = useDispatch();
     const [userPost, setUserPost] = useState({
         text: "",
@@ -27,6 +38,7 @@ const Post = () => {
 
     useEffect(()=> {
         dispatch(fetchPosts());
+        dispatch(fetchUsers());
     }, []);
 
     const [error, setError] = useState({});
@@ -37,7 +49,7 @@ const Post = () => {
             await dispatch(createPost(userPost));
             setUserPost({
                 text: "",
-                userId: auth.id,
+                userId: "",
             });
             setError({});
         }
@@ -90,6 +102,14 @@ const Post = () => {
         value: PropTypes.number.isRequired,
       };
 
+      const formatDate = (createdAt) => {
+        const date = new Date(createdAT);
+        //console.log('test date here:::', date)
+        //const formattedDate = date.toDateString()
+        const formattedDate = createdAt.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+        return formattedDate
+      }
+
   return (
     <div>
       <Box component="span" sx={{ p: 2, border: '' }}>
@@ -104,7 +124,7 @@ const Post = () => {
                 rows={7}
                 variant="filled"
                 defaultValue={userPost.text}
-				onChange={(ev) => setUserPost({ ...userPost, text: ev.target.value })}
+				        onChange={(ev) => setUserPost({ ...userPost, text: ev.target.value })}
             />
             <Typography component="legend">Feeling</Typography>
             <StyledRating
@@ -117,18 +137,32 @@ const Post = () => {
             <Button onClick={submitPost}>Submit</Button>
             </form>
         </div>
-        <div>
+        <br></br>
+        <div className="posts-thread">
+          <Grid sx={{overflowY: "scroll", overflow: "hidden", }}>
             <Box>
-                {/* {
-                    posts.map(post => {
-                        return ([
-                            <Card>
-                                <Typography>{ post.text }</Typography>
-                            </Card>
-                        ])
+                {
+                    posts.map((post) => {
+                      const currUser = users.filter(currUser => currUser.id === post.userId);
+                      const allUsers = currUser.map(person => {return [`${person.firstName} ${person.lastName}`]})
+                      //console.log('HERE HERE HERE', currUser)
+                        return (
+                          <Box sx={{ m: 3 }}>
+                            <Grid item key={post.id}>
+                              <Card key={post.id}>
+                                <CardContent>
+                                    <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}><Typography>{ formatDate(`${post.createdAt}`) }</Typography></Box>
+                                    <Box sx={{height: 50, color: 'primary.main'}}><Typography>{ allUsers }</Typography></Box>
+                                    <Box sx={{height: 40}}><Typography>{ post.text }</Typography></Box>
+                                </CardContent>
+                              </Card>
+                            </Grid>
+                          </Box>
+                        )
                     })
-                } */}
+                }
             </Box>
+            </Grid>
         </div>
       </Box>
     </div>

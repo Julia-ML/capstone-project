@@ -12,7 +12,19 @@ const Post = conn.define("post", {
     },
     userId: {
         type: UUID,
-      }
+      },
+    teamId: {
+        type: UUID,
+    },
 });
+
+Post.prototype.getPosts = async function () {
+	let posts = await conn.models.post.findAll({
+		where: {
+			teamId: this.teamId,
+		},
+	});
+	return posts;
+};
 
 module.exports = Post;
