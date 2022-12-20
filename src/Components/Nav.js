@@ -12,11 +12,11 @@ import auth from "../store/auth";
 import { logout } from "../store";
 
 function NavBar() {
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-	const { pathname } = useLocation();
-	const { auth } = useSelector((state) => state);
+  const { pathname } = useLocation();
+  const { auth } = useSelector((state) => state);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -27,7 +27,8 @@ function NavBar() {
             edge="start"
             color="inherit"
             aria-label="menu"
-            sx={{ mr: 2 }}></IconButton>
+            sx={{ mr: 2 }}
+          ></IconButton>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <div>
@@ -41,7 +42,8 @@ function NavBar() {
                   {auth.teamId && (
                     <Button
                       color="inherit"
-                      onClick={() => navigate("/dashboard")}>
+                      onClick={() => navigate("/dashboard")}
+                    >
                       Dashboard
                     </Button>
                   )}
@@ -53,7 +55,8 @@ function NavBar() {
                   {auth.teamId && (
                     <Button
                       color="inherit"
-                      onClick={() => navigate("/projects")}>
+                      onClick={() => navigate("/projects")}
+                    >
                       Projects
                     </Button>
                   )}
@@ -76,13 +79,20 @@ function NavBar() {
               onClick={() => {
                 dispatch(logout());
                 navigate("/");
-              }}>
+              }}
+            >
               Logout
             </Button>
           ) : (
-            <div>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
               <Button color="inherit" onClick={() => navigate("/")}>
-                <Typography variant="h4" color="inherit">
+                <Typography variant="h5" color="inherit">
                   Daily Standup Replacer
                 </Typography>
               </Button>
