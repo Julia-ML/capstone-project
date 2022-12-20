@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
 	createTask,
 	fetchProjects,
@@ -12,6 +12,7 @@ import {
 } from "../store";
 import TaskDelete from "./TaskDelete";
 import CalendarButton from "./CalendarButton";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Grid from "@mui/material/Grid";
 import DoneGraph from "./DoneGraph";
 import ColumnGraph from "./ColumnGraph";
@@ -52,7 +53,7 @@ const ProjectDetail = () => {
 	const [disabled, setDisabled] = useState(true);
 	const [drawerOpen, setDrawerOpen] = useState(false);
 	const [drawerTask, setDrawerTask] = useState({});
-	const [value, setValue] = React.useState(Dayjs);
+	const [value, setValue] = useState(Dayjs);
 	const [newTask, setNewTask] = useState({
 		name: "",
 		description: "",
@@ -67,9 +68,17 @@ const ProjectDetail = () => {
 	}, []);
 
 	useEffect(() => {
-		const projectTasks = tasks.filter((task) => {
-			return task.projectId == id;
-		});
+		const projectTasks = tasks
+			.filter((task) => {
+				return task.projectId == id;
+			})
+			.map((task) => {
+				if (task.deadline) {
+					task.datedisplay = displayDate(task.deadline);
+					return task;
+				}
+				return task;
+			});
 
 		if (projects[0] !== undefined) {
 			//kept getting project undefined error, changing from projects.length to this seems to fix it??
@@ -97,21 +106,25 @@ const ProjectDetail = () => {
 				id: 1,
 				name: "Backlog",
 				tasks: backlog,
+				shade: "red",
 			},
 			2: {
 				id: 2,
 				name: "To Do",
 				tasks: todo,
+				shade: "gold",
 			},
 			3: {
 				id: 3,
 				name: "In Progress",
 				tasks: progress,
+				shade: "white",
 			},
 			4: {
 				id: 4,
 				name: "Done",
 				tasks: done,
+				shade: "green",
 			},
 		});
 	}, [project, tasks]);
@@ -158,6 +171,10 @@ const ProjectDetail = () => {
 	const onDeadlineEdit = (date) => {
 		setDrawerTask({ ...drawerTask, deadline: date });
 		dispatch(fetchTasks());
+	};
+
+	const onDeadlineCreate = (date) => {
+		setNewTask({ ...newTask, deadline: date });
 	};
 
 	const createNewTask = () => {
@@ -242,13 +259,19 @@ const ProjectDetail = () => {
 			});
 		}
 	};
+	const displayDate = (date) => {
+		const formattedDate = new Date(date).toLocaleString();
+		return formattedDate;
+	};
 
 	return (
 		<div>
 			<br />
-			<Typography variant='h4' align='center'>
-				{project.name}
+			<Typography variant='h3' align='center'>
+				Project: {project.name}
+				<br />
 			</Typography>
+			<hr />
 			<Container
 				sx={{ display: "flex", justifyContent: "center", height: "100%" }}
 			>
@@ -265,7 +288,9 @@ const ProjectDetail = () => {
 								}}
 								key={columnId}
 							>
-								<h2>{column.name}</h2>
+								<Typography variant='h4' style={{ color: column.shade }}>
+									{column.name}
+								</Typography>
 								<div
 									style={{
 										margin: 8,
@@ -309,28 +334,24 @@ const ProjectDetail = () => {
 																	index={index}
 																>
 																	{(provided, snapshot) => {
-																		let newDate = "";
-																		if (task.deadline) {
-																			newDate = new Date(
-																				task.deadline
-																			).toLocaleString();
-																		}
 																		return (
 																			<Grid
 																				container
 																				ref={provided.innerRef}
 																				{...provided.draggableProps}
 																				{...provided.dragHandleProps}
+																				sx={{ boxShadow: 10 }}
 																				style={{
 																					display: "flex",
 																					flexDirection: "column",
 																					userSelect: "none",
+
 																					padding: 16,
 																					margin: "0 0 8px 0",
 																					minHeight: "50px",
 																					backgroundColor: snapshot.isDragging
-																						? "#263B4A"
-																						: "#456C86",
+																						? "#456C86"
+																						: "#252525",
 																					color: "white",
 																					...provided.draggableProps.style,
 																				}}
@@ -341,6 +362,7 @@ const ProjectDetail = () => {
 																						sx={{
 																							textAlign: "left",
 																							fontWeight: "bold",
+																							color: column.shade,
 																						}}
 																					>
 																						{task.name}
@@ -354,7 +376,7 @@ const ProjectDetail = () => {
 																						Due:{" "}
 																						{task.deadline === undefined
 																							? ""
-																							: newDate}
+																							: task.datedisplay}
 																					</Typography>
 																				</Grid>
 																				<Grid item>
@@ -375,13 +397,23 @@ const ProjectDetail = () => {
 																						display: "flex",
 																						border: "1px",
 																						justifyContent: "space-between",
+																						alignItems: "center",
 																					}}
 																				>
 																					<Grid item>
 																						<TaskDelete task={task} />
 																					</Grid>
+
 																					{!task.deadline ? (
-																						""
+																						<Grid item>
+																							<Tooltip title='No deadline'>
+																								<IconButton>
+																									<CalendarMonthIcon
+																										sx={{ color: "grey" }}
+																									/>
+																								</IconButton>
+																							</Tooltip>
+																						</Grid>
 																					) : (
 																						<Grid item>
 																							<CalendarButton task={task} />
@@ -417,7 +449,11 @@ const ProjectDetail = () => {
 								<Button variant='contained' onClick={handleClickOpen}>
 									+ Add a task
 								</Button>
-								<Dialog open={open} onClose={handleClose}>
+								<Dialog
+									open={open}
+									onClose={handleClose}
+									style={{ display: "flex", flexDirection: "column" }}
+								>
 									<DialogTitle>New Task</DialogTitle>
 									<DialogContent>
 										<DialogContentText>
@@ -452,6 +488,7 @@ const ProjectDetail = () => {
 											name='status'
 											value={newTask.status}
 											onChange={onChange}
+											fullWidth
 											label='status'
 										>
 											<MenuItem value={"To Do"}>To Do</MenuItem>
@@ -460,48 +497,44 @@ const ProjectDetail = () => {
 											<MenuItem value={"Backlog"}>Backlog</MenuItem>
 										</Select>
 										<FormHelperText>Status</FormHelperText>
-										<FormControl>
-											<Select
-												name='userId'
-												value={newTask.userId}
-												onChange={onChange}
-												fullWidth
+
+										<Select
+											name='userId'
+											value={newTask.userId}
+											onChange={onChange}
+											fullWidth
+										>
+											<MenuItem value={null}>none</MenuItem>
+											{users
+												.filter((user) => user.teamId === auth.teamId)
+												.map((teamMem) => {
+													return (
+														<MenuItem value={teamMem.id} key={teamMem.id}>
+															{teamMem.username}
+														</MenuItem>
+													);
+												})}
+										</Select>
+										<FormHelperText>Assign to</FormHelperText>
+										<LocalizationProvider dateAdapter={AdapterDayjs}>
+											<DatePicker
+												value={newTask.deadline || value}
+												onChange={(newValue) => {
+													setValue(newValue);
+													onDeadlineCreate(newValue);
+												}}
+												renderInput={(params) => <TextField {...params} />}
+											/>
+											<Button
+												onClick={() => {
+													setValue(null);
+													setNewTask({ ...newTask, deadline: null });
+												}}
 											>
-												<MenuItem value={null}>none</MenuItem>
-												{users
-													.filter((user) => user.teamId === auth.teamId)
-													.map((teamMem) => {
-														return (
-															<MenuItem value={teamMem.id} key={teamMem.id}>
-																{teamMem.username}
-															</MenuItem>
-														);
-													})}
-											</Select>
-											<FormHelperText>Assign to</FormHelperText>
-										</FormControl>
-										<FormControl>
-											<LocalizationProvider dateAdapter={AdapterDayjs}>
-												<DatePicker
-													value={newTask.deadline || value}
-													onChange={(newValue) => {
-														console.log(newValue.$d);
-														setValue(newValue);
-														onDeadlineEdit(newValue.$d);
-													}}
-													renderInput={(params) => <TextField {...params} />}
-												/>
-												<Button
-													onClick={() => {
-														setValue(null);
-														setNewTask({ ...newTask, deadline: null });
-													}}
-												>
-													clear date
-												</Button>
-											</LocalizationProvider>
-											<FormHelperText>Deadline</FormHelperText>
-										</FormControl>
+												clear date
+											</Button>
+										</LocalizationProvider>
+										<FormHelperText>Deadline</FormHelperText>
 									</DialogContent>
 									<DialogActions>
 										<Button onClick={handleClose}>Cancel</Button>
