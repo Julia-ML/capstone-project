@@ -10,6 +10,9 @@ const Post = conn.define("post", {
     text: {
         type: TEXT,
     },
+    userId: {
+        type: UUID,
+      }
 });
 
 module.exports = Post;

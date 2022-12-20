@@ -30,3 +30,11 @@ form > * {
 	align-items: center;
 }
 
+.dash-header {
+  text-align: center;
+}
+
+.dash-card {
+  display: flex;
+  justify-content: center;
+}
