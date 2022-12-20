@@ -61,78 +61,78 @@ const ProjectDetail = () => {
 		teamId: "",
 	});
 
-  useEffect(() => {
-    dispatch(fetchProjects()),
-      dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
-  }, []);
+	useEffect(() => {
+		dispatch(fetchProjects()),
+			dispatch(fetchUsers(), dispatch(fetchTasks()), dispatch(fetchLog(id)));
+	}, []);
 
-  useEffect(() => {
-    const projectTasks = tasks.filter((task) => {
-      return task.projectId == id;
-    });
+	useEffect(() => {
+		const projectTasks = tasks.filter((task) => {
+			return task.projectId == id;
+		});
 
-    if (projects[0] !== undefined) {
-      //kept getting project undefined error, changing from projects.length to this seems to fix it??
-      const project = projects.find((project) => project.id === id);
-      projectTasks.length
-        ? `${
-            (setProject(project),
-            setNewTask({ ...newTask, teamId: project.teamId }),
-            setBacklog(
-              projectTasks.filter((task) => task.status === "Backlog")
-            ),
-            setTodo(projectTasks.filter((task) => task.status === "To Do")),
-            setProgress(
-              projectTasks.filter((task) => task.status === "In Progress")
-            ),
-            setDone(projectTasks.filter((task) => task.status === "Done")))
-          }`
-        : setProject(project);
-    }
-  }, [projects, tasks]);
+		if (projects[0] !== undefined) {
+			//kept getting project undefined error, changing from projects.length to this seems to fix it??
+			const project = projects.find((project) => project.id === id);
+			projectTasks.length
+				? `${
+						(setProject(project),
+						setNewTask({ ...newTask, teamId: project.teamId }),
+						setBacklog(
+							projectTasks.filter((task) => task.status === "Backlog")
+						),
+						setTodo(projectTasks.filter((task) => task.status === "To Do")),
+						setProgress(
+							projectTasks.filter((task) => task.status === "In Progress")
+						),
+						setDone(projectTasks.filter((task) => task.status === "Done")))
+				  }`
+				: setProject(project);
+		}
+	}, [projects, tasks]);
 
-  useEffect(() => {
-    setColumns({
-      1: {
-        id: 1,
-        name: "Backlog",
-        tasks: backlog,
-      },
-      2: {
-        id: 2,
-        name: "To Do",
-        tasks: todo,
-      },
-      3: {
-        id: 3,
-        name: "In Progress",
-        tasks: progress,
-      },
-      4: {
-        id: 4,
-        name: "Done",
-        tasks: done,
-      },
-    });
-  }, [project, tasks]);
+	useEffect(() => {
+		setColumns({
+			1: {
+				id: 1,
+				name: "Backlog",
+				tasks: backlog,
+			},
+			2: {
+				id: 2,
+				name: "To Do",
+				tasks: todo,
+			},
+			3: {
+				id: 3,
+				name: "In Progress",
+				tasks: progress,
+			},
+			4: {
+				id: 4,
+				name: "Done",
+				tasks: done,
+			},
+		});
+	}, [project, tasks]);
 
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
+	const handleClickOpen = () => {
+		setOpen(true);
+	};
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+	const handleClose = () => {
+		setOpen(false);
+	};
 
-  const onChange = (ev) => {
-    newTask.name === "" || newTask.description === ""
-      ? setDisabled(true)
-      : setDisabled(false);
-    setNewTask({
-      ...newTask,
-      [ev.target.name]: ev.target.value,
-    });
-  };
+	const onChange = (ev) => {
+		newTask.name === "" || newTask.description === ""
+			? setDisabled(true)
+			: setDisabled(false);
+		setNewTask({
+			...newTask,
+			[ev.target.name]: ev.target.value,
+		});
+	};
 
 	const getUserName = (task) => {
 		if (task.userId) {
@@ -155,36 +155,36 @@ const ProjectDetail = () => {
 		}
 	};
 
-  const onDeadlineEdit = (date) => {
-    setDrawerTask({ ...drawerTask, deadline: date });
-    dispatch(fetchTasks());
-  };
+	const onDeadlineEdit = (date) => {
+		setDrawerTask({ ...drawerTask, deadline: date });
+		dispatch(fetchTasks());
+	};
 
-  const createNewTask = () => {
-    dispatch(createTask(newTask));
-    if (newTask.status === "To Do") {
-      setTodo([...todo, newTask]);
-    }
-    if (newTask.status === "Backlog") {
-      setBacklog([...backlog, newTask]);
-    }
-    if (newTask.status === "In Progress") {
-      setProgress([...progress, newTask]);
-    }
-    if (newTask.status === "Done") {
-      setProgress([...done, newTask]);
-    }
-    setColumns({ ...columns });
-    setNewTask({
-      name: "",
-      description: "",
-      status: "To Do",
-      projectId: id,
-      teamId: auth.teamId,
-    });
-    dispatch(fetchTasks());
-    handleClose();
-  };
+	const createNewTask = () => {
+		dispatch(createTask(newTask));
+		if (newTask.status === "To Do") {
+			setTodo([...todo, newTask]);
+		}
+		if (newTask.status === "Backlog") {
+			setBacklog([...backlog, newTask]);
+		}
+		if (newTask.status === "In Progress") {
+			setProgress([...progress, newTask]);
+		}
+		if (newTask.status === "Done") {
+			setProgress([...done, newTask]);
+		}
+		setColumns({ ...columns });
+		setNewTask({
+			name: "",
+			description: "",
+			status: "To Do",
+			projectId: id,
+			teamId: auth.teamId,
+		});
+		dispatch(fetchTasks());
+		handleClose();
+	};
 
 	const editTask = () => {
 		dispatch(updateTask(drawerTask));
@@ -194,55 +194,55 @@ const ProjectDetail = () => {
 		dispatch(fetchTasks());
 	};
 
-  const toggleDrawer = () => {
-    setDrawerOpen(false);
-  };
+	const toggleDrawer = () => {
+		setDrawerOpen(false);
+	};
 
-  const onDragEnd = async (result, columns, setColumns) => {
-    if (!result.destination) return;
-    const { source, destination } = result;
-    if (source.droppableId !== destination.droppableId) {
-      const sourceColumn = columns[source.droppableId];
-      const destColumn = columns[destination.droppableId];
-      const sourceTasks = Array.from(sourceColumn.tasks);
-      const destTasks = Array.from(destColumn.tasks);
-      const [removed] = sourceTasks.splice(source.index, 1);
-      destTasks.splice(destination.index, 0, removed);
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...sourceColumn,
-          tasks: sourceTasks,
-        },
-        [destination.droppableId]: {
-          ...destColumn,
-          tasks: destTasks,
-        },
-      });
-      const newStatus = columns[destination.droppableId].name;
-      const changedTask = removed;
-      changedTask.status = newStatus;
+	const onDragEnd = async (result, columns, setColumns) => {
+		if (!result.destination) return;
+		const { source, destination } = result;
+		if (source.droppableId !== destination.droppableId) {
+			const sourceColumn = columns[source.droppableId];
+			const destColumn = columns[destination.droppableId];
+			const sourceTasks = Array.from(sourceColumn.tasks);
+			const destTasks = Array.from(destColumn.tasks);
+			const [removed] = sourceTasks.splice(source.index, 1);
+			destTasks.splice(destination.index, 0, removed);
+			setColumns({
+				...columns,
+				[source.droppableId]: {
+					...sourceColumn,
+					tasks: sourceTasks,
+				},
+				[destination.droppableId]: {
+					...destColumn,
+					tasks: destTasks,
+				},
+			});
+			const newStatus = columns[destination.droppableId].name;
+			const changedTask = removed;
+			changedTask.status = newStatus;
 
-      try {
-        await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
-      } catch (ex) {
-        console.log(ex);
-      }
-    } else {
-      const column = columns[source.droppableId];
-      const copiedTasks = [...column.tasks];
-      const [removed] = copiedTasks.splice(source.index, 1);
-      copiedTasks.splice(destination.index, 0, removed);
-      setColumns({
-        ...columns,
-        [source.droppableId]: {
-          ...column,
-          tasks: copiedTasks,
-        },
-      });
-    }
-  };
-  
+			try {
+				await axios.put(`/api/tasks/${changedTask.id}`, changedTask);
+			} catch (ex) {
+				console.log(ex);
+			}
+		} else {
+			const column = columns[source.droppableId];
+			const copiedTasks = [...column.tasks];
+			const [removed] = copiedTasks.splice(source.index, 1);
+			copiedTasks.splice(destination.index, 0, removed);
+			setColumns({
+				...columns,
+				[source.droppableId]: {
+					...column,
+					tasks: copiedTasks,
+				},
+			});
+		}
+	};
+
 	return (
 		<div>
 			<br />
@@ -460,6 +460,48 @@ const ProjectDetail = () => {
 											<MenuItem value={"Backlog"}>Backlog</MenuItem>
 										</Select>
 										<FormHelperText>Status</FormHelperText>
+										<FormControl>
+											<Select
+												name='userId'
+												value={newTask.userId}
+												onChange={onChange}
+												fullWidth
+											>
+												<MenuItem value={null}>none</MenuItem>
+												{users
+													.filter((user) => user.teamId === auth.teamId)
+													.map((teamMem) => {
+														return (
+															<MenuItem value={teamMem.id} key={teamMem.id}>
+																{teamMem.username}
+															</MenuItem>
+														);
+													})}
+											</Select>
+											<FormHelperText>Assign to</FormHelperText>
+										</FormControl>
+										<FormControl>
+											<LocalizationProvider dateAdapter={AdapterDayjs}>
+												<DatePicker
+													value={newTask.deadline || value}
+													onChange={(newValue) => {
+														console.log(newValue.$d);
+														setValue(newValue);
+														onDeadlineEdit(newValue.$d);
+													}}
+													renderInput={(params) => <TextField {...params} />}
+												/>
+												<Button
+													onClick={() => {
+														setValue(null);
+														setNewTask({ ...newTask, deadline: null });
+													}}
+												>
+													clear date
+												</Button>
+											</LocalizationProvider>
+											<FormHelperText>Deadline</FormHelperText>
+										</FormControl>
 									</DialogContent>
 									<DialogActions>
 										<Button onClick={handleClose}>Cancel</Button>
@@ -563,16 +605,16 @@ const ProjectDetail = () => {
 					</Button>
 				</FormControl>
 			</Drawer>
-      <hr />
-      {log && tasks ? (
-        <div style={{ display: "flex" }}>
-          <DoneGraph log={log} />
-          <ColumnGraph tasks={tasks} projectId={id} />
-        </div>
-      ) : (
-        ""
-      )}
-      <hr />
+			<hr />
+			{log && tasks ? (
+				<div style={{ display: "flex" }}>
+					<DoneGraph log={log} />
+					<ColumnGraph tasks={tasks} projectId={id} />
+				</div>
+			) : (
+				""
+			)}
+			<hr />
 		</div>
 	);
 };
