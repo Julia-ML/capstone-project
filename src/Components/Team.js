@@ -110,13 +110,16 @@ const Team = () => {
     <Container>
       {auth.teamId !== null ? (
         <Paper>
+          <div style={{ height: "5px" }}></div>
+
           <Box sx={{ margin: "auto", border: 1, width: "50%" }}>
             <Tabs
               value={selectedTab}
               onChange={tabChange}
               textColor="secondary"
               indicatorColor="secondary"
-              centered>
+              centered
+            >
               <Tab value="team" label="Team overview" />
               <Tab value="invite" label="Invite member" />
               {adminView && (
@@ -135,7 +138,8 @@ const Team = () => {
                 sx={{
                   margin: "1rem",
                   padding: "1rem",
-                }}>
+                }}
+              >
                 {teams.users &&
                   teams.users.map((user) => {
                     return (
@@ -151,7 +155,8 @@ const Team = () => {
                           margin: "1rem",
                           padding: "1rem",
                           width: "300px",
-                        }}>
+                        }}
+                      >
                         <Grid item>
                           <Typography variant="h6">
                             Username - {user.username}
@@ -175,12 +180,14 @@ const Team = () => {
                         {adminView && user.id !== teams.adminId && (
                           <Grid
                             container
-                            sx={{ display: "flex", flexDirection: "row" }}>
+                            sx={{ display: "flex", flexDirection: "row" }}
+                          >
                             <Grid item>
                               <Button
                                 onClick={() => {
                                   removeUser(user);
-                                }}>
+                                }}
+                              >
                                 {" "}
                                 <CancelIcon />
                               </Button>
@@ -214,7 +221,8 @@ const Team = () => {
               <Button
                 sx={{ margin: "auto", width: "50%" }}
                 variant="contained"
-                type="submit">
+                type="submit"
+              >
                 Invite User
               </Button>
             </form>
@@ -229,7 +237,8 @@ const Team = () => {
               onChange={tabChange}
               textColor="secondary"
               indicatorColor="secondary"
-              centered>
+              centered
+            >
               <Tab value="joinTeam" label="Join a team" />
               <Tab value="createTeam" label="Create Team" />
             </Tabs>
@@ -245,11 +254,13 @@ const Team = () => {
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
-        }}>
+        }}
+      >
         <Alert
           onClose={closeRemovedUser}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           User removed Successfully
         </Alert>
       </Snackbar>
@@ -260,11 +271,13 @@ const Team = () => {
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
-        }}>
+        }}
+      >
         <Alert
           onClose={closeNewAdmin}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           New Admin set Successfully
         </Alert>
       </Snackbar>
@@ -275,11 +288,13 @@ const Team = () => {
         anchorOrigin={{
           vertical: "bottom",
           horizontal: "center",
-        }}>
+        }}
+      >
         <Alert
           onClose={closeInvitedUser}
           severity="success"
-          sx={{ width: "100%" }}>
+          sx={{ width: "100%" }}
+        >
           Invite Successfully sent to {recipientInfo.email}
         </Alert>
       </Snackbar>
