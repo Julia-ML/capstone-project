@@ -33,7 +33,7 @@ const Home = () => {
 
   return (
     <div display="flex">
-      <div>My Dashboard for: {date.toDateString()}</div> <div>Due Soon: </div>
+      <div class="dash-header">My Dashboard for: {date.toDateString()}</div> <div class="dash-header">Due Soon: </div>
       <div>
         <Paper sx={{ width: 200, maxWidth: "100%" }}>
           <MenuList>
