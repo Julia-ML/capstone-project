@@ -14,9 +14,20 @@ const Metrics = () => {
   }, []);
 
   return (
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
-      {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-evenly",
+        flexWrap: "wrap",
+        flexDirection: "row",
+      }}
+    >
+      <div>
+        {tasks && auth ? <UserTasksGraph tasks={tasks} id={auth.id} /> : ""}
+      </div>
+      <div>
+        {tasks && auth ? <TeamTasksGraph tasks={tasks} id={auth.id} /> : ""}
+      </div>
     </div>
   );
 };

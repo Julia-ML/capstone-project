@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import {
   ResponsiveContainer,
   PieChart,
@@ -24,12 +24,11 @@ const UserTasksGraph = (props) => {
   ];
 
   return (
-    <span>
-      {" "}
-      <Typography width="100%" align="center">
+    <Fragment>
+      <Typography width="100%" align="center" variant="h6">
         My Tasks
       </Typography>
-      <PieChart width={730} height={250}>
+      <PieChart width={450} height={300}>
         <Legend />
         <Pie
           data={data}
@@ -37,8 +36,8 @@ const UserTasksGraph = (props) => {
           nameKey="name"
           cx="50%"
           cy="50%"
-          outerRadius={70}
-          innerRadius={40}
+          outerRadius={95}
+          innerRadius={50}
           fill="#8884d8"
           label
         >
@@ -56,7 +55,7 @@ const UserTasksGraph = (props) => {
           ))}
         </Pie>
       </PieChart>
-    </span>
+    </Fragment>
   );
 };
 
