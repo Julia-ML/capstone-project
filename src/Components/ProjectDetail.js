@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
 	createTask,
 	fetchProjects,
@@ -15,7 +15,6 @@ import CalendarButton from "./CalendarButton";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import Grid from "@mui/material/Grid";
 import DoneGraph from "./DoneGraph";
-import Paper from "@mui/material/Paper";
 import ColumnGraph from "./ColumnGraph";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
