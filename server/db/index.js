@@ -19,7 +19,7 @@ Project.belongsTo(User);
 Project.hasMany(Task);
 Project.belongsTo(Team);
 Log.belongsTo(Project);
-Post.belongsTo(User);
+//Post.belongsTo(User);
 
 const syncAndSeed = async () => {
   await conn.sync({ force: true });
@@ -231,7 +231,7 @@ const syncAndSeed = async () => {
       userId: moe.id,
     }),
     Post.create({
-      text: "Hello all! I am super excited to be assinging our first new tasks today, keep an eye on our tasks board!",
+      text: "Hello all! I am super excited to be assigning our first new tasks today, keep an eye on our tasks board!",
       userId: lucy.id,
     }),
     Post.create({
