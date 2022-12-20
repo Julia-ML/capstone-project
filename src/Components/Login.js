@@ -43,6 +43,7 @@ const Login = () => {
               <TextField
                 sx={{ margin: "auto", width: "50%", background: "#424242" }}
                 label="Username"
+                variant="filled"
                 value={credentials.username}
                 onChange={onChange}
                 name="username"
@@ -52,6 +53,7 @@ const Login = () => {
 
               <TextField
                 sx={{ margin: "auto", width: "50%", background: "#424242" }}
+                variant="filled"
                 type="password"
                 label="Password"
                 value={credentials.password}
@@ -64,16 +66,14 @@ const Login = () => {
               <Button
                 type="submit"
                 variant="contained"
-                sx={{ margin: "auto", width: "50%" }}
-              >
+                sx={{ margin: "auto", width: "50%" }}>
                 Login
               </Button>
               <br></br>
               <Button
                 sx={{ margin: "auto", width: "50%" }}
                 onClick={() => setToggle(true)}
-                variant="contained"
-              >
+                variant="contained">
                 Create Account
               </Button>
             </form>
