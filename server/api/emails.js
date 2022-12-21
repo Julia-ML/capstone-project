@@ -49,7 +49,7 @@ app.post("/invite/team", async (req, res, next) => {
       from: "devtest2207@zohomail.com",
       to: req.body.recipient,
       subject: `You have been invited to join ${req.body.senderName} \'s team`,
-      html: `<a href='https://rekj-capstone.herokuapp.com/#/login/${req.body.teamId}'>Click this link to join ${req.body.senderName} \'s team</a>`,
+      html: `<a href='https://rekj-capstone.herokuapp.com/#/login/${req.body.teamId}'>Click this link to join ${req.body.senderName}\'s team</a>`,
     };
     transporter.sendMail(mailOptions, function (error, info) {
       if (error) {
