@@ -18,6 +18,7 @@ app.get("/", async (req, res, next) => {
 
 app.post("/", async (req, res, next) => {
     try {
+      console.log('Testing here:::::', req.body)
       const post = await Post.create(req.body);
       res.send(post);
     } catch (ex) {

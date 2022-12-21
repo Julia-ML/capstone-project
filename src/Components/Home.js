@@ -30,10 +30,9 @@ const Home = () => {
   return (
     <div display="flex">
       <div style={{ height: 5 }}></div>
-      <div class="dash-header">
+      <div className="dash-header">
         My Dashboard for: {date.toDateString()}
-      </div>{" "}
-      <div class="dash-header">Due Soon: </div>
+      </div>
       <div>
         <Paper sx={{ width: 200, maxWidth: "100%" }}>
           <MenuList>
@@ -51,7 +50,7 @@ const Home = () => {
             </MenuItem>
           </MenuList>
         </Paper>
-        <div class="dash-card">
+        <div className="dash-card">
           {active === "PostingCard" && <DashboardCard comp={<Post />} />}
           {active === "MetricsCard" && <DashboardCard comp={<Metrics />} />}
         </div>
