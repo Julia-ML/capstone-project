@@ -13,6 +13,9 @@ const Post = conn.define("post", {
     userId: {
         type: UUID,
       },
+    feeling: {
+        type: TEXT,
+    },
     teamId: {
         type: UUID,
     },

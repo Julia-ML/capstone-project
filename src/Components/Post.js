@@ -29,11 +29,12 @@ import auth from '../store/auth.js';
 
 const Post = () => {
   let createdAT = ''
-    const { posts, users } = useSelector(state => state)
+    const { posts, users, auth } = useSelector(state => state)
     const dispatch = useDispatch();
     const [userPost, setUserPost] = useState({
         text: "",
-        userId: "",
+        userId: auth.id,
+        feeling: "",
     });
 
     useEffect(()=> {
@@ -49,7 +50,8 @@ const Post = () => {
             await dispatch(createPost(userPost));
             setUserPost({
                 text: "",
-                userId: "",
+                userId: auth.id,
+                feeling: "",
             });
             setError({});
         }
@@ -92,6 +94,10 @@ const Post = () => {
           label: 'Very Satisfied',
         },
       };
+
+      // const findFace = (num) => {
+      //   customIcons.filter(currFace => num === post.userId)
+      // }
       
       function IconContainer(props) {
         const { value, ...other } = props;
@@ -104,8 +110,6 @@ const Post = () => {
 
       const formatDate = (createdAt) => {
         const date = new Date(createdAT);
-        //console.log('test date here:::', date)
-        //const formattedDate = date.toDateString()
         const formattedDate = createdAt.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
         return formattedDate
       }
@@ -130,9 +134,11 @@ const Post = () => {
             <StyledRating
                 name="highlight-selected-only"
                 defaultValue={2}
+                value={userPost.feeling}
                 IconContainerComponent={IconContainer}
                 getLabelText={(value) => customIcons[value].label}
                 highlightSelectedOnly
+                onChange={(ev) => setUserPost({ ...userPost, feeling: ev.target.value })}
             />
             <Button onClick={submitPost}>Submit</Button>
             </form>
@@ -144,21 +150,21 @@ const Post = () => {
                 {
                     posts.map((post) => {
                       const currUser = users.filter(currUser => currUser.id === post.userId);
-                      const allUsers = currUser.map(person => {return [`${person.firstName} ${person.lastName}`]})
-                      //console.log('HERE HERE HERE', currUser)
-                        return (
+                      const allUsers = currUser.map(person => {return [`${person.firstName} ${person.lastName}`]});
+                        return ([
                           <Box sx={{ m: 3 }}>
                             <Grid item key={post.id}>
                               <Card key={post.id}>
                                 <CardContent>
                                     <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}><Typography>{ formatDate(`${post.createdAt}`) }</Typography></Box>
                                     <Box sx={{height: 50, color: 'primary.main'}}><Typography>{ allUsers }</Typography></Box>
+                                    <Box><Typography>{ post.feeling }</Typography></Box>
                                     <Box sx={{height: 40}}><Typography>{ post.text }</Typography></Box>
                                 </CardContent>
                               </Card>
                             </Grid>
                           </Box>
-                        )
+                        ].sort())
                     })
                 }
             </Box>
