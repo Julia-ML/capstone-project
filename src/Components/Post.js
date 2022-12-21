@@ -94,10 +94,12 @@ const Post = () => {
           label: 'Very Satisfied',
         },
       };
-
-      // const findFace = (num) => {
-      //   customIcons.filter(currFace => num === post.userId)
-      // }
+      
+      const findReaction = (rating) => {
+        if (rating) {
+          return customIcons[rating].icon;
+        }
+      }
       
       function IconContainer(props) {
         const { value, ...other } = props;
@@ -158,7 +160,7 @@ const Post = () => {
                                 <CardContent>
                                     <Box sx={{ display: 'flex', flexDirection: 'row-reverse'}}><Typography>{ formatDate(`${post.createdAt}`) }</Typography></Box>
                                     <Box sx={{height: 50, color: 'primary.main'}}><Typography>{ allUsers }</Typography></Box>
-                                    <Box><Typography>{ post.feeling }</Typography></Box>
+                                    <Box><Typography>{ findReaction(post.feeling) }</Typography></Box>
                                     <Box sx={{height: 40}}><Typography>{ post.text }</Typography></Box>
                                 </CardContent>
                               </Card>
