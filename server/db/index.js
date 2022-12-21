@@ -229,14 +229,17 @@ const syncAndSeed = async () => {
     Post.create({
       text: "Hey team, I am having some issues with creating the wireframe, could I schedule a meet with someone?",
       userId: moe.id,
+      feeling: 2,
     }),
     Post.create({
       text: "Hello all! I am super excited to be assigning our first new tasks today, keep an eye on our tasks board!",
       userId: lucy.id,
+      feeling: 4,
     }),
     Post.create({
       text: "Need to push out the deadline for the new app, the security audit found more bugs than anticipated..",
       userId: larry.id,
+      feeling: 1,
     })
   ])
 
