@@ -15,6 +15,7 @@ app.get("/", async (req, res, next) => {
   }
 });
 
+//API Route: Deletes current user upon account deletion.
 app.delete('/:id', async(req, res, next) => {
   try {
     const user = await User.findByPk(req.params.id)

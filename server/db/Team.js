@@ -1,6 +1,7 @@
 const conn = require("./conn");
 const { STRING, UUID, UUIDV4 } = conn.Sequelize;
 
+//Sequelize Model for Teams:
 const Team = conn.define("team", {
   id: {
     type: UUID,

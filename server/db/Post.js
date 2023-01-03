@@ -1,6 +1,7 @@
 const conn = require("./conn");
 const { TEXT, UUID, UUIDV4 } = require("sequelize");
 
+//Sequelize Model for Posts:
 const Post = conn.define("post", {
     id: {
         type: UUID,
@@ -21,6 +22,7 @@ const Post = conn.define("post", {
     },
 });
 
+//Post property for finding all posts given a user within a specific team.
 Post.prototype.getPosts = async function () {
 	let posts = await conn.models.post.findAll({
 		where: {

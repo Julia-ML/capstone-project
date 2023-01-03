@@ -5,6 +5,7 @@ import UserTasksGraph from "./UserTasksGraph";
 import TeamTasksGraph from "./TeamTasksGraph";
 import { fetchTasks, fetchProjects } from "../store";
 
+//The Metrics component displays both the UserTasksGraph and TeamTasksGraph
 const Metrics = () => {
   const { auth, tasks } = useSelector((state) => state);
   const dispatch = useDispatch();

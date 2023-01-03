@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { Box } from "@mui/material";
 
+//This Confirm Delete compoent diapays when the user is not a team admin.
+//The Confrim Delete component is used to delete a users profile/account.
 const ConfirmDelete = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

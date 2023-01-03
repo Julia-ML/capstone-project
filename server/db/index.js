@@ -6,6 +6,7 @@ const Task = require("./Task");
 const Log = require("./Log");
 const Post = require("./Post");
 
+//Model realtions
 User.hasMany(Task);
 User.hasMany(Project);
 User.belongsTo(Team);
@@ -19,7 +20,6 @@ Project.belongsTo(User);
 Project.hasMany(Task);
 Project.belongsTo(Team);
 Log.belongsTo(Project);
-//Post.belongsTo(User);
 
 const syncAndSeed = async () => {
   await conn.sync({ force: true });
@@ -225,6 +225,7 @@ const syncAndSeed = async () => {
     }),
   ]);
 
+  //Creates sample posts to be seeded
   await Promise.all([
     Post.create({
       text: "Hey team, I am having some issues with creating the wireframe, could I schedule a meet with someone?",

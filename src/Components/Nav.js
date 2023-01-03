@@ -11,6 +11,8 @@ import { useSelector, useDispatch } from "react-redux";
 import auth from "../store/auth";
 import { logout } from "../store";
 
+//The Nav Bar MUI component displays the navigation items for specific web pages.
+//If a user is loggend in, the: 'dahsboard', 'tasks', 'projects', 'team', and 'profile' options become available.
 function NavBar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
