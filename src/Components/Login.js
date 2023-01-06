@@ -6,6 +6,7 @@ import Register from "./Register";
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 
+//This is the Login component leveraged by users to access their accounts.
 const Login = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

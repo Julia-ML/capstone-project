@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const JWT = process.env.JWT;
 
+//Sequelize Model for Users:
 const User = conn.define("user", {
 	id: {
 		type: UUID,
@@ -88,6 +89,7 @@ User.authenticate = async function ({ username, password }) {
 	throw error;
 };
 
+//User property that returns projects for a given user and their teammates.
 User.prototype.getProjects = async function () {
 	let projects = await conn.models.project.findAll({
 		where: {
@@ -98,6 +100,7 @@ User.prototype.getProjects = async function () {
 	return projects;
 };
 
+//User property that returns tasks for a given user and their teammates.
 User.prototype.getTasks = async function () {
 	let tasks = await conn.models.task.findAll({
 		where: {

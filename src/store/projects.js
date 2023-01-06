@@ -1,4 +1,5 @@
 import axios from "axios";
+
 const projects = (state = [], action) => {
   if (action.type === "SET_PROJECTS") {
     return action.projects;

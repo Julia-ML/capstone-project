@@ -1,6 +1,7 @@
 const conn = require("./conn");
 const { STRING, UUID, UUIDV4, TEXT, ENUM, DATE } = conn.Sequelize;
 
+//Sequelize Model for Tasks:
 const Task = conn.define("task", {
 	id: {
 		type: UUID,

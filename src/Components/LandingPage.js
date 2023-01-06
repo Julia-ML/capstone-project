@@ -2,17 +2,8 @@ import React from "react";
 import landingLogo from "../../static/images/landingLogo.jpg";
 import Paper from '@mui/material/Paper';
 
-// const useStyles = {
-//     root: ({
-//         backgroundImage: `url(${landingLogo.jpg})`,
-//         backgroundSize: 'cover',
-//         height: '100%'
-//     }),
-// };
-
-//<img className="landingLogo" src="./images/landingLogo.jpg" />
+//The Landing Page component displays when a user first accesses the website, it displays an image and a dexcription of services.
 const LandingPage = () => {
-    //const { root } = useStyles
     return (
         <Paper style={root}>
         <img className="landingLogo" src="../../static/images/landingLogo.jpg" />

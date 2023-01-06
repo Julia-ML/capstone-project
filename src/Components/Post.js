@@ -21,12 +21,7 @@ import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfi
 import Typography from '@mui/material/Typography';
 import auth from '../store/auth.js';
 
-// const formatDate = (createdAt) => {
-//   const date = new Date(createdAT);
-//   const formattedDate = createdAt.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-//   return formattedDate
-// }
-
+//The Post component displays both past posts from teammeates, and the option to create a new post.
 const Post = () => {
   let createdAT = ''
     const { posts, users, auth } = useSelector(state => state)
@@ -72,6 +67,7 @@ const Post = () => {
         },
       }));
       
+      //The follwing MUI object refers to the 'reaction' fances.
       const customIcons = {
         1: {
           icon: <SentimentVeryDissatisfiedIcon color="error" />,
@@ -95,6 +91,7 @@ const Post = () => {
         },
       };
       
+      //The findReaditon function displays the correct 'reaction' with a given post.
       const findReaction = (rating) => {
         if (rating) {
           return customIcons[rating].icon;

@@ -13,12 +13,17 @@ import Post from "./Post";
 import DashboardCard from "./DashboardCard";
 import Metrics from "./Metrics";
 
+//The Home component displays as the dahsboard page after a user logs in. 
+//The Home component displays both the Metircs and Posts as a menu.
 const Home = () => {
   const [active, setActive] = useState("");
   const { auth } = useSelector((state) => state);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+  //Current date displays on the home page
   const date = new Date();
+
   useEffect(() => {
     dispatch(fetchProjects()), dispatch(fetchTasks());
   }, []);

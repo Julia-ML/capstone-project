@@ -6,6 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
+//The Admin Error component displays when the current user is the admin.
+//The Admin Error component instructs the user to select a new team admin before profile/account deletion.
 const AdminError = () => {
     const [open, setOpen] = React.useState(false);
   

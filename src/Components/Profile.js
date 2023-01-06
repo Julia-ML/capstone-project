@@ -22,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmDelete from "./DeleteDialog";
 import AdminError from "./ErrorDialog";
 
+//The Profile component displays a the current users infromation and allows sed user to change/edit the information.
 export const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();

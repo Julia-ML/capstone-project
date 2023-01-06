@@ -1,6 +1,7 @@
 const conn = require("./conn");
 const { STRING, UUID, UUIDV4, TEXT, DECIMAL, INTEGER, DATE } = conn.Sequelize;
 
+//Sequelize Model for Logs:
 const Log = conn.define("log", {
   id: {
     type: UUID,
